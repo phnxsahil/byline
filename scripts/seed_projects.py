@@ -2,13 +2,16 @@ from __future__ import annotations
 
 import asyncio
 import json
+import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
 
 from sqlalchemy import select
 
 from apps.api.db.models import NarrativeArc, Project
 from apps.api.db.session import get_session_factory
-ROOT = Path(__file__).resolve().parent.parent
 PROJECTS_FILE = ROOT / "scripts" / "projects.json"
 
 

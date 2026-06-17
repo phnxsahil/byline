@@ -24,6 +24,10 @@ dev = [
   "pytest-asyncio>=1.0.0",
 ]
 
+[tool.setuptools.packages.find]
+include = ["packages/*", "apps/*", "packages/agents/*", "apps/api/*", "apps/api/db/*", "apps/api/routers/*", "apps/api/schemas/*", "apps/api/services/*", "apps/api/tests/*"]
+namespaces = false
+
 [build-system]
 requires = ["setuptools>=69.0"]
 build-backend = "setuptools.build_meta"

@@ -1,7 +1,7 @@
 [project]
-name = "dispatch"
+name = "byline"
 version = "0.1.0"
-description = "Dispatch Phase 0 backend and agent pipeline"
+description = "Byline — multi-agent content engine for developer-founders"
 requires-python = ">=3.12"
 dependencies = [
   "alembic>=1.16.0",

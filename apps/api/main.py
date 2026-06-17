@@ -1,5 +1,8 @@
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 
 from apps.api.config import get_settings
 from apps.api.routers import dispatches, drafts, projects, voice
@@ -25,4 +28,17 @@ app.include_router(voice.router)
 @app.get("/healthz")
 async def healthcheck():
     return {"status": "ok"}
+
+
+BYLINE_DIST = Path(__file__).resolve().parent.parent.parent / "byline" / "dist"
+
+
+@app.get("/")
+async def serve_byline():
+    return FileResponse(BYLINE_DIST / "index.html")
+
+
+@app.get("/assets/{asset_path:path}")
+async def serve_assets(asset_path: str):
+    return FileResponse(BYLINE_DIST / "assets" / asset_path)
 

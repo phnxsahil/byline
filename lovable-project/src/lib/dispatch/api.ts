@@ -7,7 +7,7 @@ import type {
   VoiceProfile,
 } from "./types";
 
-const API_BASE = (import.meta.env.VITE_BYLINE_API_BASE_URL as string | undefined) ?? "http://127.0.0.1:8000";
+const API_BASE = (import.meta.env.VITE_BYLINE_API_BASE_URL as string | undefined) ?? "http://127.0.0.1:8001";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {

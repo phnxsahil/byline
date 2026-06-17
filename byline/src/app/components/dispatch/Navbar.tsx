@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { label: "github",    href: "https://github.com/sahil/byline" },
 ];
 
+// Fix #4: no pulsing dot — plain bordered button
 function DashboardPill({ dark }: { dark: boolean }) {
   const [hov, setHov] = useState(false);
   return (
@@ -22,14 +23,16 @@ function DashboardPill({ dark }: { dark: boolean }) {
       style={{
         display: "inline-flex", alignItems: "center", gap: 5,
         padding: "5px 11px", borderRadius: 4,
-        backgroundColor: hov ? "rgba(232,94,44,0.15)" : "rgba(232,94,44,0.08)",
-        border: "0.5px solid rgba(232,94,44,0.3)",
+        backgroundColor: "transparent",
+        border: dark
+          ? `0.5px solid ${hov ? "rgba(250,250,248,0.25)" : "rgba(250,250,248,0.1)"}`
+          : `0.5px solid ${hov ? "rgba(15,15,13,0.25)" : "var(--border)"}`,
         fontFamily: "'IBM Plex Mono', monospace", fontSize: 11,
-        color: "#E85E2C", textDecoration: "none", letterSpacing: "0.04em",
+        color: dark ? "rgba(250,250,248,0.7)" : "var(--text-secondary)",
+        textDecoration: "none", letterSpacing: "0.04em",
         transition: "all 0.12s ease", whiteSpace: "nowrap",
       }}
     >
-      <span style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#E85E2C", flexShrink: 0 }} />
       dashboard
     </a>
   );
@@ -344,7 +347,7 @@ export function Navbar() {
         }
 
         .dispatch-nav.narrow {
-          max-width: 300px;
+          max-width: 420px;
           height: 38px;
           border-radius: 50px;
           box-shadow: 0 8px 24px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
@@ -422,10 +425,11 @@ export function Navbar() {
             </div>
           )}
 
-          {/* Cell 4 — CTA & Theme Toggle */}
-          <div className="dispatch-nav-cell dispatch-nav-cta" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <DashboardPill dark={isNavbarDark} />
-            <ThemeToggle theme={theme} onChange={setTheme} isDarkSection={isNavbarDark} />
+          {/* Cell 4 — CTA cluster: ThemeToggle · StarPill · DashboardPill · CTABtn */}
+          {/* Fix #3: ThemeToggle is leftmost, never sandwiched between action buttons */}
+          <div className="dispatch-nav-cell dispatch-nav-cta" style={{ display: "flex", alignItems: "center", gap: scrolled ? 4 : 8 }}>
+            {!scrolled && <ThemeToggle theme={theme} onChange={setTheme} isDarkSection={isNavbarDark} />}
+            {!scrolled && <DashboardPill dark={isNavbarDark} />}
             <CTABtn />
           </div>
 

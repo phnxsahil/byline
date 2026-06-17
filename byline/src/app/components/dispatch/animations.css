@@ -40,8 +40,9 @@
 
 .dispatch-reveal {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  transform: translateY(12px);
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
@@ -55,8 +56,9 @@
 
 .dispatch-bento-card {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  transform: translateY(10px);
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
@@ -67,11 +69,11 @@
 
 /* Stagger delays — applied in JS via data-index */
 .dispatch-bento-card[data-index="0"] { transition-delay: 0ms;   }
-.dispatch-bento-card[data-index="1"] { transition-delay: 60ms;  }
-.dispatch-bento-card[data-index="2"] { transition-delay: 120ms; }
-.dispatch-bento-card[data-index="3"] { transition-delay: 180ms; }
-.dispatch-bento-card[data-index="4"] { transition-delay: 240ms; }
-.dispatch-bento-card[data-index="5"] { transition-delay: 300ms; }
+.dispatch-bento-card[data-index="1"] { transition-delay: 50ms;  }
+.dispatch-bento-card[data-index="2"] { transition-delay: 100ms; }
+.dispatch-bento-card[data-index="3"] { transition-delay: 150ms; }
+.dispatch-bento-card[data-index="4"] { transition-delay: 200ms; }
+.dispatch-bento-card[data-index="5"] { transition-delay: 250ms; }
 
 
 /* ── 4. Stamp rotation — CSS-only ────────────────────────────────────────── */
@@ -111,3 +113,46 @@
 .dispatch-cta-btn:active {
   transform: scale(0.99);
 }
+
+
+/* ── 6. Pulse dot — used in eyebrow / live indicators ─────────────────────── */
+
+@keyframes dispatch-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(0.92); }
+}
+
+.dispatch-pulse-dot {
+  animation: dispatch-pulse 2.2s ease-in-out infinite;
+}
+
+
+/* ── 7. Navbar entrance slide-down ────────────────────────────────────────── */
+
+@keyframes dispatch-slide-down {
+  from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.dispatch-nav {
+  animation: dispatch-slide-down 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+
+/* ── 8. Hero content fade-in ──────────────────────────────────────────────── */
+
+@keyframes dispatch-hero-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dispatch-hero-content > * {
+  opacity: 0;
+  animation: dispatch-hero-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.dispatch-hero-content > *:nth-child(1) { animation-delay: 0.1s; }
+.dispatch-hero-content > *:nth-child(2) { animation-delay: 0.2s; }
+.dispatch-hero-content > *:nth-child(3) { animation-delay: 0.4s; }
+.dispatch-hero-content > *:nth-child(4) { animation-delay: 0.6s; }
+.dispatch-hero-content > *:nth-child(5) { animation-delay: 0.8s; }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { Logo } from "./Logo";
 import {
   IconBrandLinkedin, IconBrandX, IconBrandReddit, IconBrandThreads,
@@ -7,6 +7,9 @@ import {
   IconSettings, IconCheck, IconClock, IconLoader2,
   IconArrowLeft, IconBolt, IconAdjustments,
 } from "@tabler/icons-react";
+import {
+  listDispatches, listProjects, createDispatch, getDrafts, patchDraft, streamGeneration, type DispatchRead, type DraftRead,
+} from "../../api";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -683,6 +686,44 @@ function BylinesTable({
 export function DashboardSection() {
   const [bylines, setBylines] = useState(RECENT_BYLINES);
   const [newMilestoneText, setNewMilestoneText] = useState("");
+  const [realDispatches, setRealDispatches] = useState<DispatchRead[]>([]);
+  const [realDrafts, setRealDrafts] = useState<Record<string, DraftRead[]>>({});
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [currentProjectId, setCurrentProjectId] = useState("");
+  const currentDispatchRef = useRef<string | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  // Fetch real dispatches + projects on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const projects = await listProjects();
+        if (projects.length > 0) setCurrentProjectId(projects[0].id);
+        const dispatches = await listDispatches();
+        setRealDispatches(dispatches);
+        // Fetch drafts for each dispatch
+        const draftsMap: Record<string, DraftRead[]> = {};
+        await Promise.all(dispatches.map(async (d) => {
+          try {
+            draftsMap[d.id] = await getDrafts(d.id);
+          } catch { /* ignore */ }
+        }));
+        setRealDrafts(draftsMap);
+        // Merge into bylines list
+        if (dispatches.length > 0) {
+          const realRows = dispatches.map((d, i) => ({
+            id: 1000 + i,
+            milestone: d.body,
+            platforms: d.suggested_platforms?.length ? d.suggested_platforms : ["LinkedIn"],
+            score: 0,
+            status: (d.hold_reason ? "flagged" : "draft") as PostStatus,
+            time: new Date(d.created_at).toLocaleDateString(),
+          }));
+          setBylines((prev) => [...realRows, ...prev]);
+        }
+      } catch { /* API not available, use mock data */ }
+    })();
+  }, []);
   
   const [platforms, setPlatforms] = useState({
     LinkedIn: true,
@@ -716,55 +757,124 @@ export function DashboardSection() {
   const toggleSkill = (name: string) =>
     setActiveSkills(prev => ({ ...prev, [name]: !prev[name] }));
 
-  const startPipeline = () => {
-    if (pipelineStep >= 0) return;
+  // Decorative pipeline animation (AgentPipeline "run" button)
+  const runPipelineAnimation = () => {
+    if (isGenerating) return;
     setAgentStatuses(["waiting", "waiting", "waiting", "waiting", "waiting"]);
-    setPipelineStep(0);
+    let step = 0;
+    const interval = setInterval(() => {
+      step++;
+      if (step > AGENTS.length) {
+        clearInterval(interval);
+        setAgentStatuses(["done", "done", "done", "done", "done"]);
+        return;
+      }
+      setAgentStatuses(prev => prev.map((s, i) =>
+        i === step - 1 ? "done" : i === step ? "running" : s
+      ));
+    }, 700);
+  };
+
+  const handleGenerationEvent = useCallback((event: Record<string, unknown>) => {
+    const platformMap: Record<string, number> = { strategist: 0, linkedin: 1, x: 2, reddit: 3, critic: 4 };
+    const node = event.node as string;
+    const status = event.status as string;
+    const idx = platformMap[node] ?? -1;
+
+    if (node === "strategist") {
+      setAgentStatuses(prev => prev.map((s, i) => i === 0 ? (status === "done" ? "done" : "running") : s));
+      if (status === "done") {
+        setTimeout(() => {
+          setAgentStatuses(prev => prev.map((s, i) => i === 0 ? "done" : "running"));
+        }, 300);
+      }
+    } else if (idx >= 1 && node !== "critic") {
+      if (status === "done") {
+        setAgentStatuses(prev => prev.map((s, i) => i === idx ? "done" : s));
+      }
+    } else if (node === "critic" && status === "done") {
+      setAgentStatuses(prev => prev.map(() => "done"));
+    }
+  }, []);
+
+  const startPipeline = async () => {
+    if (isGenerating || !newMilestoneText.trim()) return;
+    setIsGenerating(true);
+    setAgentStatuses(["running", "idle", "idle", "idle", "idle"]);
+
+    try {
+      const created = await createDispatch({
+        project_id: currentProjectId,
+        body: newMilestoneText,
+        source: "manual",
+      });
+
+      currentDispatchRef.current = created.id;
+
+      const newRow = {
+        id: Date.now(),
+        milestone: newMilestoneText,
+        platforms: created.suggested_platforms?.length ? created.suggested_platforms : ["LinkedIn"],
+        score: 0,
+        status: "draft" as PostStatus,
+        time: "Just now",
+      };
+      setBylines(prev => [newRow, ...prev]);
+      setNewMilestoneText("");
+
+      abortRef.current = streamGeneration(
+        created.id,
+        (event) => handleGenerationEvent(event),
+        () => { /* error */ },
+        () => {
+          setIsGenerating(false);
+          setAgentStatuses(prev => prev.map(() => "done"));
+          // Refresh drafts
+          getDrafts(created.id).then(drafts => {
+            setRealDrafts(prev => ({ ...prev, [created.id]: drafts }));
+          }).catch(() => {});
+        }
+      );
+    } catch {
+      setIsGenerating(false);
+      setAgentStatuses(["idle", "idle", "idle", "idle", "idle"]);
+    }
   };
 
   useEffect(() => {
-    if (pipelineStep < 0) return;
-    if (pipelineStep >= AGENTS.length) {
-      setAgentStatuses(["done", "done", "done", "done", "done"]);
-      setPipelineStep(-1);
-      
-      // If we had a typed milestone, insert it now!
-      if (newMilestoneText.trim()) {
-        const activePlats = Object.keys(platforms).filter(k => platforms[k as keyof typeof platforms]);
-        const newRow = {
-          id: Date.now(),
-          milestone: newMilestoneText,
-          platforms: activePlats.length > 0 ? activePlats : ["LinkedIn"],
-          score: parseFloat((8.2 + Math.random() * 1.4).toFixed(1)),
-          status: "draft" as PostStatus,
-          time: "Just now",
-        };
-        setBylines(prev => [newRow, ...prev]);
-        setNewMilestoneText("");
-      }
-      return;
-    }
-
-    setAgentStatuses(prev => {
-      const next = [...prev];
-      if (pipelineStep > 0) next[pipelineStep - 1] = "done";
-      next[pipelineStep] = "running";
-      return next;
-    });
-
-    timerRef.current = setTimeout(() => {
-      setPipelineStep(s => s + 1);
-    }, 700 + Math.random() * 400);
-
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      if (abortRef.current) abortRef.current.abort();
     };
-  }, [pipelineStep]);
+  }, []);
 
-  const handleOpenDraft = (milestone: string, platform: string, id: number) => {
+  const handleOpenDraft = async (milestone: string, platform: string, id: number) => {
     const matchedB = bylines.find(b => b.id === id);
     const status = matchedB ? matchedB.status : ("draft" as PostStatus);
 
+    // Try real API drafts first
+    const dispatchIdx = id >= 1000 ? id - 1000 : -1;
+    const realDispatch = dispatchIdx >= 0 && dispatchIdx < realDispatches.length
+      ? realDispatches[dispatchIdx] : null;
+
+    if (realDispatch && realDrafts[realDispatch.id]) {
+      const platformDraft = realDrafts[realDispatch.id].find(d =>
+        d.platform.toLowerCase() === platform.toLowerCase()
+      );
+      if (platformDraft) {
+        setSelectedDraft({
+          id,
+          milestone,
+          platform,
+          body: platformDraft.body,
+          score: platformDraft.critic_score ?? 0,
+          checks: [platformDraft.critic_note ? `note: ${platformDraft.critic_note}` : "generated"],
+          status,
+        });
+        return;
+      }
+    }
+
+    // Fall back to mock drafts
     const db = DRAFTS_DATABASE[milestone] || generateFallbackDrafts(milestone);
     const dft = db[platform] || generateFallbackDrafts(milestone)[platform] || {
       body: `Draft for ${platform} has been queued.`,
@@ -783,8 +893,25 @@ export function DashboardSection() {
     });
   };
 
-  const handleApproveDraft = () => {
+  const handleApproveDraft = async () => {
     if (!selectedDraft) return;
+
+    // Try to PATCH via API if we have a real draft
+    const dispatchIdx = selectedDraft.id >= 1000 ? selectedDraft.id - 1000 : -1;
+    const realDispatch = dispatchIdx >= 0 && dispatchIdx < realDispatches.length
+      ? realDispatches[dispatchIdx] : null;
+
+    if (realDispatch && realDrafts[realDispatch.id]) {
+      const platformDraft = realDrafts[realDispatch.id].find(d =>
+        d.platform.toLowerCase() === selectedDraft.platform.toLowerCase()
+      );
+      if (platformDraft) {
+        try {
+          await patchDraft(platformDraft.id, { status: "approved" });
+        } catch { /* fallback */ }
+      }
+    }
+
     setBylines(prev => prev.map(b => {
       if (b.id === selectedDraft.id) {
         return { ...b, status: "posted" as PostStatus };
@@ -860,7 +987,7 @@ export function DashboardSection() {
 
           {/* Agent pipeline */}
           <div className="byline-dash-card">
-            <AgentPipeline statuses={agentStatuses} step={pipelineStep} onRun={startPipeline} />
+            <AgentPipeline statuses={agentStatuses} step={pipelineStep} onRun={runPipelineAnimation} />
           </div>
 
           {/* Customization */}
@@ -974,31 +1101,31 @@ export function DashboardSection() {
               <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "rgba(255,255,255,0.25)" }}>Pipeline will auto-select best platforms</span>
               <button
                 onClick={startPipeline}
-                disabled={pipelineStep >= 0 || !newMilestoneText.trim()}
+                disabled={isGenerating || !newMilestoneText.trim()}
                 style={{
                   display: "flex", alignItems: "center", gap: 7, padding: "8px 18px",
-                  backgroundColor: (pipelineStep >= 0 || !newMilestoneText.trim()) ? "rgba(232,94,44,0.3)" : "#E85E2C",
-                  border: "none", borderRadius: 6, cursor: (pipelineStep >= 0 || !newMilestoneText.trim()) ? "default" : "pointer",
+                  backgroundColor: (isGenerating || !newMilestoneText.trim()) ? "rgba(232,94,44,0.3)" : "#E85E2C",
+                  border: "none", borderRadius: 6, cursor: (isGenerating || !newMilestoneText.trim()) ? "default" : "pointer",
                   fontFamily: "'IBM Plex Sans'", fontSize: 13, fontWeight: 500, color: "#F5F2EC",
                   transition: "background-color 0.12s ease",
                 }}
                 onMouseEnter={e => {
-                  if (pipelineStep < 0 && newMilestoneText.trim()) {
+                  if (!isGenerating && newMilestoneText.trim()) {
                     e.currentTarget.style.backgroundColor = "#C7501E";
                   }
                 }}
                 onMouseLeave={e => {
-                  if (pipelineStep < 0 && newMilestoneText.trim()) {
+                  if (!isGenerating && newMilestoneText.trim()) {
                     e.currentTarget.style.backgroundColor = "#E85E2C";
                   }
                 }}
               >
-                {pipelineStep >= 0 ? (
+                {isGenerating ? (
                   <IconLoader2 size={13} color="#F5F2EC" stroke={2} className="byline-spin" />
                 ) : (
                   <IconSend size={13} color="#F5F2EC" stroke={2} />
                 )}
-                {pipelineStep >= 0 ? "Bylining..." : "Publish"}
+                {isGenerating ? "Bylining..." : "Publish"}
               </button>
             </div>
           </div>

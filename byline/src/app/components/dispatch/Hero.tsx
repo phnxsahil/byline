@@ -335,7 +335,7 @@ export function Hero() {
         <div className="dispatch-hero-grid">
 
           {/* ── Left column ───────────────────────────────────────────────── */}
-          <div>
+          <div className="dispatch-hero-content">
 
             {/* Eyebrow */}
             <div style={{ marginBottom: 22 }}>
@@ -349,7 +349,7 @@ export function Hero() {
                   display: "block",
                   fontFamily: "Space Grotesk, system-ui, sans-serif",
                   fontSize: 40,
-                  fontWeight: 500,
+                  fontWeight: 700,
                   color: "var(--text-primary)",
                   letterSpacing: "-0.04em",
                   lineHeight: 1.08,
@@ -363,7 +363,7 @@ export function Hero() {
                   display: "block",
                   fontFamily: "Space Grotesk, system-ui, sans-serif",
                   fontSize: 40,
-                  fontWeight: 500,
+                  fontWeight: 700,
                   color: "#E85E2C",
                   letterSpacing: "-0.04em",
                   lineHeight: 1.08,
@@ -373,10 +373,10 @@ export function Hero() {
               </span>
             </h1>
 
-            {/* Subheadline */}
+            {/* Sub + watcher line */}
             <p
               style={{
-                margin: "0 0 30px",
+                margin: "0 0 8px",
                 fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
                 fontSize: 15,
                 fontWeight: 400,
@@ -388,14 +388,29 @@ export function Hero() {
             >
               One milestone. Five specialized agents. Your voice — published natively across LinkedIn, X, Reddit, and Threads.
             </p>
+            <p
+              style={{
+                margin: "0 0 24px",
+                fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+                fontSize: 13,
+                fontWeight: 400,
+                color: "var(--text-tertiary, var(--text-secondary))",
+                maxWidth: 400,
+                lineHeight: 1.6,
+                opacity: 0.72,
+                transition: "color 0.3s ease",
+              }}
+            >
+              Or connect your GitHub — Byline watches your commits and surfaces drafts before you even think to post.
+            </p>
 
-            {/* CTA row */}
+            {/* CTA row — Fix #5: 18px gap to trust badges (was 26px) */}
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
                 gap: 10,
-                marginBottom: 26,
+                marginBottom: 18,
                 flexWrap: "wrap",
               }}
             >
@@ -403,21 +418,17 @@ export function Hero() {
               <CTAGhost />
             </div>
 
-            {/* Trust bar */}
+            {/* Trust bar — Fix #6: mid-dot separators instead of faint icons */}
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 16,
+                gap: 0,
                 flexWrap: "wrap",
               }}
             >
-              {TRUST.map(({ Icon, label }) => (
-                <div
-                  key={label}
-                  style={{ display: "flex", alignItems: "center", gap: 6 }}
-                >
-                  <Icon size={13} color="var(--accent)" stroke={1.75} style={{ flexShrink: 0 }} />
+              {TRUST.map(({ label }, idx) => (
+                <React.Fragment key={label}>
                   <span
                     style={{
                       fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
@@ -430,7 +441,10 @@ export function Hero() {
                   >
                     {label}
                   </span>
-                </div>
+                  {idx < TRUST.length - 1 && (
+                    <span style={{ margin: "0 8px", color: "var(--border)", fontSize: 14 }}>·</span>
+                  )}
+                </React.Fragment>
               ))}
             </div>
 

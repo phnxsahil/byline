@@ -59,10 +59,8 @@ nav{
   position: sticky;
   top: 12px;
   z-index: 1000;
-  background: rgba(250, 250, 248, 0.92);
-  backdrop-filter: blur(12px);
-  border: 0.5px solid var(--rule);
-  border-radius: var(--dispatch-radius-card);
+  background: transparent;
+  border-bottom: 0.5px solid transparent;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -71,6 +69,9 @@ nav{
   max-width: 1080px;
   margin: 12px auto 0;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+nav.nav-scrolled-border {
+  border-bottom-color: var(--rule);
 }
 .n-left{display:flex;align-items:center;gap:1rem; transition: all 0.4s ease;}
 .logo{font-family:var(--sg);font-weight:500;font-size:1rem;letter-spacing:-.03em; transition: color 0.4s ease;}
@@ -95,12 +96,22 @@ nav{
   border-bottom-color: var(--dispatch-accent);
 }
 .n-right{display:flex;align-items:center;gap:.6rem}
+
+/* Dark mode toggle */
+.dark-toggle{
+  display:flex;align-items:center;justify-content:center;
+  width:28px;height:28px;
+  border:.5px solid var(--rule);background:none;
+  cursor:pointer;transition:all .2s;color:var(--carbon);
+  font-size:.85rem;line-height:1;
+}
+.dark-toggle:hover{border-color:rgba(26,25,22,.25);color:var(--ink)}
+
 .gh-btn{
   display:flex;align-items:center;gap:.4rem;
   font-family:var(--mono);font-size:.63rem;color:var(--carbon);
   border:.5px solid var(--rule);padding:.35rem .75rem;background:none;
   cursor:pointer;transition:all .12s;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 .gh-btn:hover{color:var(--ink);border-color:rgba(26,25,22,.2)}
 .cta-btn{
@@ -113,6 +124,53 @@ nav{
 .cta-btn.wire{background:var(--wire)}
 .cta-btn.wire:hover{background:var(--wire-d)}
 
+/* Hamburger button (mobile only) */
+.hamburger{
+  display:none;flex-direction:column;justify-content:center;gap:4px;
+  width:32px;height:32px;background:none;border:.5px solid var(--rule);
+  cursor:pointer;padding:6px;transition:border-color .2s;
+}
+.hamburger:hover{border-color:rgba(26,25,22,.25)}
+.hamburger span{display:block;height:1px;background:var(--carbon);transition:all .25s;}
+
+/* Mobile nav drawer */
+.mobile-nav-drawer{
+  display:none;
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:var(--paper);
+  z-index:999;
+  padding:5rem 2rem 2rem;
+  flex-direction:column;
+  gap:0;
+  overflow-y:auto;
+}
+.mobile-nav-drawer.open{display:flex;}
+.mobile-nav-close{
+  position:absolute;top:1.1rem;right:1.5rem;
+  font-family:var(--mono);font-size:.8rem;color:var(--carbon);
+  background:none;border:.5px solid var(--rule);padding:.3rem .6rem;
+  cursor:pointer;
+}
+.mobile-nav-drawer a{
+  font-family:var(--mono);font-size:.88rem;color:var(--carbon);
+  padding:.85rem 0;border-bottom:.5px solid var(--rule);
+  display:block;transition:color .12s;
+}
+.mobile-nav-drawer a:last-of-type{border-bottom:none}
+.mobile-nav-drawer a:hover{color:var(--ink)}
+.mobile-nav-actions{
+  display:flex;flex-direction:column;gap:.65rem;
+  margin-top:1.5rem;
+}
+.mobile-dark-row{
+  display:flex;align-items:center;gap:.75rem;
+  padding:.65rem 0;border-bottom:.5px solid var(--rule);
+  font-family:var(--mono);font-size:.75rem;color:var(--carbon);
+}
+.mobile-dark-row button{
+  margin-left:auto;
+}
+
 /* Scrolled/Shrunk Navbar State */
 nav.scrolled {
   width: 90%;
@@ -120,12 +178,13 @@ nav.scrolled {
   padding: 0.45rem 1.25rem;
   border-radius: 50px;
   background: rgba(26, 25, 22, 0.98);
-  border-color: rgba(255, 255, 255, 0.15);
+  border-bottom-color: transparent;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.22);
 }
 nav.scrolled .n-links,
 nav.scrolled .gh-btn,
-nav.scrolled .yc-pill {
+nav.scrolled .yc-pill,
+nav.scrolled .dark-toggle {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -144,6 +203,13 @@ nav.scrolled .cta-btn {
 }
 nav.scrolled .cta-btn:hover {
   background: var(--wire-d);
+}
+
+/* Mobile responsive — hamburger */
+@media(max-width:768px){
+  .n-links,.gh-btn,.yc-pill,.dark-toggle{display:none!important}
+  .hamburger{display:flex}
+  nav{padding:0.5rem 1rem}
 }
 
 /* ══ ANNOUNCE ════════════════════════════════════════════════════════════ */
@@ -168,12 +234,13 @@ nav.scrolled .cta-btn:hover {
 .kicker-dot{width:7px;height:7px;border-radius:50%;background:var(--mint);animation:kblink 2s ease-in-out infinite}
 @keyframes kblink{0%,100%{opacity:1}50%{opacity:.25}}
 .h1{
-  font-family:var(--sg);font-size:clamp(2.4rem,4.5vw,3.8rem);font-weight:500;
+  font-family:var(--sg);font-size:clamp(2.4rem,4.5vw,3.8rem);font-weight:700;
   line-height:1.05;letter-spacing:-.05em;margin-bottom:1.35rem;
 }
-.h1 .accent{color:var(--stamp)}
+.h1 .accent{color:var(--stamp);font-weight:700}
 .h-sub{font-size:.95rem;color:var(--carbon);line-height:1.75;margin-bottom:2.25rem;max-width:420px}
-.h-actions{display:flex;align-items:center;gap:1rem;margin-bottom:1.1rem}
+.h-sub-watcher{font-size:.83rem;color:var(--dark-c);line-height:1.65;margin-top:.6rem;max-width:420px}
+.h-actions{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
 .btn-lg{
   font-family:var(--mono);font-size:.72rem;padding:.72rem 1.5rem;
   cursor:pointer;letter-spacing:.02em;border:none;
@@ -186,9 +253,16 @@ nav.scrolled .cta-btn:hover {
   color:var(--carbon);transition:all .15s;
 }
 .btn-ghost:hover{border-color:rgba(26,25,22,.25);color:var(--ink)}
-.h-trust{display:flex;align-items:center;gap:1.5rem}
-.trust-item{font-family:var(--mono);font-size:.6rem;color:var(--carbon);display:flex;align-items:center;gap:.35rem}
-.trust-dot{width:4px;height:4px;border-radius:50%;background:var(--mint)}
+/* trust badges — mid-dot separator style */
+.h-trust{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin-top:0}
+.trust-item{
+  font-family:var(--mono);font-size:.6rem;color:var(--carbon);
+  display:flex;align-items:center;
+}
+.trust-sep{
+  display:inline-block;margin:0 .55rem;
+  color:var(--dispatch-text-tertiary);font-size:.75rem;line-height:1;
+}
 
 /* ══ HERO DEMO BOX ════════════════════════════════════════════════════════ */
 .hero-demo{
@@ -305,13 +379,29 @@ nav.scrolled .cta-btn:hover {
 /* ══ PROBLEM SECTION ══════════════════════════════════════════════════════ */
 .problem{padding:5rem 2.5rem;max-width:1200px;margin:0 auto}
 .problem-head{margin-bottom:3rem}
-.problem-head .eyebrow{margin-bottom:.85rem}
-.problem-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5px;background:var(--rule);border:.5px solid var(--rule)}
-.prob{background:var(--paper);padding:2rem 1.75rem;transition:background .15s}
+.problem-head .eyebrow{margin-bottom:8px} /* tight label-to-headline gap */
+.problem-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:.5px;background:var(--rule);border:.5px solid var(--rule);
+  align-items:stretch; /* fix #8: uniform card heights */
+}
+.prob{
+  background:var(--paper);padding:24px; /* fix #10: 24px all sides */
+  transition:background .15s;
+  display:flex;flex-direction:column; /* stretch fill */
+  min-height:200px; /* fix #8: uniform baseline height */
+}
 .prob:hover{background:var(--paper-r)}
-.prob-n{font-family:var(--mono);font-size:.6rem;color:var(--stamp);margin-bottom:.75rem;letter-spacing:.05em}
-.prob-t{font-family:var(--sg);font-size:.92rem;font-weight:500;margin-bottom:.45rem}
-.prob-b{font-size:.78rem;color:var(--carbon);line-height:1.65}
+/* fix #10: standardized icon→title→body spacing */
+.prob-n{
+  font-family:var(--mono);font-size:.6rem;color:var(--stamp);
+  letter-spacing:.05em;
+  display:flex;align-items:center;gap:12px; /* 12px icon-to-title gap */
+  margin-bottom:8px; /* 8px title-to-body gap (applied on prob-t below) */
+}
+.prob-icon{width:20px;height:20px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.prob-t{font-family:var(--sg);font-size:.92rem;font-weight:500;margin-bottom:8px} /* fix #10 */
+.prob-b{font-size:.78rem;color:var(--carbon);line-height:1.65;flex:1}
 
 /* ══ DARK DEMO SECTION ════════════════════════════════════════════════════ */
 .dark-section{background:var(--dark);color:var(--dark-ink);padding:5rem 2.5rem}
@@ -723,11 +813,65 @@ nav.scrolled .cta-btn:hover {
 .tcard-n{font-family:var(--sg);font-size:.78rem;font-weight:500;margin-bottom:.1rem}
 .tcard-r{font-family:var(--mono);font-size:.57rem;color:var(--carbon)}
 
+/* ══ WATCHER SECTION ══════════════════════════════════════════════════════ */
+.watcher-section{
+  background:var(--paper-r);padding:5rem 2.5rem;
+  border-top:.5px solid var(--rule);border-bottom:.5px solid var(--rule);
+}
+.watcher-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.watcher-text .eyebrow{margin-bottom:8px}
+.watcher-text .section-head{margin-top:.5rem;margin-bottom:1rem}
+.watcher-text p{font-size:.88rem;color:var(--carbon);line-height:1.75;margin-bottom:1.5rem;max-width:440px}
+.watcher-checks{display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.75rem}
+.watcher-check{
+  font-family:var(--mono);font-size:.68rem;color:var(--carbon);
+  display:flex;align-items:flex-start;gap:.55rem;line-height:1.5;
+}
+.watcher-check .wc-tick{color:var(--mint);flex-shrink:0;margin-top:.05rem}
+.watcher-terminal{
+  background:#0D0C0A;border:.5px solid rgba(255,255,255,.1);
+  font-family:var(--mono);font-size:.65rem;line-height:1.75;color:#C8C5C0;
+  overflow:hidden;
+}
+.wt-bar{
+  display:flex;align-items:center;gap:.4rem;
+  padding:.5rem .8rem;border-bottom:.5px solid rgba(255,255,255,.06);
+  background:rgba(255,255,255,.025);
+}
+.wt-bar-title{font-size:.56rem;color:#5B5855;flex:1;text-align:center;font-family:var(--mono)}
+.wt-body{padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.7rem}
+.wt-row{
+  background:rgba(255,255,255,.03);border:.5px solid rgba(255,255,255,.06);
+  padding:.65rem .8rem;font-size:.62rem;
+}
+.wt-row-label{font-size:.5rem;color:#5B5855;letter-spacing:.07em;margin-bottom:.3rem}
+.wt-commit{color:#9C97F2;margin-bottom:.2rem}
+.wt-arrow{color:#5B5855;font-size:.58rem;margin:.4rem 0;padding-left:.2rem}
+.wt-detected{color:#7FCBA4}
+.wt-draft{
+  display:flex;align-items:center;gap:.5rem;
+  background:rgba(82,71,204,.08);border:.5px solid rgba(82,71,204,.2);
+  padding:.5rem .8rem;font-size:.62rem;
+}
+.wt-draft-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--stamp);
+  animation:kblink 1.2s ease-in-out infinite;flex-shrink:0;
+}
+.wt-draft-text{color:#9C97F2}
+@media(max-width:900px){
+  .watcher-inner{grid-template-columns:1fr}
+}
+
 /* ══ OPEN SOURCE SECTION ══════════════════════════════════════════════════ */
 .oss-section{
   background:var(--ink);color:var(--paper);padding:5rem 2.5rem;
 }
 .oss-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start}
+.oss-founder-quote{
+  font-style:italic;font-size:.82rem;color:rgba(245,242,236,.5);
+  line-height:1.7;margin-bottom:1.5rem;
+  padding:.75rem 1rem;border-left:2px solid rgba(245,242,236,.15);
+}
 .oss-text .eyebrow{color:rgba(245,242,236,.5);margin-bottom:.85rem}
 .oss-text .section-head{color:var(--paper);margin-bottom:1rem;font-size:2rem}
 .oss-text p{font-size:.85rem;color:rgba(245,242,236,.6);line-height:1.7;margin-bottom:1.5rem}
@@ -956,7 +1100,7 @@ footer{
   Phase 0 ships this weekend — <span class="a-link">follow the build log →</span>
 </div>
 
-<nav>
+<nav id="main-nav">
   <div class="n-left">
     <div class="logo">dispatch<span>.</span></div>
   </div>
@@ -964,18 +1108,45 @@ footer{
     <a href="#demo">demo</a>
     <a href="#features">features</a>
     <a href="#pricing">pricing</a>
-    <a href="javascript:void(0)" onclick="openCreditsModal()" class="credits-link">Learn how to get more credits</a>
+    <a href="javascript:void(0)" onclick="openCreditsModal()" class="credits-link">credits</a>
     <a href="https://github.com" target="_blank">github</a>
     <a href="#">docs</a>
   </div>
   <div class="n-right">
+    <button class="dark-toggle" id="dark-toggle-btn" title="Toggle dark mode" onclick="toggleDarkMode()">☽</button>
     <button class="gh-btn">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.167 6.839 9.49.5.09.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.268 2.75 1.026A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.337 1.909-1.294 2.747-1.026 2.747-1.026.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
       ★ <span id="gh-stars">312</span>
     </button>
     <button class="cta-btn">join waitlist</button>
+    <!-- Mobile hamburger -->
+    <button class="hamburger" id="hamburger-btn" onclick="openMobileNav()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- Mobile nav drawer -->
+<div class="mobile-nav-drawer" id="mobile-nav-drawer">
+  <button class="mobile-nav-close" onclick="closeMobileNav()">[close]</button>
+  <div class="mobile-dark-row">
+    <span>theme</span>
+    <button class="dark-toggle" onclick="toggleDarkMode()">☽</button>
+  </div>
+  <a href="#demo" onclick="closeMobileNav()">demo</a>
+  <a href="#features" onclick="closeMobileNav()">features</a>
+  <a href="#pricing" onclick="closeMobileNav()">pricing</a>
+  <a href="#" onclick="closeMobileNav()">docs</a>
+  <a href="https://github.com" target="_blank" onclick="closeMobileNav()">github ↗</a>
+  <div class="mobile-nav-actions">
+    <button class="gh-btn" style="width:100%;justify-content:center">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.167 6.839 9.49.5.09.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.268 2.75 1.026A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.337 1.909-1.294 2.747-1.026 2.747-1.026.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.741 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+      ★ 312 stars on GitHub
+    </button>
+    <button class="cta-btn" style="width:100%;text-align:center;padding:.65rem 1rem" onclick="document.querySelector('.wl-form').scrollIntoView({behavior:'smooth'});closeMobileNav()">join waitlist</button>
+    <button class="btn-ghost" style="width:100%;text-align:center" onclick="closeMobileNav()">read docs</button>
+  </div>
+</div>
 
 <!-- ════ HERO ════ -->
 <section class="hero">
@@ -986,14 +1157,17 @@ footer{
     </div>
     <h1 class="h1">Ship things.<br><span class="accent">Dispatch the rest.</span></h1>
     <p class="h-sub">The personal wire service for builders. Log a 30-second update about what you shipped. Dispatch remembers your projects and writes platform-native posts for LinkedIn, X, Reddit, and Threads — in your voice, without the reformatting tax.</p>
+    <p class="h-sub-watcher">Or connect your GitHub — Dispatch watches your commits and surfaces drafts before you even think to post.</p>
     <div class="h-actions">
       <button class="btn-lg" onclick="document.querySelector('.wl-form').scrollIntoView({behavior:'smooth'})">join the waitlist</button>
       <button class="btn-ghost" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">see how it works</button>
     </div>
     <div class="h-trust">
-      <div class="trust-item"><span class="trust-dot"></span>MIT open source</div>
-      <div class="trust-item"><span class="trust-dot"></span>LangGraph + Claude</div>
-      <div class="trust-item"><span class="trust-dot"></span>self-hostable</div>
+      <div class="trust-item">Self-hostable</div>
+      <span class="trust-sep">·</span>
+      <div class="trust-item">LangGraph + Claude</div>
+      <span class="trust-sep">·</span>
+      <div class="trust-item">Composio distribution</div>
     </div>
   </div>
 
@@ -1062,26 +1236,34 @@ footer{
 <section class="problem reveal">
   <div class="problem-head">
     <div class="eyebrow">the problem</div>
-    <h2 class="section-head" style="margin-top:.85rem">Building in public<br>shouldn't be a second job.</h2>
+    <h2 class="section-head">Building in public<br>shouldn't be a second job.</h2>
   </div>
   <div class="problem-grid">
     <div class="prob">
-      <div class="prob-n">01 — THE MEMORY GAP</div>
+      <div class="prob-n">
+        <span class="prob-icon">⊘</span>01 — THE MEMORY GAP
+      </div>
       <div class="prob-t">Every session starts from zero</div>
       <div class="prob-b">Buffer, Typefully, Hootsuite — none of them know your tech stack, your project history, or what you posted 2 weeks ago. You re-explain context every time. The model generates blind.</div>
     </div>
     <div class="prob">
-      <div class="prob-n">02 — VOICE DECAY</div>
+      <div class="prob-n">
+        <span class="prob-icon">⊘</span>02 — VOICE DECAY
+      </div>
       <div class="prob-t">AI output sounds like AI output</div>
       <div class="prob-b">"Excited to share," "game-changer," "thrilled to announce." AI rewriting tools have no memory of how you actually write. The result sounds like a press release, not a person.</div>
     </div>
     <div class="prob">
-      <div class="prob-n">03 — FORMAT FATIGUE</div>
+      <div class="prob-n">
+        <span class="prob-icon">⊘</span>03 — FORMAT FATIGUE
+      </div>
       <div class="prob-t">Four platforms, four rewrites, four copy-pastes</div>
       <div class="prob-b">LinkedIn wants a 1200-char story. X wants compression. Reddit will shadow-ban you for sounding promotional. Threads is a text to people who already know you. None of this is the same post.</div>
     </div>
     <div class="prob">
-      <div class="prob-n">04 — ZERO STRATEGY</div>
+      <div class="prob-n">
+        <span class="prob-icon">⊘</span>04 — ZERO STRATEGY
+      </div>
       <div class="prob-t">No one decides what's actually worth posting</div>
       <div class="prob-b">Rewriting tools assume every update deserves a post. Nothing decides the angle, checks whether you covered this topic 3 weeks ago, or tells you to hold this one and combine it with the next update.</div>
     </div>
@@ -1459,11 +1641,48 @@ footer{
   </div>
 </section>
 
+<!-- ════ THE WATCHER ════ -->
+<section class="watcher-section reveal">
+  <div class="watcher-inner">
+    <div class="watcher-text">
+      <div class="eyebrow">the watcher</div>
+      <h2 class="section-head">It watches while you build.</h2>
+      <p>Connect your GitHub. Dispatch reads your commits, skips the chores, and taps you when something's worth saying. No prompts. No copy-paste. Just: you shipped something, here's your draft.</p>
+      <div class="watcher-checks">
+        <div class="watcher-check"><span class="wc-tick">✓</span>Detects feature commits, new releases, significant PRs</div>
+        <div class="watcher-check"><span class="wc-tick">✓</span>Filters out chore, deps, lint, format, bump automatically</div>
+        <div class="watcher-check"><span class="wc-tick">✓</span>Surfaces a draft — not a notification</div>
+      </div>
+    </div>
+    <div class="watcher-terminal">
+      <div class="wt-bar">
+        <div style="width:8px;height:8px;border-radius:50%;background:#FF5F57"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:#FFBD2E"></div>
+        <div style="width:8px;height:8px;border-radius:50%;background:#28CA41"></div>
+        <div class="wt-bar-title">github webhook · dispatch watcher</div>
+      </div>
+      <div class="wt-body">
+        <div class="wt-row">
+          <div class="wt-row-label">INCOMING COMMIT</div>
+          <div class="wt-commit">feat: added semantic search to fltrd.tech using pgvector</div>
+        </div>
+        <div class="wt-arrow">↓ filtering commit type...</div>
+        <div class="wt-arrow" style="color:#7FCBA4">→ Dispatch detected something worth saying</div>
+        <div class="wt-draft">
+          <span class="wt-draft-dot"></span>
+          <span class="wt-draft-text">draft ready · strategist queued · fltrd.tech</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ════ OPEN SOURCE ════ -->
 <section class="oss-section">
   <div class="oss-inner">
     <div class="oss-text">
       <div class="eyebrow">open source</div>
+      <div class="oss-founder-quote">"I shipped pgvector on fltrd.tech and forgot to post about it for three weeks. Dispatch is what I built to stop that from happening. — Sahil"</div>
       <h2 class="section-head" style="margin-top:.85rem">Built in public.<br>Ship it yourself.</h2>
       <p>Dispatch is MIT-licensed. Self-host with <code style="font-family:var(--mono);font-size:.78rem;background:rgba(245,242,236,.08);padding:.1rem .35rem">docker compose up</code> in under 5 minutes. Bring your own API keys.</p>
       <div class="oss-stats">
@@ -1742,15 +1961,47 @@ document.getElementById('wl-btn').addEventListener('click',function(){
   }
 });
 
-/* ── SCROLL NAVBAR SHRINKS ── */
+/* ── SCROLL NAVBAR: shrink on scroll + border on mild scroll ── */
 window.addEventListener('scroll', function() {
   const navEl = document.querySelector('nav');
   if (window.scrollY > 40) {
     navEl.classList.add('scrolled');
+    navEl.classList.remove('nav-scrolled-border');
+  } else if (window.scrollY > 10) {
+    navEl.classList.remove('scrolled');
+    navEl.classList.add('nav-scrolled-border');
   } else {
     navEl.classList.remove('scrolled');
+    navEl.classList.remove('nav-scrolled-border');
   }
 });
+
+/* ── MOBILE NAV ── */
+function openMobileNav() {
+  document.getElementById('mobile-nav-drawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMobileNav() {
+  document.getElementById('mobile-nav-drawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── DARK MODE TOGGLE ── */
+function toggleDarkMode() {
+  document.body.classList.toggle('dark-mode');
+  const isDark = document.body.classList.contains('dark-mode');
+  document.querySelectorAll('.dark-toggle').forEach(btn => {
+    btn.textContent = isDark ? '☀' : '☽';
+  });
+  localStorage.setItem('dispatch-theme', isDark ? 'dark' : 'light');
+}
+// Restore saved theme
+(function(){
+  if(localStorage.getItem('dispatch-theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+    document.querySelectorAll('.dark-toggle').forEach(btn => btn.textContent = '☀');
+  }
+})();
 
 /* ── CREDITS MODAL CONTROLS ── */
 function openCreditsModal() {

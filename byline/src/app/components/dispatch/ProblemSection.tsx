@@ -50,10 +50,11 @@ function ProblemCard({
       style={{
         backgroundColor: hov ? "var(--surface-secondary)" : "var(--surface)",
         borderRadius: 12,
-        padding: 20,
+        padding: 24,
         display: "flex",
         flexDirection: "column",
         gap: 12,
+        minHeight: 180,
         border: `0.5px solid ${hov ? "var(--text-primary)" : "var(--border)"}`,
         transform: hov ? "translateY(-2px)" : "translateY(0)",
         boxShadow: hov ? "0 8px 20px rgba(15,15,13,0.04)" : "none",
@@ -109,6 +110,7 @@ export function ProblemSection() {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 12px;
+          align-items: stretch;
         }
         @media (max-width: 767px) {
           .dispatch-problem-inner {
@@ -133,7 +135,7 @@ export function ProblemSection() {
             opacity: 0.7,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
-            marginBottom: 20,
+            marginBottom: 8,
             transition: "color 0.3s ease",
           }}
         >

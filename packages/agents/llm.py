@@ -16,22 +16,50 @@ def _extract_json_block(text: str) -> dict[str, Any]:
     return json.loads(cleaned[start : end + 1])
 
 
-async def call_text_model(system_prompt: str, user_prompt: str, max_tokens: int = 1200) -> str:
+async def _call_anthropic(system_prompt: str, user_prompt: str, max_tokens: int) -> str | None:
     api_key = os.getenv("ANTHROPIC_API_KEY")
     if not api_key:
-        raise RuntimeError("ANTHROPIC_API_KEY is not configured")
+        return None
+    try:
+        from anthropic import AsyncAnthropic
+        client = AsyncAnthropic(api_key=api_key)
+        response = await client.messages.create(
+            model="claude-sonnet-4-6",
+            system=system_prompt,
+            max_tokens=max_tokens,
+            messages=[{"role": "user", "content": user_prompt}],
+        )
+        parts = [part.text for part in response.content if getattr(part, "type", None) == "text"]
+        return "".join(parts).strip()
+    except Exception:
+        return None
 
-    from anthropic import AsyncAnthropic
 
-    client = AsyncAnthropic(api_key=api_key)
-    response = await client.messages.create(
-        model="claude-sonnet-4-6",
-        system=system_prompt,
-        max_tokens=max_tokens,
-        messages=[{"role": "user", "content": user_prompt}],
-    )
-    parts = [part.text for part in response.content if getattr(part, "type", None) == "text"]
-    return "".join(parts).strip()
+async def _call_gemini(system_prompt: str, user_prompt: str, max_tokens: int) -> str | None:
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        return None
+    try:
+        from google import genai
+        client = genai.Client(api_key=api_key)
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=f"{system_prompt}\n\n{user_prompt}",
+            config={"max_output_tokens": max_tokens},
+        )
+        return response.text.strip()
+    except Exception:
+        return None
+
+
+async def call_text_model(system_prompt: str, user_prompt: str, max_tokens: int = 1200) -> str:
+    result = await _call_anthropic(system_prompt, user_prompt, max_tokens)
+    if result is not None:
+        return result
+    result = await _call_gemini(system_prompt, user_prompt, max_tokens)
+    if result is not None:
+        return result
+    raise RuntimeError("No LLM provider configured. Set ANTHROPIC_API_KEY or GEMINI_API_KEY in .env")
 
 
 async def call_json_model(system_prompt: str, user_prompt: str, max_tokens: int = 1200) -> dict[str, Any]:

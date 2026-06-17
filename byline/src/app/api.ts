@@ -62,6 +62,19 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json();
 }
 
+export async function createProject(payload: {
+  name: string;
+  slug: string;
+  description: string;
+  stack?: string[];
+  repo_url?: string;
+}): Promise<Project> {
+  return request<Project>("/projects", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function listProjects(): Promise<Project[]> {
   return request<Project[]>("/projects");
 }

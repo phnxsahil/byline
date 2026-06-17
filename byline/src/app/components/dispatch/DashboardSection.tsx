@@ -6,13 +6,14 @@ import {
   IconCheck, IconClock, IconLoader2, IconBolt,
 } from "@tabler/icons-react";
 import {
-  listDispatches, createDispatch, getDrafts, patchDraft, streamGeneration, type DispatchRead, type DraftRead,
+  listDispatches, listProjects, createDispatch, getDrafts, patchDraft, streamGeneration, getVoiceProfile, type DispatchRead, type DraftRead,
 } from "../../api";
 import { DashboardSidebar } from "./DashboardSidebar";
 import { StatusBar } from "./StatusBar";
 import { CommandPalette } from "./CommandPalette";
 import { ProjectDetailPage } from "./ProjectDetailPage";
 import { VoiceProfileSection } from "./VoiceProfileSection";
+import { OnboardingWizard } from "./OnboardingWizard";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -743,6 +744,26 @@ export function DashboardSection() {
       } catch { /* API not available, use mock data */ }
     })();
   }, []);
+
+  // ── Onboarding check ───────────────────────────────────────────────────────
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  useEffect(() => {
+    (async () => {
+      try {
+        const [projectsRes, voiceRes] = await Promise.all([
+          listProjects(),
+          getVoiceProfile().catch(() => null),
+        ]);
+        if (projectsRes.length === 0 && !voiceRes) {
+          setShowOnboarding(true);
+        }
+      } catch {
+        // If API unavailable, check localStorage flag
+        const dismissed = localStorage.getItem("byline-onboarding-dismissed");
+        if (!dismissed) setShowOnboarding(true);
+      }
+    })();
+  }, []);
   
   const [platforms, setPlatforms] = useState({
     LinkedIn: true,
@@ -943,6 +964,13 @@ export function DashboardSection() {
   return (
     <section style={{ backgroundColor: "var(--bg-terminal)", height: "100vh", display: "flex", flexDirection: "column", transition: "background-color 0.3s ease" }}>
       <style dangerouslySetInnerHTML={{ __html: DASH_STYLES }} />
+
+      {showOnboarding && (
+        <OnboardingWizard
+          onComplete={() => { setShowOnboarding(false); localStorage.setItem("byline-onboarding-dismissed", "true"); }}
+          onSkip={() => { setShowOnboarding(false); localStorage.setItem("byline-onboarding-dismissed", "true"); }}
+        />
+      )}
 
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         <div className="byline-dash-grid">

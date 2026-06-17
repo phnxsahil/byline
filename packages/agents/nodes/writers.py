@@ -43,7 +43,7 @@ async def _write(platform: Platform, state: DispatchState) -> dict:
         result = await call_json_model(system_prompt, user_prompt, max_tokens=1200)
     except Exception:
         body = fallback_writer(platform, state["dispatch_body"], state["project"], state["angle"] or "", state["key_points"])
-        result = {"content": body.strip(), "char_count": len(body.strip())}
+        result = {"content": body.strip(), "body": body.strip(), "char_count": len(body.strip())}
 
     draft = {
         "critic_score": 0,

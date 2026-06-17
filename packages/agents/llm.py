@@ -25,7 +25,7 @@ async def call_text_model(system_prompt: str, user_prompt: str, max_tokens: int 
 
     client = AsyncAnthropic(api_key=api_key)
     response = await client.messages.create(
-        model="claude-3-5-sonnet-20241022",
+        model="claude-sonnet-4-6",
         system=system_prompt,
         max_tokens=max_tokens,
         messages=[{"role": "user", "content": user_prompt}],

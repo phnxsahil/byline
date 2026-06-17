@@ -9,9 +9,20 @@ they modify — they never mutate the input.
 from __future__ import annotations
 
 import asyncio
-from typing import TypedDict, NotRequired
+from typing import Annotated, Any, TypedDict, NotRequired
 
 from .constants import Platform
+
+
+def merge_drafts(current: dict[str, Any], updates: dict[str, Any]) -> dict[str, Any]:
+    """Merge multiple concurrent draft updates into one dict."""
+    merged = dict(current)
+    for key, value in updates.items():
+        if isinstance(value, dict) and key in merged and isinstance(merged[key], dict):
+            merged[key].update(value)
+        else:
+            merged[key] = value
+    return merged
 
 
 class DraftResult(TypedDict):
@@ -48,5 +59,6 @@ class DispatchState(TypedDict):
 
     # ── Set by writer + critic nodes ──────────────────────────────────────────
     # Keys are platform names: "linkedin", "x", "reddit", "threads"
-    drafts: dict[Platform, DraftResult]
+    # Uses Annotated with merge_drafts to handle concurrent updates
+    drafts: Annotated[dict[Platform, DraftResult], merge_drafts]
     critic_results: dict[str, dict]   # {platform: {overall_score, scores, flags, verdict}}

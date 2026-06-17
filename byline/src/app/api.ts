@@ -100,6 +100,29 @@ export async function listArcs(): Promise<NarrativeArc[]> {
   return request<NarrativeArc[]>("/narrative-arcs");
 }
 
+export interface VoiceProfileRead {
+  id: string;
+  platform: string;
+  body: string;
+  version: number;
+  is_active: boolean;
+  generated_at: string;
+}
+
+export async function getVoiceProfile(): Promise<VoiceProfileRead> {
+  return request<VoiceProfileRead>("/voice-profile");
+}
+
+export async function createVoiceProfile(payload: {
+  raw_posts: string;
+  platform?: string;
+}): Promise<VoiceProfileRead> {
+  return request<VoiceProfileRead>("/voice-profile", {
+    method: "POST",
+    body: JSON.stringify({ raw_posts: payload.raw_posts, platform: payload.platform ?? "all" }),
+  });
+}
+
 export function streamGeneration(
   dispatchId: string,
   onEvent: (event: Record<string, unknown>) => void,

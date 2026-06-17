@@ -12,6 +12,7 @@ import { DashboardSidebar } from "./DashboardSidebar";
 import { StatusBar } from "./StatusBar";
 import { CommandPalette } from "./CommandPalette";
 import { ProjectDetailPage } from "./ProjectDetailPage";
+import { VoiceProfileSection } from "./VoiceProfileSection";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -955,7 +956,9 @@ export function DashboardSection() {
           {/* ── Right main ────────────────────────────────────────────────────────── */}
           <div className="byline-dash-right">
 
-          {/^[0-9a-f-]{36}$/.test(activeSidebarItem) ? (
+          {activeSidebarItem === "voice-profile" ? (
+            <VoiceProfileSection onBack={() => setActiveSidebarItem("overview")} />
+          ) : /^[0-9a-f-]{36}$/.test(activeSidebarItem) ? (
             <ProjectDetailPage projectId={activeSidebarItem} onBack={() => setActiveSidebarItem("overview")} />
           ) : (
             <>

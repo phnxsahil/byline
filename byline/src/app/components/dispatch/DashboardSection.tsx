@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Logo } from "./Logo";
 import {
   IconBrandLinkedin, IconBrandX, IconBrandReddit, IconBrandThreads,
   IconBrain, IconChessKnight, IconShieldCheck, IconSend,
-  IconTrendingUp, IconTrendingDown, IconChevronDown, IconChevronRight,
-  IconSettings, IconCheck, IconClock, IconLoader2,
-  IconArrowLeft, IconBolt, IconAdjustments,
+  IconTrendingUp, IconTrendingDown,
+  IconCheck, IconClock, IconLoader2, IconBolt,
 } from "@tabler/icons-react";
 import {
-  listDispatches, listProjects, createDispatch, getDrafts, patchDraft, streamGeneration, type DispatchRead, type DraftRead,
+  listDispatches, createDispatch, getDrafts, patchDraft, streamGeneration, type DispatchRead, type DraftRead,
 } from "../../api";
+import { DashboardSidebar } from "./DashboardSidebar";
+import { StatusBar } from "./StatusBar";
+import { CommandPalette } from "./CommandPalette";
+import { ProjectDetailPage } from "./ProjectDetailPage";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -81,15 +83,11 @@ const DASH_STYLES = [
   "  100% { box-shadow: 0 0 0 0 rgba(232,94,44,0); }",
   "}",
   ".byline-dash-grid {",
-  "  display: grid;",
-  "  grid-template-columns: 300px 1fr;",
-  "  gap: 20px;",
-  "  max-width: 1080px;",
-  "  margin: 0 auto;",
-  "  padding: 0 40px;",
+  "  display: flex;",
+  "  max-width: 100%;",
+  "  min-height: calc(100vh - 60px);",
   "}",
-  ".byline-dash-left { display: flex; flex-direction: column; gap: 16px; }",
-  ".byline-dash-right { display: flex; flex-direction: column; gap: 20px; }",
+  ".byline-dash-right { display: flex; flex-direction: column; gap: 20px; flex: 1; padding: 32px 40px; max-width: 860px; }",
   ".byline-dash-card {",
   "  background: rgba(255,255,255,0.03);",
   "  border: 0.5px solid rgba(255,255,255,0.08);",
@@ -628,7 +626,6 @@ function BylinesTable({
         <span style={{ fontFamily: "'IBM Plex Sans'", fontSize: 11, color: "rgba(255,255,255,0.25)" }}>{bylines.length} total</span>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-        {/* Header */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 100px 50px 80px 32px", gap: 8, padding: "6px 12px", borderBottom: "0.5px solid rgba(255,255,255,0.06)" }}>
           {["Milestone","Platforms","Score","Status",""].map(h => (
             <span key={h} style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: "rgba(255,255,255,0.25)", letterSpacing: "0.08em", textTransform: "uppercase" }}>{h}</span>
@@ -638,10 +635,8 @@ function BylinesTable({
           const isOpen = expanded === row.id;
           const sc = STATUS_CONFIG[row.status];
           return (
-            <div key={row.id}
-              style={{ borderBottom: "0.5px solid rgba(255,255,255,0.04)", transition: "background-color 0.12s ease", cursor: "pointer", backgroundColor: isOpen ? "rgba(255,255,255,0.03)" : "transparent" }}
-              onClick={() => setExpanded(isOpen ? null : row.id)}
-            >
+            <div key={row.id} style={{ borderBottom: "0.5px solid rgba(255,255,255,0.04)", transition: "background-color 0.12s ease", cursor: "pointer", backgroundColor: isOpen ? "rgba(255,255,255,0.03)" : "transparent" }}
+              onClick={() => setExpanded(isOpen ? null : row.id)}>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 100px 50px 80px 32px", gap: 8, padding: "10px 12px", alignItems: "center" }}>
                 <span style={{ fontFamily: "'IBM Plex Sans'", fontSize: 12, color: "rgba(255,255,255,0.75)", lineHeight: 1.3, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical" } as React.CSSProperties}>{row.milestone}</span>
                 <div style={{ display: "flex", gap: 3 }}>
@@ -657,17 +652,13 @@ function BylinesTable({
               {isOpen && (
                 <div style={{ padding: "0 12px 12px", display: "flex", gap: 6, flexWrap: "wrap" }} onClick={e => e.stopPropagation()}>
                   {row.platforms.map(p => (
-                    <button key={p}
-                      onClick={() => onOpenDraft(row.milestone, p, row.id)}
-                      style={{
-                        display: "flex", alignItems: "center", gap: 5, padding: "4px 10px",
-                        backgroundColor: "rgba(255,255,255,0.05)", border: "0.5px solid rgba(255,255,255,0.1)", borderRadius: 5,
-                        fontFamily: "'IBM Plex Sans'", fontSize: 11, color: "rgba(255,255,255,0.5)", cursor: "pointer",
-                        transition: "all 0.12s ease",
-                      }}
+                    <button key={p} onClick={() => onOpenDraft(row.milestone, p, row.id)} style={{
+                      display: "flex", alignItems: "center", gap: 5, padding: "4px 10px",
+                      backgroundColor: "rgba(255,255,255,0.05)", border: "0.5px solid rgba(255,255,255,0.1)", borderRadius: 5,
+                      fontFamily: "'IBM Plex Sans'", fontSize: 11, color: "rgba(255,255,255,0.5)", cursor: "pointer", transition: "all 0.12s ease",
+                    }}
                       onMouseEnter={e => { e.currentTarget.style.color = "#F5F4F0"; e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.1)"; }}
-                      onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.5)"; e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.05)"; }}
-                    >
+                      onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.5)"; e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.05)"; }}>
                       <PlatformIcon platform={p} size={11} /> View {p} draft
                     </button>
                   ))}
@@ -688,10 +679,37 @@ export function DashboardSection() {
   const [newMilestoneText, setNewMilestoneText] = useState("");
   const [realDispatches, setRealDispatches] = useState<DispatchRead[]>([]);
   const [realDrafts, setRealDrafts] = useState<Record<string, DraftRead[]>>({});
+  const [activeSidebarItem, setActiveSidebarItem] = useState("overview");
   const [isGenerating, setIsGenerating] = useState(false);
   const [currentProjectId, setCurrentProjectId] = useState("");
   const currentDispatchRef = useRef<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
+
+  // ── Command palette state ──────────────────────────────────────────────────
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setPaletteOpen((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
+  const paletteCommands = [
+    { id: "log-milestone", label: "Log new milestone", group: "Actions", action: () => { document.querySelector<HTMLTextAreaElement>('[placeholder*="Log a milestone"]')?.focus(); } },
+    { id: "run-pipeline", label: "Run pipeline", shortcut: "⏎", group: "Actions", action: () => { startPipeline(); } },
+    { id: "approve-last", label: "Approve last draft", group: "Actions", action: () => { handleApproveDraft(); } },
+    { id: "go-overview", label: "Go to Overview", shortcut: "G O", group: "Navigate", action: () => setActiveSidebarItem("overview") },
+    { id: "go-analytics", label: "Go to Analytics", group: "Navigate", action: () => setActiveSidebarItem("analytics") },
+    { id: "go-voice", label: "Go to Voice Profile", group: "Navigate", action: () => setActiveSidebarItem("voice-profile") },
+    { id: "toggle-storyteller", label: "Toggle Storyteller mode", group: "Agent skills", action: () => toggleSkill("Storyteller Mode") },
+    { id: "toggle-reddit", label: "Toggle Reddit Stealth", group: "Agent skills", action: () => toggleSkill("Reddit Stealth") },
+    { id: "open-integrations", label: "Open integrations", group: "Settings", action: () => setActiveSidebarItem("integrations") },
+    { id: "edit-env", label: "Edit .env", group: "Settings", action: () => { /* placeholder */ } },
+  ];
 
   // Fetch real dispatches + projects on mount
   useEffect(() => {
@@ -922,142 +940,25 @@ export function DashboardSection() {
   };
 
   return (
-    <section style={{ backgroundColor: "var(--bg-terminal)", minHeight: "100vh", paddingTop: 80, paddingBottom: 64, transition: "background-color 0.3s ease" }}>
+    <section style={{ backgroundColor: "var(--bg-terminal)", height: "100vh", display: "flex", flexDirection: "column", transition: "background-color 0.3s ease" }}>
       <style dangerouslySetInnerHTML={{ __html: DASH_STYLES }} />
 
-      {/* ── Self-hosted preview banner ────────────────────────────────────────── */}
-      <div style={{ maxWidth: 1080, margin: "0 auto 20px", padding: "0 40px" }}>
-        <div style={{
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "10px 16px", borderRadius: 8,
-          backgroundColor: "rgba(232,94,44,0.07)",
-          border: "0.5px solid rgba(232,94,44,0.2)",
-          flexWrap: "wrap", gap: 10,
-        }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 7, height: 7, borderRadius: "50%", backgroundColor: "#E85E2C",
-              animation: "byline-pulse-glow 2s ease-out infinite",
-              boxShadow: "0 0 0 0 rgba(232,94,44,0.5)" }} />
-            <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: "rgba(255,255,255,0.55)", letterSpacing: "0.04em" }}>
-              {"self-hosted preview — this is what you get when you "}
-              <code style={{ color: "#E85E2C" }}>docker compose up</code>
-            </span>
-          </div>
-          <a
-            href="#docs/quickstart"
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace", fontSize: 11,
-              color: "#E85E2C", textDecoration: "none",
-              padding: "3px 10px", border: "0.5px solid rgba(232,94,44,0.3)",
-              borderRadius: 4, transition: "all 0.12s ease",
-            }}
-            onMouseEnter={e => { e.currentTarget.style.backgroundColor = "rgba(232,94,44,0.12)"; }}
-            onMouseLeave={e => { e.currentTarget.style.backgroundColor = "transparent"; }}
-          >
-            {"Self-host guide →"}
-          </a>
-        </div>
-      </div>
+      <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
+        <div className="byline-dash-grid">
 
-      <div className="byline-dash-grid">
+          {/* ── Left sidebar (new two-level design) ──────────────────────────────── */}
+          <DashboardSidebar
+            activeItem={activeSidebarItem}
+            onNavigate={setActiveSidebarItem}
+          />
 
-        {/* ── Left sidebar ──────────────────────────────────────────────────────── */}
-        <div className="byline-dash-left">
+          {/* ── Right main ────────────────────────────────────────────────────────── */}
+          <div className="byline-dash-right">
 
-          {/* Header */}
-          <div>
-            <a href="#" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: "rgba(255,255,255,0.35)", textDecoration: "none", marginBottom: 16, transition: "color 0.12s ease" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.75)")}
-              onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}
-            >
-              <IconArrowLeft size={12} stroke={2} />
-              Back to Site
-            </a>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <Logo size={20} dark={true} />
-              <span style={{
-                fontFamily: "'IBM Plex Mono', monospace", fontSize: 9,
-                color: "#22C55E", padding: "2px 7px", borderRadius: 3,
-                border: "0.5px solid rgba(34,197,94,0.3)",
-                backgroundColor: "rgba(34,197,94,0.07)", letterSpacing: "0.08em",
-              }}>self-hosted</span>
-            </div>
-            <div style={{ fontFamily: "'IBM Plex Sans'", fontSize: 12, color: "rgba(255,255,255,0.35)", marginTop: 5 }}>Your byline. Everywhere you ship.</div>
-          </div>
-
-          {/* Agent pipeline */}
-          <div className="byline-dash-card">
-            <AgentPipeline statuses={agentStatuses} step={pipelineStep} onRun={runPipelineAnimation} />
-          </div>
-
-          {/* Customization */}
-          <AgentCustomPanel platforms={platforms} onPlatformsChange={setPlatforms} />
-
-          {/* Agent skills — toggleable */}
-          <div className="byline-dash-card">
-            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "rgba(255,255,255,0.3)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 12 }}>Agent Skills</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-              {([
-                { name: "Storyteller Mode", desc: "Long narrative LinkedIn posts" },
-                { name: "Thread Architect", desc: "Auto-split into X threads" },
-                { name: "Reddit Stealth", desc: "Ultra-careful anti-promo" },
-                { name: "Ghost Mode", desc: "Drafts only, never auto-posts" },
-                { name: "Velocity Mode", desc: "Batch multiple milestones" },
-              ] as const).map(skill => {
-                const isActive = activeSkills[skill.name];
-                return (
-                  <div
-                    key={skill.name}
-                    onClick={() => toggleSkill(skill.name)}
-                    style={{
-                      display: "flex", alignItems: "center", justifyContent: "space-between",
-                      padding: "9px 0", borderBottom: "0.5px solid rgba(255,255,255,0.04)",
-                      cursor: "pointer", transition: "opacity 0.12s ease",
-                    }}
-                    onMouseEnter={e => (e.currentTarget.style.opacity = "0.8")}
-                    onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
-                  >
-                    <div>
-                      <div style={{ fontFamily: "'IBM Plex Sans'", fontSize: 12, color: isActive ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.28)", transition: "color 0.15s ease" }}>{skill.name}</div>
-                      <div style={{ fontFamily: "'IBM Plex Sans'", fontSize: 10, color: "rgba(255,255,255,0.18)", marginTop: 1 }}>{skill.desc}</div>
-                    </div>
-                    <MiniToggle active={isActive} onChange={() => toggleSkill(skill.name)} />
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Docker quick-start card */}
-          <div style={{
-            borderRadius: 10, border: "0.5px solid rgba(255,255,255,0.08)",
-            overflow: "hidden",
-          }}>
-            <div style={{ padding: "12px 14px 10px", borderBottom: "0.5px solid rgba(255,255,255,0.06)" }}>
-              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "rgba(255,255,255,0.3)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 2 }}>Quick Start</div>
-              <div style={{ fontFamily: "'IBM Plex Sans'", fontSize: 11, color: "rgba(255,255,255,0.25)" }}>Self-host in 5 minutes</div>
-            </div>
-            <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 6 }}>
-              {[
-                "git clone github.com/sahil/byline",
-                "cp .env.example .env",
-                "docker compose up -d",
-              ].map((cmd, i) => (
-                <div key={i} style={{
-                  display: "flex", alignItems: "center", gap: 8,
-                  padding: "6px 10px", borderRadius: 5,
-                  backgroundColor: "rgba(255,255,255,0.03)",
-                }}>
-                  <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "rgba(255,255,255,0.2)", minWidth: 12 }}>{i + 1}</span>
-                  <code style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "rgba(255,255,255,0.55)" }}>{cmd}</code>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* ── Right main ────────────────────────────────────────────────────────── */}
-        <div className="byline-dash-right">
+          {/^[0-9a-f-]{36}$/.test(activeSidebarItem) ? (
+            <ProjectDetailPage projectId={activeSidebarItem} onBack={() => setActiveSidebarItem("overview")} />
+          ) : (
+            <>
 
           {/* Stats row */}
           <div className="byline-stats-grid">
@@ -1130,8 +1031,17 @@ export function DashboardSection() {
             </div>
           </div>
 
+            </>
+          )}
+          </div>
         </div>
       </div>
+
+      {/* ── Status Bar ─────────────────────────────────────────────────────── */}
+      <StatusBar />
+
+      {/* ── Command Palette ────────────────────────────────────────────────── */}
+      <CommandPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} commands={paletteCommands} />
 
       {/* Draft View/Edit Modal */}
       {selectedDraft && (

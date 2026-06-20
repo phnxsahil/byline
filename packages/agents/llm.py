@@ -53,13 +53,13 @@ async def _call_gemini(system_prompt: str, user_prompt: str, max_tokens: int) ->
 
 
 async def call_text_model(system_prompt: str, user_prompt: str, max_tokens: int = 1200) -> str:
-    result = await _call_anthropic(system_prompt, user_prompt, max_tokens)
-    if result is not None:
-        return result
     result = await _call_gemini(system_prompt, user_prompt, max_tokens)
     if result is not None:
         return result
-    raise RuntimeError("No LLM provider configured. Set ANTHROPIC_API_KEY or GEMINI_API_KEY in .env")
+    result = await _call_anthropic(system_prompt, user_prompt, max_tokens)
+    if result is not None:
+        return result
+    raise RuntimeError("No LLM provider configured. Set GEMINI_API_KEY or ANTHROPIC_API_KEY in .env")
 
 
 async def call_json_model(system_prompt: str, user_prompt: str, max_tokens: int = 1200) -> dict[str, Any]:

@@ -27,7 +27,7 @@ function DashboardPill({ dark }: { dark: boolean }) {
         border: dark
           ? `0.5px solid ${hov ? "rgba(250,250,248,0.25)" : "rgba(250,250,248,0.1)"}`
           : `0.5px solid ${hov ? "rgba(15,15,13,0.25)" : "var(--border)"}`,
-        fontFamily: "'IBM Plex Mono', monospace", fontSize: 11,
+        fontFamily: "'JetBrains Mono', monospace", fontSize: 11,
         color: dark ? "rgba(250,250,248,0.7)" : "var(--text-secondary)",
         textDecoration: "none", letterSpacing: "0.04em",
         transition: "all 0.12s ease", whiteSpace: "nowrap",
@@ -46,7 +46,7 @@ function NavLink({ label, href, dark }: { label: string; href: string; dark: boo
     <a
       href={href}
       style={{
-        fontFamily: "'IBM Plex Mono', monospace",
+        fontFamily: "'JetBrains Mono', monospace",
         fontSize: 11,
         fontWeight: 400,
         color: dark
@@ -78,7 +78,7 @@ function StarPill({ dark }: { dark: boolean }) {
     >
       <span
         style={{
-          fontFamily: "'IBM Plex Mono', monospace",
+          fontFamily: "'JetBrains Mono', monospace",
           fontSize: 11,
           color: hov
             ? dark ? "#FAFAF8" : "#0F0F0D"
@@ -114,7 +114,7 @@ function CTABtn() {
     >
       <span
         style={{
-          fontFamily: "'IBM Plex Mono', monospace",
+          fontFamily: "'JetBrains Mono', monospace",
           fontSize: 11,
           fontWeight: 500,
           color: "#FAFAF8",
@@ -189,7 +189,7 @@ function MobileMenu({ open, dark, onClose }: { open: boolean; dark: boolean; onC
           href={link.href}
           onClick={onClose}
           style={{
-            fontFamily: "'IBM Plex Mono', monospace",
+            fontFamily: "'JetBrains Mono', monospace",
             fontSize: 13,
             fontWeight: 400,
             color: dark ? "rgba(245, 244, 240, 0.82)" : "var(--text-primary)",

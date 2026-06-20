@@ -42,8 +42,8 @@
   --byline-section-padding: 72px;
   /* Font stacks */
   --byline-font-display: 'Space Grotesk', system-ui, sans-serif;
-  --byline-font-body:    'IBM Plex Sans', system-ui, sans-serif;
-  --byline-font-mono:    'IBM Plex Mono', 'JetBrains Mono', monospace;
+  --byline-font-body:    'Inter', system-ui, sans-serif;
+  --byline-font-mono:    'DM Mono', 'JetBrains Mono', monospace;
   /* ──────────────────────────────────────────────────────────── */
 
   --font-size: 16px;
@@ -162,6 +162,21 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-paper: #0D1117;
+  --color-paper-raised: #161B22;
+  --color-ink: #E6EDF3;
+  --color-carbon: #8B949E;
+  --color-wire: #58A6FF;
+  --color-wire-light: #21262D;
+  --color-stamp: #F0A500;
+  --color-stamp-light: #21262D;
+  --color-mint: #3FB950;
+  --color-mint-light: #21262D;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "DM Mono", monospace;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer base {
@@ -233,10 +248,113 @@
   --text-secondary: rgba(245, 244, 240, 0.6);
   --border: rgba(245, 244, 240, 0.1);
   --accent: #E85E2C;
-  --bg-terminal: #222220;
-  --bg-footer: #1A1A18;
-  --border-footer: rgba(245, 244, 240, 0.1);
-  --text-footer-primary: #F5F4F0;
+  --bg-terminal: #0D1117;
+  --bg-footer: #161B22;
+  --border-footer: #30363D;
+  --text-footer-primary: #E6EDF3;
   --text-footer-secondary: rgba(245, 244, 240, 0.6);
   --bg-nav: rgba(15, 15, 13, 0.82);
+}
+
+@keyframes stamp-punch {
+  0% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(0.92);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes stamp-press {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(0.88);
+  }
+  70% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes stamp-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(82, 71, 204, 0.35);
+  }
+  60% {
+    box-shadow: 0 0 0 5px rgba(82, 71, 204, 0.1);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(82, 71, 204, 0);
+  }
+}
+@keyframes line-tick {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes typewriter {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@utility animate-stamp {
+  animation: stamp-punch 280ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+@utility animate-tick {
+  animation: line-tick 500ms var(--ease-out-expo) both;
+}
+@utility animate-reveal {
+  animation: reveal-up 700ms var(--ease-out-expo) both;
+}
+@utility stamp-badge-animating {
+  animation:
+    stamp-press 180ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    stamp-ring 320ms ease-out;
+}
+@utility terminal-cursor {
+  &::after {
+    content: "_";
+    margin-left: 2px;
+    animation: blink 1s step-end infinite;
+  }
+}
+
+@utility bg-grid-dots {
+  background-image: radial-gradient(rgba(235, 230, 220, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
 }

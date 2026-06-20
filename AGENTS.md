@@ -1,3 +1,5 @@
+
+
 # BYLINE — Master Agent Context
 > OpenCode reads this file automatically at session start.
 > This is the single source of truth for the entire project.

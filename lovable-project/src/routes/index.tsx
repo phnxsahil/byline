@@ -1,6 +1,44 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useMemo } from "react";
 
+/* ─────────────────────────────────────────── BYLINE STAMP ─────────────────────────────────────────── */
+
+function BylineStamp({ show, onComplete }: { show: boolean; onComplete?: () => void }) {
+  const [displayText, setDisplayText] = useState("");
+  const fullText = "By Sahil — ";
+  
+  useEffect(() => {
+    if (!show) {
+      setDisplayText("");
+      return;
+    }
+    
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index < fullText.length) {
+        setDisplayText(fullText.slice(0, index + 1));
+        index++;
+      } else {
+        clearInterval(interval);
+        if (onComplete) {
+          setTimeout(onComplete, 1000);
+        }
+      }
+    }, 80);
+    
+    return () => clearInterval(interval);
+  }, [show, onComplete]);
+  
+  if (!show) return null;
+  
+  return (
+    <div className="px-5 pt-4 pb-2 font-mono text-sm text-stamp">
+      {displayText}
+      {displayText.length < fullText.length && <span className="animate-pulse">_</span>}
+    </div>
+  );
+}
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -103,6 +141,9 @@ function Hero() {
             The personal wire service for builders. Log a raw update about what you built. Dispatch
             remembers your projects and writes platform-perfect posts in your exact voice.
           </p>
+          <p className="mb-10 max-w-lg text-sm leading-relaxed text-carbon/70">
+            Or connect your GitHub — Byline watches your commits and surfaces drafts before you even think to post.
+          </p>
           <div className="flex flex-wrap gap-3">
             <a
               href="#preview"
@@ -162,6 +203,7 @@ function HeroPlayground() {
   const [logs, setLogs] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<PlayPlatform>("LinkedIn");
   const [done, setDone] = useState(false);
+  const [showStamp, setShowStamp] = useState(false);
 
   const drafts = useMemo(() => {
     if (!dispatchText.trim()) return { LinkedIn: "", X: "", Reddit: "", Threads: "" };
@@ -182,6 +224,7 @@ function HeroPlayground() {
     setRunning(true);
     setLogs([]);
     setDone(false);
+    setShowStamp(false);
 
     const steps = [
       { delay: 0, text: `> initiating pipeline for project [${project}]...` },
@@ -203,7 +246,7 @@ function HeroPlayground() {
 
     setTimeout(() => {
       setRunning(false);
-      setDone(true);
+      setShowStamp(true);
     }, 1150);
   }
 
@@ -211,6 +254,7 @@ function HeroPlayground() {
     setDone(false);
     setLogs([]);
     setDispatchText("");
+    setShowStamp(false);
   }
 
   return (

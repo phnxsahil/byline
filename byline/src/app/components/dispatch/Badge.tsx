@@ -37,7 +37,7 @@ export function Badge({ variant = "default", children }: BadgeProps) {
         alignItems: "center",
         padding: "3px 8px",
         borderRadius: 4,
-        fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+        fontFamily: "'Inter', system-ui, sans-serif",
         fontSize: 11,
         fontWeight: 500,
         letterSpacing: "0.07em",

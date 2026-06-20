@@ -1,18 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./components/dispatch/animations.css";
-import { Navbar } from "./components/dispatch/Navbar";
-import { Hero } from "./components/dispatch/Hero";
-import { ProblemSection } from "./components/dispatch/ProblemSection";
-import { HowItWorksSection } from "./components/dispatch/HowItWorks";
-import { FeatureSection } from "./components/dispatch/FeatureSection";
-import { DemoSection } from "./components/dispatch/DemoSection";
-import { IntegrationsSection } from "./components/dispatch/IntegrationsSection";
-import { SocialProofSection } from "./components/dispatch/SocialProofSection";
-import { PricingSection } from "./components/dispatch/PricingSection";
-import { CTASection } from "./components/dispatch/CTASection";
-import { Footer } from "./components/dispatch/Footer";
 import { DocsSection } from "./components/dispatch/DocsSection";
-import { DashboardSection } from "./components/dispatch/DashboardSection";
+import LandingPageV2 from "./components/dispatch/LandingPageV2";
+import { DispatchWorkspace } from "./components/dispatch/workspace";
 
 export default function App() {
   const [view, setView] = useState<"landing" | "docs" | "dashboard">(
@@ -73,7 +63,7 @@ export default function App() {
       style={{
         backgroundColor: "var(--bg)",
         minHeight: "100vh",
-        fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+        fontFamily: "'Inter', system-ui, sans-serif",
         transition: "background-color 0.3s ease",
       }}
     >
@@ -82,7 +72,7 @@ export default function App() {
 
         /* Warm body font */
         body {
-          font-family: 'IBM Plex Sans', system-ui, sans-serif;
+          font-family: 'Inter', system-ui, sans-serif;
           background: var(--bg);
           color: var(--text-primary);
           transition: background-color 0.3s ease, color 0.3s ease;
@@ -101,7 +91,7 @@ export default function App() {
 
         /* Monospace labels keep their stack */
         .dispatch-mono {
-          font-family: 'IBM Plex Mono', monospace;
+          font-family: 'JetBrains Mono', monospace;
         }
 
         @media (max-width: 767px) {
@@ -109,46 +99,15 @@ export default function App() {
         }
       `}</style>
 
-      {/* ── Navbar ─────────────────────────────────────────────────────────── */}
-      <Navbar />
-
       {view === "docs" ? (
-        <DocsSection />
-      ) : view === "dashboard" ? (
-        <DashboardSection />
-      ) : (
         <>
-          {/* ── Hero ───────────────────────────────────────────────────────────── */}
-          <Hero />
-
-          {/* ── Problem ────────────────────────────────────────────────────────── */}
-          <ProblemSection />
-
-          {/* ── How it works ───────────────────────────────────────────────────── */}
-          <HowItWorksSection />
-
-          {/* ── Features ───────────────────────────────────────────────────────── */}
-          <FeatureSection />
-
-          {/* ── Demo ───────────────────────────────────────────────────────────── */}
-          <DemoSection />
-
-          {/* ── Integrations ───────────────────────────────────────────────────── */}
-          <IntegrationsSection />
-
-          {/* ── Social proof ───────────────────────────────────────────────────── */}
-          <SocialProofSection />
-
-          {/* ── Pricing ────────────────────────────────────────────────────────── */}
-          <PricingSection />
-
-          {/* ── Final CTA ──────────────────────────────────────────────────────── */}
-          <CTASection />
+          <DocsSection />
         </>
+      ) : view === "dashboard" ? (
+        <DispatchWorkspace onLandingClick={() => { window.location.hash = ""; }} />
+      ) : (
+        <LandingPageV2 />
       )}
-
-      {/* ── Footer ─────────────────────────────────────────────────────────── */}
-      <Footer />
     </div>
   );
 }

@@ -174,7 +174,7 @@ function HubDiagram() {
             dominantBaseline="middle"
             fontSize={11}
             fill="var(--text-primary)"
-            fontFamily="'IBM Plex Sans', system-ui, sans-serif"
+            fontFamily="'Inter', system-ui, sans-serif"
             style={{ transition: "color 0.2s ease" }}
           >
             {n.label}
@@ -211,7 +211,7 @@ function HubDiagram() {
           fontSize={12}
           fontWeight="500"
           fill="#E85E2C"
-          fontFamily="'IBM Plex Sans', system-ui, sans-serif"
+          fontFamily="'Inter', system-ui, sans-serif"
           letterSpacing="-0.01em"
         >
           Composio
@@ -222,7 +222,7 @@ function HubDiagram() {
           textAnchor="middle"
           fontSize={9}
           fill="rgba(232,94,44,0.5)"
-          fontFamily="JetBrains Mono, IBM Plex Mono, monospace"
+          fontFamily="JetBrains Mono, DM Mono, monospace"
           letterSpacing="0.1em"
         >
           MCP
@@ -261,7 +261,7 @@ function CapabilityPill({ label }: { label: string }) {
     >
       <span
         style={{
-          fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 12,
           fontWeight: 400,
           color: "#22C55E",
@@ -271,7 +271,7 @@ function CapabilityPill({ label }: { label: string }) {
       </span>
       <span
         style={{
-          fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 12,
           fontWeight: 400,
           color: "var(--text-secondary)",
@@ -288,7 +288,7 @@ function CapabilityPill({ label }: { label: string }) {
 
 export function IntegrationsSection() {
   return (
-    <section className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96, transition: "background-color 0.3s ease" }}>
+    <section className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 140, transition: "background-color 0.3s ease" }}>
       <style>{`
         .dispatch-integ-inner {
           max-width: 1080px;
@@ -316,7 +316,7 @@ export function IntegrationsSection() {
         {/* Eyebrow */}
         <div
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 10,
             fontWeight: 400,
             color: "#A8A49A",
@@ -349,7 +349,7 @@ export function IntegrationsSection() {
         {/* Sub */}
         <p
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 14,
             fontWeight: 400,
             color: "var(--text-secondary)",
@@ -376,7 +376,7 @@ export function IntegrationsSection() {
         {/* Footnote */}
         <p
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 11,
             fontWeight: 400,
             color: "#A8A49A",

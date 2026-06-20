@@ -65,7 +65,7 @@ function EyebrowPill() {
       />
       <span
         style={{
-          fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 11,
           fontWeight: 400,
           color: "var(--text-secondary)",
@@ -103,7 +103,7 @@ function CTAPrimary() {
     >
       <span
         style={{
-          fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 13,
           fontWeight: 500,
           color: "#F5F2EC",
@@ -142,7 +142,7 @@ function CTAGhost() {
       <IconBrandGithub size={14} color="var(--text-primary)" stroke={1.75} />
       <span
         style={{
-          fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 13,
           fontWeight: 400,
           color: "var(--text-primary)",
@@ -200,7 +200,7 @@ function TerminalCard() {
         <span
           style={{
             marginLeft: 8,
-            fontFamily: "JetBrains Mono, IBM Plex Mono, monospace",
+            fontFamily: "JetBrains Mono, DM Mono, monospace",
             fontSize: 11,
             color: "rgba(255,255,255,0.22)",
             letterSpacing: "0.04em",
@@ -221,7 +221,7 @@ function TerminalCard() {
             >
               <span
                 style={{
-                  fontFamily: "JetBrains Mono, IBM Plex Mono, monospace",
+                  fontFamily: "JetBrains Mono, DM Mono, monospace",
                   fontSize: 12,
                   lineHeight: 1.7,
                   color: LINE_COLOR[line.type],
@@ -240,7 +240,7 @@ function TerminalCard() {
         <div className="dispatch-term-cursor" style={{ display: "flex", alignItems: "center", gap: 6 }}>
           <span
             style={{
-              fontFamily: "JetBrains Mono, IBM Plex Mono, monospace",
+              fontFamily: "JetBrains Mono, DM Mono, monospace",
               fontSize: 12,
               color: "rgba(255,255,255,0.85)",
             }}
@@ -377,7 +377,7 @@ export function Hero() {
             <p
               style={{
                 margin: "0 0 8px",
-                fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+                fontFamily: "'Inter', system-ui, sans-serif",
                 fontSize: 15,
                 fontWeight: 400,
                 color: "var(--text-secondary)",
@@ -391,7 +391,7 @@ export function Hero() {
             <p
               style={{
                 margin: "0 0 24px",
-                fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+                fontFamily: "'Inter', system-ui, sans-serif",
                 fontSize: 13,
                 fontWeight: 400,
                 color: "var(--text-tertiary, var(--text-secondary))",
@@ -431,7 +431,7 @@ export function Hero() {
                 <React.Fragment key={label}>
                   <span
                     style={{
-                      fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+                      fontFamily: "'Inter', system-ui, sans-serif",
                       fontSize: 11,
                       fontWeight: 400,
                       color: "var(--text-secondary)",

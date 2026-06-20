@@ -1,0 +1,1214 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\Projects\\dispatch\\byline\\node_modules\\@playwright\\test\\cli.js",
+      "test"
+    ],
+    "configFile": "D:\\Projects\\dispatch\\byline\\playwright.config.ts",
+    "rootDir": "D:/Projects/dispatch/byline/scripts",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 3
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Projects/dispatch/byline/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 3
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/Projects/dispatch/byline/scripts",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "fix-logs/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.61.0",
+    "workers": 6,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "byline-audit.spec.ts",
+      "file": "byline-audit.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Landing Page",
+          "file": "byline-audit.spec.ts",
+          "line": 36,
+          "column": 6,
+          "specs": [
+            {
+              "title": "navbar: full links visible at 1280px",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6031,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n\n    at D:\\Projects\\dispatch\\byline\\scripts\\byline-audit.spec.ts:40:16",
+                        "location": {
+                          "file": "D:\\Projects\\dispatch\\byline\\scripts\\byline-audit.spec.ts",
+                          "column": 16,
+                          "line": 40
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 38 |\u001b[39m   test(\u001b[32m'navbar: full links visible at 1280px'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n \u001b[90m 39 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39msetViewportSize({ width\u001b[33m:\u001b[39m \u001b[35m1280\u001b[39m\u001b[33m,\u001b[39m height\u001b[33m:\u001b[39m \u001b[35m800\u001b[39m })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 40 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[33mBASE_URL\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 41 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m'networkidle'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 42 |\u001b[39m     \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m link \u001b[36mof\u001b[39m [\u001b[32m'demo'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'features'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'docs'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'pricing'\u001b[39m\u001b[33m,\u001b[39m \u001b[32m'github'\u001b[39m]) {\n \u001b[90m 43 |\u001b[39m       \u001b[36mawait\u001b[39m expect(page\u001b[33m.\u001b[39mlocator(\u001b[32m`nav a:has-text(\"${link}\")`\u001b[39m)\u001b[33m.\u001b[39mfirst())\u001b[33m.\u001b[39mtoBeVisible()\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Projects\\dispatch\\byline\\scripts\\byline-audit.spec.ts",
+                            "column": 16,
+                            "line": 40
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/\", waiting until \"load\"\u001b[22m\n\n\n  38 |   test('navbar: full links visible at 1280px', async ({ page }) => {\n  39 |     await page.setViewportSize({ width: 1280, height: 800 });\n> 40 |     await page.goto(BASE_URL);\n     |                ^\n  41 |     await page.waitForLoadState('networkidle');\n  42 |     for (const link of ['demo', 'features', 'docs', 'pricing', 'github']) {\n  43 |       await expect(page.locator(`nav a:has-text(\"${link}\")`).first()).toBeVisible();\n    at D:\\Projects\\dispatch\\byline\\scripts\\byline-audit.spec.ts:40:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:17:17.852Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Projects\\dispatch\\byline\\test-results\\byline-audit-Landing-Page--3f4b1-ull-links-visible-at-1280px\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\Projects\\dispatch\\byline\\test-results\\byline-audit-Landing-Page--3f4b1-ull-links-visible-at-1280px\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Projects\\dispatch\\byline\\test-results\\byline-audit-Landing-Page--3f4b1-ull-links-visible-at-1280px\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Projects\\dispatch\\byline\\scripts\\byline-audit.spec.ts",
+                        "column": 16,
+                        "line": 40
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "f521449ea6d2d3df4f73-a1375784b2a7f1cdd008",
+              "file": "byline-audit.spec.ts",
+              "line": 38,
+              "column": 3
+            },
+            {
+              "title": "navbar: hamburger appears and works at 375px",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 18767,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:17:26.342Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f521449ea6d2d3df4f73-01a62ff02d594e497865",
+              "file": "byline-audit.spec.ts",
+              "line": 47,
+              "column": 3
+            },
+            {
+              "title": "navbar: dark mode toggle is NOT between two CTA buttons",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 34034,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "D:\\Projects\\dispatch\\byline\\scripts\\byline-audit.spec.ts",
+                            "column": 16,
+                            "line": 75
+                          },
+                          "message": "Error: page.waitForLoadState: Test timeout of 30000ms exceeded.\n\n  73 |     await page.setViewportSize({ width: 1280, height: 800 });\n  74 |     await page.goto(BASE_URL);\n> 75 |     await page.waitForLoadState('networkidle');\n     |                ^\n  76 |     const toggleBox = await page.locator('[aria-label=\"Toggle theme\"]').boundingBox();\n  77 |     const dashBox = await page.locator('a:has-text(\"dashboard\"), button:has-text(\"dashboard\")').first().boundingBox();\n  78 |     const readDocsBox = await page.locator('a:has-text(\"read docs\"), button:has-text(\"read docs\")').first().boundingBox();\n    at D:\\Projects\\dispatch\\byline\\scripts\\byline-audit.spec.ts:75:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:17:45.534Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Projects\\dispatch\\byline\\test-results\\byline-audit-Landing-Page--dea4a-NOT-between-two-CTA-buttons\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\Projects\\dispatch\\byline\\test-results\\byline-audit-Landing-Page--dea4a-NOT-between-two-CTA-buttons\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Projects\\dispatch\\byline\\test-results\\byline-audit-Landing-Page--dea4a-NOT-between-two-CTA-buttons\\error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "f521449ea6d2d3df4f73-d080f1eb82d9c59414b1",
+              "file": "byline-audit.spec.ts",
+              "line": 72,
+              "column": 3
+            },
+            {
+              "title": "hero: no large gap between CTA buttons and trust badges",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 42950,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "D:\\Projects\\dispatch\\byline\\scripts\\byline-audit.spec.ts",
+                            "column": 16,
+                            "line": 92
+                          },
+                          "message": "Error: page.waitForLoadState: Test timeout of 30000ms exceeded.\n\n  90 |     await page.setViewportSize({ width: 1280, height: 800 });\n  91 |     await page.goto(BASE_URL);\n> 92 |     await page.waitForLoadState('networkidle');\n     |                ^\n  93 |     const ctaBox = await page.locator('a:has-text(\"Read the Docs\"), button:has-text(\"Read the Docs\"), a:has-text(\"read the docs\")').first().boundingBox();\n  94 |     const badgeBox = await page.locator('text=Self-hostable').first().boundingBox();\n  95 |     if (ctaBox && badgeBox) {\n    at D:\\Projects\\dispatch\\byline\\scripts\\byline-audit.spec.ts:92:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:18:33.653Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\Projects\\dispatch\\byline\\test-results\\byline-audit-Landing-Page--6a96a-TA-buttons-and-trust-badges\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Projects\\dispatch\\byline\\test-results\\byline-audit-Landing-Page--6a96a-TA-buttons-and-trust-badges\\error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "f521449ea6d2d3df4f73-9dcd92bb63e21fc3a904",
+              "file": "byline-audit.spec.ts",
+              "line": 89,
+              "column": 3
+            },
+            {
+              "title": "problem section: label tight to headline (≤ 16px gap)",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4587,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:19:54.409Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f521449ea6d2d3df4f73-2dc91f15e270b40e754d",
+              "file": "byline-audit.spec.ts",
+              "line": 101,
+              "column": 3
+            },
+            {
+              "title": "problem section: all 4 cards same height",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2346,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:19:59.333Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f521449ea6d2d3df4f73-6b91d0aeafbd00f5b8d2",
+              "file": "byline-audit.spec.ts",
+              "line": 118,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Dashboard",
+          "file": "byline-audit.spec.ts",
+          "line": 138,
+          "column": 6,
+          "specs": [
+            {
+              "title": "dashboard page has dark background",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2901,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:20:01.723Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f521449ea6d2d3df4f73-1b3090cd6b2ae1d77e4c",
+              "file": "byline-audit.spec.ts",
+              "line": 151,
+              "column": 3
+            },
+            {
+              "title": "no blue accent on active sidebar state",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2384,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:20:04.654Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f521449ea6d2d3df4f73-f1ebe403ad1c20ef59df",
+              "file": "byline-audit.spec.ts",
+              "line": 169,
+              "column": 3
+            },
+            {
+              "title": "active sidebar item uses orange, not blue",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2112,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:20:07.083Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f521449ea6d2d3df4f73-96e3d71b0287a3e47d52",
+              "file": "byline-audit.spec.ts",
+              "line": 174,
+              "column": 3
+            },
+            {
+              "title": "voice score chart: no unicode escape in label",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2127,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:20:09.225Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f521449ea6d2d3df4f73-e753ba571f55992a5dca",
+              "file": "byline-audit.spec.ts",
+              "line": 191,
+              "column": 3
+            },
+            {
+              "title": "milestone table: no rows with score 0",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2732,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:20:11.374Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f521449ea6d2d3df4f73-e74b0f985b3b8090b47a",
+              "file": "byline-audit.spec.ts",
+              "line": 197,
+              "column": 3
+            },
+            {
+              "title": "posts/week chart: no purple for X/Twitter",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 2082,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:20:14.139Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f521449ea6d2d3df4f73-e6f5b1f1f75416729e0d",
+              "file": "byline-audit.spec.ts",
+              "line": 208,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "console-check.spec.ts",
+      "file": "console-check.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "dump console errors",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 5901,
+                  "error": {
+                    "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/#dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/#dashboard\", waiting until \"load\"\u001b[22m\n",
+                    "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/#dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/#dashboard\", waiting until \"load\"\u001b[22m\n\n    at D:\\Projects\\dispatch\\byline\\scripts\\console-check.spec.ts:7:14",
+                    "location": {
+                      "file": "D:\\Projects\\dispatch\\byline\\scripts\\console-check.spec.ts",
+                      "column": 14,
+                      "line": 7
+                    },
+                    "snippet": "\u001b[0m \u001b[90m  5 |\u001b[39m   page\u001b[33m.\u001b[39mon(\u001b[32m'pageerror'\u001b[39m\u001b[33m,\u001b[39m error \u001b[33m=>\u001b[39m console\u001b[33m.\u001b[39mlog(\u001b[32m'BROWSER ERROR:'\u001b[39m\u001b[33m,\u001b[39m error\u001b[33m.\u001b[39mmessage))\u001b[33m;\u001b[39m\n \u001b[90m  6 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  7 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'http://localhost:5174/#dashboard'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  8 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m2000\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m  9 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 10 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Projects\\dispatch\\byline\\scripts\\console-check.spec.ts",
+                        "column": 14,
+                        "line": 7
+                      },
+                      "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/#dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/#dashboard\", waiting until \"load\"\u001b[22m\n\n\n   5 |   page.on('pageerror', error => console.log('BROWSER ERROR:', error.message));\n   6 |\n>  7 |   await page.goto('http://localhost:5174/#dashboard');\n     |              ^\n   8 |   await page.waitForTimeout(2000);\n   9 | });\n  10 |\n    at D:\\Projects\\dispatch\\byline\\scripts\\console-check.spec.ts:7:14"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-06-19T17:17:17.880Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Projects\\dispatch\\byline\\test-results\\console-check-dump-console-errors\\test-failed-1.png"
+                    },
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "D:\\Projects\\dispatch\\byline\\test-results\\console-check-dump-console-errors\\video.webm"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Projects\\dispatch\\byline\\test-results\\console-check-dump-console-errors\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Projects\\dispatch\\byline\\scripts\\console-check.spec.ts",
+                    "column": 14,
+                    "line": 7
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c7d22671db5d62fffc5c-6d32e262c97e641c6db1",
+          "file": "console-check.spec.ts",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "dashboard-smoke.spec.ts",
+      "file": "dashboard-smoke.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Sidebar Navigation",
+          "file": "dashboard-smoke.spec.ts",
+          "line": 12,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should render sidebar correctly (232px wide)",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 5874,
+                      "error": {
+                        "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/#dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/#dashboard\", waiting until \"load\"\u001b[22m\n",
+                        "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/#dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/#dashboard\", waiting until \"load\"\u001b[22m\n\n    at D:\\Projects\\dispatch\\byline\\scripts\\dashboard-smoke.spec.ts:14:16",
+                        "location": {
+                          "file": "D:\\Projects\\dispatch\\byline\\scripts\\dashboard-smoke.spec.ts",
+                          "column": 16,
+                          "line": 14
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 12 |\u001b[39m test\u001b[33m.\u001b[39mdescribe(\u001b[32m'Sidebar Navigation'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\n \u001b[90m 13 |\u001b[39m   test\u001b[33m.\u001b[39mbeforeEach(\u001b[36masync\u001b[39m ({ page }) \u001b[33m=>\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 14 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m'/#dashboard'\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 15 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'button:has-text(\"Overview\")'\u001b[39m)\u001b[33m.\u001b[39mfirst()\u001b[33m.\u001b[39mwaitFor({ state\u001b[33m:\u001b[39m \u001b[32m'visible'\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 16 |\u001b[39m     \u001b[36mawait\u001b[39m dismissOnboarding(page)\u001b[33m;\u001b[39m\n \u001b[90m 17 |\u001b[39m   })\u001b[33m;\u001b[39m\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Projects\\dispatch\\byline\\scripts\\dashboard-smoke.spec.ts",
+                            "column": 16,
+                            "line": 14
+                          },
+                          "message": "Error: page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:5174/#dashboard\nCall log:\n\u001b[2m  - navigating to \"http://localhost:5174/#dashboard\", waiting until \"load\"\u001b[22m\n\n\n  12 | test.describe('Sidebar Navigation', () => {\n  13 |   test.beforeEach(async ({ page }) => {\n> 14 |     await page.goto('/#dashboard');\n     |                ^\n  15 |     await page.locator('button:has-text(\"Overview\")').first().waitFor({ state: 'visible' });\n  16 |     await dismissOnboarding(page);\n  17 |   });\n    at D:\\Projects\\dispatch\\byline\\scripts\\dashboard-smoke.spec.ts:14:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:17:17.837Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Projects\\dispatch\\byline\\test-results\\dashboard-smoke-Sidebar-Na-785d0-debar-correctly-232px-wide-\\test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "D:\\Projects\\dispatch\\byline\\test-results\\dashboard-smoke-Sidebar-Na-785d0-debar-correctly-232px-wide-\\video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Projects\\dispatch\\byline\\test-results\\dashboard-smoke-Sidebar-Na-785d0-debar-correctly-232px-wide-\\error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Projects\\dispatch\\byline\\scripts\\dashboard-smoke.spec.ts",
+                        "column": 16,
+                        "line": 14
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "35e8c51b489d3f318475-6bae34be8c8f7bf23851",
+              "file": "dashboard-smoke.spec.ts",
+              "line": 19,
+              "column": 3
+            },
+            {
+              "title": "should display 6 navigation items",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 11242,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:17:26.313Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "35e8c51b489d3f318475-66a2a906e54e57dc1bab",
+              "file": "dashboard-smoke.spec.ts",
+              "line": 30,
+              "column": 3
+            },
+            {
+              "title": "should switch active content when a navigation link is clicked",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 9022,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:17:37.972Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "35e8c51b489d3f318475-72dc50c7ed11016ec7cc",
+              "file": "dashboard-smoke.spec.ts",
+              "line": 38,
+              "column": 3
+            },
+            {
+              "title": "active navigation item should show orange active styling",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 5383,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:17:47.116Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "35e8c51b489d3f318475-ac367a7ba7a806b6fe68",
+              "file": "dashboard-smoke.spec.ts",
+              "line": 60,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Simplified TopBar",
+          "file": "dashboard-smoke.spec.ts",
+          "line": 77,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should not render centered navigation tabs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 4815,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:17:52.554Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "35e8c51b489d3f318475-e4fdbf702ff8c4239dfe",
+              "file": "dashboard-smoke.spec.ts",
+              "line": 84,
+              "column": 3
+            },
+            {
+              "title": "should render logo, project switcher, avatar, and K shortcut",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 5810,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:17:57.455Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "35e8c51b489d3f318475-7d3f404ca15f38f7cc93",
+              "file": "dashboard-smoke.spec.ts",
+              "line": 92,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Command Palette",
+          "file": "dashboard-smoke.spec.ts",
+          "line": 109,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should open when clicking the TopBar shortcut pill",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 5560,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:18:03.339Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "35e8c51b489d3f318475-0a58d8f3c50fa6581015",
+              "file": "dashboard-smoke.spec.ts",
+              "line": 116,
+              "column": 3
+            },
+            {
+              "title": "should open on Cmd+K or Ctrl+K keyboard shortcut",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 9435,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:18:09.034Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "35e8c51b489d3f318475-042f14db3c33d5898748",
+              "file": "dashboard-smoke.spec.ts",
+              "line": 125,
+              "column": 3
+            },
+            {
+              "title": "should close when Escape key is pressed",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 4025,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:18:18.658Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "35e8c51b489d3f318475-4258e8cdd3e9b17654b9",
+              "file": "dashboard-smoke.spec.ts",
+              "line": 133,
+              "column": 3
+            },
+            {
+              "title": "should fuzzy match navigation destinations",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 4213,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:18:22.736Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "35e8c51b489d3f318475-db5a0a5d859fb233f8d7",
+              "file": "dashboard-smoke.spec.ts",
+              "line": 142,
+              "column": 3
+            },
+            {
+              "title": "should fuzzy match Doc headings",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 12899,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:18:27.003Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "35e8c51b489d3f318475-53819ec3e7bdcafe858d",
+              "file": "dashboard-smoke.spec.ts",
+              "line": 151,
+              "column": 3
+            },
+            {
+              "title": "should show \"Dispatch: '{text}'\" when typing unmatched queries",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 6413,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:18:39.946Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "35e8c51b489d3f318475-8a36287c16a14fff9551",
+              "file": "dashboard-smoke.spec.ts",
+              "line": 161,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Mobile Responsive Nav",
+          "file": "dashboard-smoke.spec.ts",
+          "line": 174,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should display hamburger menu and open sidebar overlay on click under 900px",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 6702,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-06-19T17:18:46.451Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "35e8c51b489d3f318475-61aaa471d1f7ce63318a",
+              "file": "dashboard-smoke.spec.ts",
+              "line": 175,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-06-19T17:17:16.484Z",
+    "duration": 180528.693,
+    "expected": 21,
+    "skipped": 0,
+    "unexpected": 5,
+    "flaky": 0
+  }
+}

@@ -45,7 +45,7 @@ export function Card({
       {meta && (
         <div
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 11,
             fontWeight: 500,
             letterSpacing: "0.07em",
@@ -61,7 +61,7 @@ export function Card({
       {title && (
         <div
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 15,
             fontWeight: 500,
             letterSpacing: "-0.02em",
@@ -77,7 +77,7 @@ export function Card({
       {description && (
         <div
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 13,
             fontWeight: 400,
             lineHeight: 1.6,
@@ -98,7 +98,7 @@ export function Card({
             borderTop: isDark
               ? "0.5px solid rgba(255,255,255,0.06)"
               : "0.5px solid rgba(15,15,13,0.08)",
-            fontFamily: "JetBrains Mono, IBM Plex Mono, monospace",
+            fontFamily: "JetBrains Mono, DM Mono, monospace",
             fontSize: 11,
             color: isDark ? "#6B6960" : "#A8A49A",
             letterSpacing: "0.02em",

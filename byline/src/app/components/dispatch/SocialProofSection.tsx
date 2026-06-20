@@ -50,21 +50,6 @@ const TESTIMONIALS: Testimonial[] = [
   },
 ];
 
-// ─── Ticker content ───────────────────────────────────────────────────────────
-
-const TICKER_ITEMS = [
-  "feat: add critic agent scoring",
-  "fix: reddit anti-promo reframe",
-  "feat: voice profile extractor",
-  "chore: composio mcp integration",
-  "feat: pgvector milestone embeddings",
-  "fix: linkedin paragraph chunking",
-  "feat: whisper voice capture",
-  "chore: langraph node wiring",
-];
-
-const TICKER_STRING = TICKER_ITEMS.join("  ·  ") + "  ·  ";
-
 // ─── Testimonial card ─────────────────────────────────────────────────────────
 
 function TestimonialCard({ t }: { t: Testimonial }) {
@@ -96,7 +81,7 @@ function TestimonialCard({ t }: { t: Testimonial }) {
       {/* Quote */}
       <p
         style={{
-          fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 14,
           fontWeight: 400,
           color: "var(--text-primary)",
@@ -133,7 +118,7 @@ function TestimonialCard({ t }: { t: Testimonial }) {
         >
           <span
             style={{
-              fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+              fontFamily: "'Inter', system-ui, sans-serif",
               fontSize: 11,
               fontWeight: 600,
               color: "#F5F2EC",
@@ -148,7 +133,7 @@ function TestimonialCard({ t }: { t: Testimonial }) {
         <div style={{ flex: 1, minWidth: 0 }}>
           <div
             style={{
-              fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+              fontFamily: "'Inter', system-ui, sans-serif",
               fontSize: 13,
               fontWeight: 500,
               color: "var(--text-primary)",
@@ -174,7 +159,7 @@ function TestimonialCard({ t }: { t: Testimonial }) {
           </div>
           <div
             style={{
-              fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+              fontFamily: "'Inter', system-ui, sans-serif",
               fontSize: 12,
               fontWeight: 400,
               color: "var(--text-secondary)",
@@ -210,75 +195,23 @@ function TestimonialCard({ t }: { t: Testimonial }) {
   );
 }
 
-// ─── Build log ticker ─────────────────────────────────────────────────────────
-
-function BuildLogTicker() {
-  return (
-    <div
-      style={{
-        backgroundColor: "var(--surface)",
-        padding: "12px 0",
-        overflow: "hidden",
-        borderTop: "0.5px solid var(--border)",
-        borderBottom: "0.5px solid var(--border)",
-        transition: "background-color 0.2s ease, border-color 0.2s ease",
-        /* Fade edges */
-        maskImage:
-          "linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)",
-        WebkitMaskImage:
-          "linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%)",
-      }}
-    >
-      <div className="dispatch-ticker-track">
-        {/* Duplicated twice for seamless loop */}
-        {[0, 1].map((i) => (
-          <span key={i} aria-hidden={i === 1 ? true : undefined}>
-            {TICKER_STRING}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // ─── Section ──────────────────────────────────────────────────────────────────
 
 export function SocialProofSection() {
   return (
-    <section className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 0, transition: "background-color 0.3s ease" }}>
+    <section className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", transition: "background-color 0.3s ease" }}>
       <style>{`
         .dispatch-proof-inner {
           max-width: 1080px;
           margin: 0 auto;
           padding-left: 40px;
           padding-right: 40px;
-          padding-bottom: 48px;
+          padding-bottom: 140px;
         }
         .dispatch-proof-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 14px;
-        }
-
-        /* Ticker */
-        @keyframes dispatch-ticker-scroll {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-        .dispatch-ticker-track {
-          display: inline-flex;
-          white-space: nowrap;
-          animation: dispatch-ticker-scroll 32s linear infinite;
-          font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
-          font-size: 11px;
-          color: #A8A49A;
-        }
-        .dispatch-ticker-track span {
-          font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace;
-          font-size: 11px;
-          color: #A8A49A;
-          letter-spacing: 0.02em;
-          padding: 0 24px;
         }
 
         @media (max-width: 767px) {
@@ -297,7 +230,7 @@ export function SocialProofSection() {
         {/* Eyebrow */}
         <div
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 10,
             fontWeight: 400,
             color: "#A8A49A",
@@ -306,7 +239,7 @@ export function SocialProofSection() {
             marginBottom: 20,
           }}
         >
-          Built in Public
+          PEOPLE WHO ACTUALLY SHIP, TALKING.
         </div>
 
         {/* Heading */}
@@ -334,25 +267,6 @@ export function SocialProofSection() {
         </div>
 
       </div>
-
-      {/* Build log ticker — full-width, outside the constrained container */}
-      <div style={{ marginBottom: 96 }}>
-        <div
-          style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
-            fontSize: 10,
-            color: "#A8A49A",
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
-            textAlign: "center",
-            marginBottom: 10,
-          }}
-        >
-          from the build log
-        </div>
-        <BuildLogTicker />
-      </div>
-
     </section>
   );
 }

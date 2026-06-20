@@ -13,7 +13,7 @@ const base: React.CSSProperties = {
   alignItems: "center",
   justifyContent: "center",
   borderRadius: 6,
-  fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+  fontFamily: "'Inter', system-ui, sans-serif",
   fontWeight: 500,
   letterSpacing: "-0.01em",
   cursor: "pointer",

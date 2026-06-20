@@ -162,7 +162,7 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
               border: "none",
               outline: "none",
               color: "#E6EDF3",
-              fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+              fontFamily: "'Inter', system-ui, sans-serif",
               fontSize: 14,
               lineHeight: "28px",
             }}
@@ -179,7 +179,7 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
           }}
         >
           {grouped.length === 0 && (
-            <div style={{ padding: "20px 14px", textAlign: "center", fontFamily: "'IBM Plex Sans'", fontSize: 13, color: "#484F58" }}>
+            <div style={{ padding: "20px 14px", textAlign: "center", fontFamily: "'Inter'", fontSize: 13, color: "#484F58" }}>
               No results for <span style={{ color: "#8B949E" }}>"{query}"</span>
             </div>
           )}
@@ -187,7 +187,7 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
             <div key={group.group}>
               <div
                 style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontFamily: "'JetBrains Mono', monospace",
                   fontSize: 9,
                   color: "#484F58",
                   letterSpacing: "0.1em",
@@ -219,7 +219,7 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
                   >
                     <span
                       style={{
-                        fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+                        fontFamily: "'Inter', system-ui, sans-serif",
                         fontSize: 13,
                         color: isSelected ? "#E6EDF3" : "#8B949E",
                         fontWeight: isSelected ? 500 : 400,
@@ -230,7 +230,7 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
                     {cmd.shortcut && (
                       <kbd
                         style={{
-                          fontFamily: "'IBM Plex Mono', monospace",
+                          fontFamily: "'JetBrains Mono', monospace",
                           fontSize: 9,
                           color: "#484F58",
                           padding: "1px 5px",
@@ -258,7 +258,7 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
             gap: 12,
             padding: "6px 14px",
             borderTop: "1px solid #21262D",
-            fontFamily: "'IBM Plex Mono', monospace",
+            fontFamily: "'JetBrains Mono', monospace",
             fontSize: 9,
             color: "#484F58",
           }}

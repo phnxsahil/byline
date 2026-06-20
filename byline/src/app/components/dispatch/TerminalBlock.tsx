@@ -37,7 +37,7 @@ export function TerminalBlock({ label, children }: TerminalBlockProps) {
           />
           <span
             style={{
-              fontFamily: "JetBrains Mono, IBM Plex Mono, monospace",
+              fontFamily: "JetBrains Mono, DM Mono, monospace",
               fontSize: 11,
               color: "#6B6960",
               letterSpacing: "0.04em",
@@ -52,7 +52,7 @@ export function TerminalBlock({ label, children }: TerminalBlockProps) {
         style={{
           margin: 0,
           padding: "20px 20px",
-          fontFamily: "JetBrains Mono, IBM Plex Mono, monospace",
+          fontFamily: "JetBrains Mono, DM Mono, monospace",
           fontSize: 12,
           lineHeight: 1.75,
           color: "#D4CFC6",

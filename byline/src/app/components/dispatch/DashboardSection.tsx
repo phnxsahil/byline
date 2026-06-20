@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { DashboardLayout } from "./dashboard/DashboardLayout";
 import {
   IconBrandLinkedin, IconBrandX, IconBrandReddit, IconBrandThreads,
   IconBrain, IconChessKnight, IconShieldCheck, IconSend,
@@ -677,15 +678,6 @@ function BylinesTable({
 // ─── Main Dashboard ──────────────────────────────────────────────────────────
 
 export function DashboardSection() {
-  const [bylines, setBylines] = useState(RECENT_BYLINES);
-  const [newMilestoneText, setNewMilestoneText] = useState("");
-  const [realDispatches, setRealDispatches] = useState<DispatchRead[]>([]);
-  const [realDrafts, setRealDrafts] = useState<Record<string, DraftRead[]>>({});
-  const [activeSidebarItem, setActiveSidebarItem] = useState("overview");
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [currentProjectId, setCurrentProjectId] = useState("");
-  const currentDispatchRef = useRef<string | null>(null);
-  const abortRef = useRef<AbortController | null>(null);
 
   // ── Command palette state ──────────────────────────────────────────────────
   const [paletteOpen, setPaletteOpen] = useState(false);

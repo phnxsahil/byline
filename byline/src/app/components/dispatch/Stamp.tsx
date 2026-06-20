@@ -47,7 +47,7 @@ export function Stamp({ size = 64 }: StampProps) {
         <text
           fill="#E85E2C"
           fontSize="6.5"
-          fontFamily="'IBM Plex Sans', system-ui, sans-serif"
+          fontFamily="'Inter', system-ui, sans-serif"
           fontWeight="600"
         >
           <textPath href="#stamp-ring" letterSpacing="21">

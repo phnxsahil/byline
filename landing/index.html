@@ -223,13 +223,13 @@ nav.scrolled .cta-btn:hover {
   display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;
   padding:5.5rem 2.5rem 4.5rem;max-width:1200px;margin:0 auto;
 }
-.h-kicker{
+.h-pill{
   display:inline-flex;align-items:center;gap:.5rem;
-  font-family:var(--mono);font-size:.62rem;color:var(--carbon);
-  border:.5px solid var(--rule);padding:.28rem .7rem;margin-bottom:1.35rem;
+  font-family:var(--mono);font-size:.68rem;color:var(--stamp);
+  border:.5px solid rgba(226,106,61,0.4);padding:.18rem .62rem;margin-bottom:1.35rem;
+  background:transparent;border-radius:4px;
 }
-.kicker-dot{width:7px;height:7px;border-radius:50%;background:var(--mint);animation:kblink 2s ease-in-out infinite}
-@keyframes kblink{0%,100%{opacity:1}50%{opacity:.25}}
+.h-pill .pill-icon{font-size:.75rem;color:var(--stamp)}
 .h1{
   font-family:var(--sg);font-size:clamp(2.4rem,4.5vw,3.8rem);font-weight:700;
   line-height:1.05;letter-spacing:-.05em;margin-bottom:1.35rem;
@@ -243,6 +243,8 @@ nav.scrolled .cta-btn:hover {
   cursor:pointer;letter-spacing:.02em;border:none;
   background:var(--ink);color:var(--paper);transition:background .15s;
 }
+.btn-lg.stamp{background:var(--stamp);color:var(--paper)}
+.btn-lg.stamp:hover{background:#D04D1E}
 .btn-lg:hover{background:var(--wire)}
 .btn-ghost{
   font-family:var(--mono);font-size:.72rem;padding:.72rem 1.25rem;
@@ -252,7 +254,7 @@ nav.scrolled .cta-btn:hover {
 .btn-ghost:hover{border-color:rgba(26,25,22,.25);color:var(--ink)}
 /* trust badges — mid-dot separators */
 .h-trust{display:flex;align-items:center;gap:0;flex-wrap:wrap;margin-top:0}
-.trust-item{font-family:var(--mono);font-size:.6rem;color:var(--carbon);display:flex;align-items:center;}
+.trust-item{font-family:var(--mono);font-size:.68rem;color:var(--carbon);display:flex;align-items:center;}
 .trust-sep{display:inline-block;margin:0 .55rem;color:var(--dispatch-text-tertiary);font-size:.75rem;line-height:1;}
 
 /* ══ HERO DEMO BOX ════════════════════════════════════════════════════════ */
@@ -1086,23 +1088,21 @@ footer{
 <!-- ════ HERO ════ -->
 <section class="hero">
   <div>
-    <div class="h-kicker">
-      <span class="kicker-dot"></span>
-      <span id="ticker-count">247</span> dispatches sent today
-    </div>
+    <div class="h-pill"><span class="pill-icon">⚡</span> AI content agent for builders</div>
     <h1 class="h1">Ship things.<br><span class="accent">Byline the rest.</span></h1>
-    <p class="h-sub">The personal wire service for builders. Log a 30-second update about what you shipped. Byline remembers your projects and writes platform-native posts for LinkedIn, X, Reddit, and Threads — in your voice, without the reformatting tax.</p>
-    <p class="h-sub-watcher">Or connect your GitHub — Byline watches your commits and surfaces drafts before you even think to post.</p>
+    <p class="h-sub">One milestone. Five specialized AI agents run in parallel — Strategist, 4 Platform Writers, Critic — and publish to LinkedIn, X, Reddit, and Threads in your voice.</p>
     <div class="h-actions">
-      <button class="btn-lg" onclick="document.querySelector('.wl-form').scrollIntoView({behavior:'smooth'})">join the waitlist</button>
-      <button class="btn-ghost" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">see how it works</button>
+      <button class="btn-lg stamp" onclick="window.open('https://docs.byline.so', '_blank')">Read the Docs</button>
+      <button class="btn-ghost" onclick="window.open('https://github.com/sahil/byline', '_blank')">Star on GitHub</button>
     </div>
     <div class="h-trust">
-      <div class="trust-item">Self-hostable</div>
+      <div class="trust-item">self-hosted</div>
       <span class="trust-sep">·</span>
       <div class="trust-item">LangGraph + Claude</div>
       <span class="trust-sep">·</span>
-      <div class="trust-item">Composio distribution</div>
+      <div class="trust-item">Composio</div>
+      <span class="trust-sep">·</span>
+      <div class="trust-item">MIT license</div>
     </div>
   </div>
 

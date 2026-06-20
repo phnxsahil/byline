@@ -33,7 +33,7 @@ export function Logo({ size = 14, dark = false }: LogoProps) {
           50% { opacity: 0; }
         }
         .byline-cursor-blink {
-          animation: byline-blink 1s step-start infinite;
+          animation: byline-blink 0.9s step-end infinite;
         }
       `}</style>
       

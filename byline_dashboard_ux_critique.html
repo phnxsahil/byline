@@ -1,0 +1,1358 @@
+<style>
+  h2.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-text-primary)
+  }
+
+  .root {
+    padding: 1.5rem 0
+  }
+
+  .section {
+    margin-bottom: 2rem
+  }
+
+  .sec-label {
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: .5rem
+  }
+
+  .sec-title {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: .25rem
+  }
+
+  .sec-sub {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.6
+  }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem
+  }
+
+  .tab {
+    padding: 6px 14px;
+    font-size: 13px;
+    border: 0.5px solid var(--color-border-secondary);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    background: transparent;
+    color: var(--color-text-secondary);
+    transition: all .15s
+  }
+
+  .tab.active {
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-primary)
+  }
+
+  .panel {
+    display: none
+  }
+
+  .panel.active {
+    display: block
+  }
+
+  .grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px
+  }
+
+  .grid3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px
+  }
+
+  .card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: 1rem 1.25rem
+  }
+
+  .card-warn {
+    border-left: 3px solid #E24B4A;
+    border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0
+  }
+
+  .card-ok {
+    border-left: 3px solid #639922;
+    border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0
+  }
+
+  .card-idea {
+    border-left: 3px solid #7F77DD;
+    border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: .4rem
+  }
+
+  .card-body {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.6
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: var(--border-radius-md);
+    margin-right: 4px;
+    margin-bottom: 4px
+  }
+
+  .badge-red {
+    background: #FCEBEB;
+    color: #A32D2D
+  }
+
+  .badge-green {
+    background: #EAF3DE;
+    color: #3B6D11
+  }
+
+  .badge-purple {
+    background: #EEEDFE;
+    color: #534AB7
+  }
+
+  .badge-amber {
+    background: #FAEEDA;
+    color: #854F0B
+  }
+
+  .badge-gray {
+    background: var(--color-background-secondary);
+    color: var(--color-text-secondary)
+  }
+
+  .item-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: .75rem 0;
+    border-bottom: 0.5px solid var(--color-border-tertiary)
+  }
+
+  .item-row:last-child {
+    border-bottom: none
+  }
+
+  .item-num {
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    min-width: 20px;
+    padding-top: 2px
+  }
+
+  .item-content {
+    flex: 1
+  }
+
+  .item-title {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 2px
+  }
+
+  .item-desc {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    line-height: 1.5
+  }
+
+  .item-cta {
+    font-size: 11px;
+    color: var(--color-text-info);
+    margin-top: 4px;
+    cursor: pointer
+  }
+
+  .item-cta:hover {
+    text-decoration: underline
+  }
+
+  .code-block {
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md);
+    padding: .75rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    margin: .5rem 0;
+    white-space: pre-wrap;
+    line-height: 1.6
+  }
+
+  .prompt-block {
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md);
+    padding: 1rem;
+    margin: .75rem 0
+  }
+
+  .prompt-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--color-text-tertiary);
+    margin-bottom: .5rem
+  }
+
+  .prompt-text {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.65
+  }
+
+  .divider {
+    border: none;
+    border-top: 0.5px solid var(--color-border-tertiary);
+    margin: 1.25rem 0
+  }
+
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: .5rem 0
+  }
+
+  .score-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: var(--color-background-secondary);
+    border-radius: 3px;
+    overflow: hidden
+  }
+
+  .score-bar {
+    height: 100%;
+    border-radius: 3px
+  }
+
+  .score-label {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    min-width: 140px
+  }
+
+  .score-val {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    min-width: 28px;
+    text-align: right
+  }
+
+  .lib-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: .6rem 0;
+    border-bottom: 0.5px solid var(--color-border-tertiary)
+  }
+
+  .lib-row:last-child {
+    border-bottom: none
+  }
+
+  .lib-name {
+    font-size: 13px;
+    font-weight: 500;
+    min-width: 160px
+  }
+
+  .lib-desc {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    flex: 1
+  }
+
+  .lib-badge {
+    font-size: 11px;
+    background: var(--color-background-secondary);
+    color: var(--color-text-tertiary);
+    border: 0.5px solid var(--color-border-tertiary);
+    padding: 2px 7px;
+    border-radius: var(--border-radius-md);
+    white-space: nowrap
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem
+  }
+
+  .nav-mock {
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    padding: .75rem 1rem;
+    font-size: 12px;
+    margin: .75rem 0
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px;
+    border-radius: var(--border-radius-md);
+    color: var(--color-text-secondary);
+    cursor: pointer
+  }
+
+  .nav-item:hover,
+  .nav-item.active {
+    background: var(--color-background-primary);
+    color: var(--color-text-primary)
+  }
+
+  .nav-item i {
+    font-size: 15px
+  }
+
+  .nav-group {
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    padding: 8px 8px 4px
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 100px;
+    background: var(--color-background-secondary);
+    color: var(--color-text-secondary);
+    border: 0.5px solid var(--color-border-tertiary)
+  }
+</style>
+
+<h2 class="sr-only">Byline dashboard UX critique and redesign recommendations — interactive reference organized by
+  category</h2>
+
+<div class="root">
+  <div class="section">
+    <div class="sec-label">Senior UX Audit</div>
+    <div class="sec-title">Byline dashboard — full redesign spec</div>
+    <div class="sec-sub">Inspired by Linear, Raycast, Vercel, GitHub, Warp. Organized into 8 areas. Click a tab to
+      explore.</div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1.5rem">
+      <div
+        style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:.75rem 1rem">
+        <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px">Current state</div>
+        <div style="font-size:20px;font-weight:500;color:#E24B4A">Generic admin</div>
+        <div style="font-size:12px;color:var(--color-text-secondary)">CRUD panel energy</div>
+      </div>
+      <div
+        style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:.75rem 1rem">
+        <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px">Target state</div>
+        <div style="font-size:20px;font-weight:500;color:#639922">Founder OS</div>
+        <div style="font-size:12px;color:var(--color-text-secondary)">Opinionated, powerful</div>
+      </div>
+      <div
+        style="background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:.75rem 1rem">
+        <div style="font-size:11px;color:var(--color-text-tertiary);margin-bottom:4px">Gaps found</div>
+        <div style="font-size:20px;font-weight:500">14 critical</div>
+        <div style="font-size:12px;color:var(--color-text-secondary)">across 8 areas</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="showPanel('nav')"><i class="ti ti-layout-sidebar" aria-hidden="true"></i>
+        Navigation</button>
+      <button class="tab" onclick="showPanel('missing')"><i class="ti ti-puzzle" aria-hidden="true"></i> Missing
+        sections</button>
+      <button class="tab" onclick="showPanel('onboarding')"><i class="ti ti-rocket" aria-hidden="true"></i>
+        Onboarding</button>
+      <button class="tab" onclick="showPanel('selfhost')"><i class="ti ti-server" aria-hidden="true"></i>
+        Self-hosting</button>
+      <button class="tab" onclick="showPanel('control')"><i class="ti ti-adjustments-horizontal" aria-hidden="true"></i>
+        User control</button>
+      <button class="tab" onclick="showPanel('visual')"><i class="ti ti-palette" aria-hidden="true"></i> Visual
+        design</button>
+      <button class="tab" onclick="showPanel('prompts')"><i class="ti ti-sparkles" aria-hidden="true"></i> Lovable
+        prompts</button>
+      <button class="tab" onclick="showPanel('libs')"><i class="ti ti-package" aria-hidden="true"></i>
+        Libraries</button>
+    </div>
+
+    <!-- NAV PANEL -->
+    <div id="panel-nav" class="panel active">
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-title">Current navbar — critical problems</div>
+        <div class="card-body">The current top navbar is a generic web header. No depth, no power user shortcuts, no
+          command palette. It doesn't feel like a tool you live in daily.</div>
+      </div>
+      <div class="grid2" style="margin-bottom:1rem">
+        <div class="card card-warn">
+          <div class="card-title"><span class="badge badge-red">Miss</span> No command palette</div>
+          <div class="card-body">Every developer tool in 2025 has ⌘K. Byline has none. This is the single
+            highest-leverage addition — lets power users publish without touching the mouse.</div>
+        </div>
+        <div class="card card-warn">
+          <div class="card-title"><span class="badge badge-red">Miss</span> Flat sidebar, no hierarchy</div>
+          <div class="card-body">Current agent config + recent bylines dump everything at the same level. No grouping by
+            project, no separation between pipeline controls and history.</div>
+        </div>
+        <div class="card card-warn">
+          <div class="card-title"><span class="badge badge-red">Miss</span> No status bar / system tray</div>
+          <div class="card-body">The footer just shows navigation links. It should be a persistent status bar showing
+            agent health, last run time, Composio connection status, and pipeline queue.</div>
+        </div>
+        <div class="card card-warn">
+          <div class="card-title"><span class="badge badge-red">Miss</span> No project switcher</div>
+          <div class="card-body">A user running Byline for 4 projects has no way to filter their feed to a single
+            project. The entire app needs a project context, like Vercel's team switcher.</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom:.75rem">
+        <div class="card-title">Recommended sidebar structure — inspired by Linear</div>
+        <div class="card-body" style="margin-bottom:.75rem">Two-level sidebar: top-level for workspace globals, second
+          level for project-scoped views. Collapsible to icon-only mode (like Warp).</div>
+        <div class="nav-mock">
+          <div
+            style="display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:8px;border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:10px">
+            <div
+              style="width:22px;height:22px;background:var(--color-background-info);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;color:var(--color-text-info)">
+              B</div>
+            <span style="font-size:13px;font-weight:500">byline</span>
+            <span class="tag" style="margin-left:auto;font-size:10px">self-hosted</span>
+          </div>
+          <div class="nav-group">Workspace</div>
+          <div class="nav-item active"><i class="ti ti-home"></i> Overview</div>
+          <div class="nav-item"><i class="ti ti-chart-bar"></i> Analytics</div>
+          <div class="nav-item"><i class="ti ti-bell"></i> Feed</div>
+          <div class="nav-group">Projects</div>
+          <div class="nav-item"><i class="ti ti-folder"></i> fltrd.tech <span
+              style="margin-left:auto;font-size:10px;color:var(--color-text-tertiary)">active</span></div>
+          <div class="nav-item"><i class="ti ti-folder"></i> Miryn</div>
+          <div class="nav-item"><i class="ti ti-plus" style="color:var(--color-text-tertiary)"></i> <span
+              style="color:var(--color-text-tertiary)">Add project</span></div>
+          <div class="nav-group">Agents</div>
+          <div class="nav-item"><i class="ti ti-player-play"></i> Pipeline</div>
+          <div class="nav-item"><i class="ti ti-robot"></i> Agent log</div>
+          <div class="nav-group">Settings</div>
+          <div class="nav-item"><i class="ti ti-adjustments-horizontal"></i> Voice profile</div>
+          <div class="nav-item"><i class="ti ti-plug-connected"></i> Integrations</div>
+          <div class="nav-item"><i class="ti ti-terminal"></i> CLI &amp; API</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Footer → persistent status bar</div>
+        <div class="card-body" style="margin-bottom:.75rem">Replace the generic footer links with a Warp-style bottom
+          status bar. Always visible, never intrusive.</div>
+        <div
+          style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.6rem 1rem;font-size:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+          <span style="display:flex;align-items:center;gap:5px;color:var(--color-text-secondary)"><i
+              class="ti ti-circle-check" style="color:#639922;font-size:14px"></i> Composio connected</span>
+          <span style="display:flex;align-items:center;gap:5px;color:var(--color-text-secondary)"><i
+              class="ti ti-circle-check" style="color:#639922;font-size:14px"></i> LangGraph healthy</span>
+          <span style="display:flex;align-items:center;gap:5px;color:var(--color-text-secondary)"><i class="ti ti-clock"
+              style="font-size:14px"></i> Last run: 3m ago</span>
+          <span style="display:flex;align-items:center;gap:5px;color:var(--color-text-secondary)"><i class="ti ti-stack"
+              style="font-size:14px"></i> Queue: 2 pending</span>
+          <span style="margin-left:auto;display:flex;align-items:center;gap:8px">
+            <span style="font-size:11px;color:var(--color-text-tertiary)">v0.4.2</span>
+            <span onclick="sendPrompt('What keyboard shortcuts does Byline support?')" class="item-cta"
+              style="font-size:11px;display:flex;align-items:center;gap:4px"><i class="ti ti-keyboard"
+                style="font-size:12px"></i> ⌘K</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MISSING SECTIONS PANEL -->
+    <div id="panel-missing" class="panel">
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-title">14 missing dashboard sections</div>
+        <div class="card-body">Grouped by priority. The current dashboard has stats + a bylines table + agent config.
+          That's about 20% of what a real Founder OS needs.</div>
+      </div>
+      <div style="margin-bottom:.5rem;font-size:13px;font-weight:500">Priority 1 — ship these first</div>
+      <div class="card" style="margin-bottom:1rem">
+        <div class="item-row">
+          <div class="item-num">01</div>
+          <div class="item-content">
+            <div class="item-title">Project context cards <span class="badge badge-red">Missing</span></div>
+            <div class="item-desc">Each project (fltrd.tech, Miryn, etc.) gets its own card in the sidebar and a context
+              page: tech stack, tagline, current milestone, metrics, GitHub link, and an "update context" button. Every
+              draft pulls from this — it's the core memory layer. Right now you have zero of this.</div>
+            <div class="item-cta"
+              onclick="sendPrompt('Write Lovable prompts to build the project context card page for Byline')">Write
+              prompts for this ↗</div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-num">02</div>
+          <div class="item-content">
+            <div class="item-title">Voice profile page <span class="badge badge-red">Missing</span></div>
+            <div class="item-desc">Let users paste 5-10 of their old LinkedIn/X posts. Run them through an extractor
+              that builds a profile: avg paragraph length, sentence openers you never use, words you overuse, your
+              tonality score. Display it visually. Show it as a diff against the current draft. This is the biggest
+              differentiator from every other tool.</div>
+            <div class="item-cta" onclick="sendPrompt('Design the voice profile UI for Byline — what should it show?')">
+              Design this ↗</div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-num">03</div>
+          <div class="item-content">
+            <div class="item-title">Draft review / "The Desk" view <span class="badge badge-amber">Partial</span></div>
+            <div class="item-desc">The demo on the landing page shows this beautifully — 4 platform tabs, edit/approve
+              buttons, quality score. But the actual dashboard doesn't have it. The "Recent bylines" table is not the
+              same thing. You need the full desk view as the primary dashboard action, not buried in a demo.</div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-num">04</div>
+          <div class="item-content">
+            <div class="item-title">Agent pipeline run log / trace view <span class="badge badge-red">Missing</span>
+            </div>
+            <div class="item-desc">When a milestone runs through the pipeline, users should be able to click "view run"
+              and see each agent's output, token usage, time taken, and any flags. Like Vercel's build log. This builds
+              trust in the AI and lets users debug bad outputs.</div>
+            <div class="item-cta"
+              onclick="sendPrompt('What should a LangGraph agent run trace look like in a developer dashboard?')">
+              Explore this ↗</div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-num">05</div>
+          <div class="item-content">
+            <div class="item-title">GitHub integration page <span class="badge badge-red">Missing</span></div>
+            <div class="item-desc">The landing page mentions GitHub webhook ingestion — auto-detect releases and
+              significant PRs. But there's no UI to set this up. You need a page: connect repo → choose trigger rules
+              (releases only? PRs above N lines? Tags?) → preview what gets turned into bylines.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:.5rem;font-size:13px;font-weight:500">Priority 2 — strong differentiators</div>
+      <div class="card" style="margin-bottom:1rem">
+        <div class="item-row">
+          <div class="item-num">06</div>
+          <div class="item-content">
+            <div class="item-title">Platform performance analytics <span class="badge badge-red">Missing</span></div>
+            <div class="item-desc">The dashboard shows a "posts / week" bar chart and a voice score trend. That's it.
+              You need: engagement by platform, top-performing post types, best days/times to post, and a feedback loop
+              that feeds back into agent prompts. Like a personal social media analytics layer.</div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-num">07</div>
+          <div class="item-content">
+            <div class="item-title">Milestone queue / content calendar <span class="badge badge-red">Missing</span>
+            </div>
+            <div class="item-desc">A lightweight calendar or queue view showing: upcoming scheduled posts, milestones
+              logged but not yet published, and suggested optimal posting times per platform. Ghost and Beehiiv do this
+              well. It makes the tool feel like an OS, not a one-shot generator.</div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-num">08</div>
+          <div class="item-content">
+            <div class="item-title">Narrative arc manager <span class="badge badge-red">Missing</span></div>
+            <div class="item-desc">The "build in public" narrative arc is mentioned in the demo dropdown, but it's just
+              a selector. Build a full arc manager: create a story arc (e.g. "zero to 1000 users"), add chapters, tag
+              milestones to chapters. The arc gives every post coherence — post 7 of the 1000-user arc feels different
+              from a standalone update.</div>
+            <div class="item-cta" onclick="sendPrompt('Design a narrative arc manager for a build-in-public OS tool')">
+              Explore this ↗</div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-num">09</div>
+          <div class="item-content">
+            <div class="item-title">Cross-project synthesis view <span class="badge badge-red">Missing</span></div>
+            <div class="item-desc">From the original spec: if you've built 4 projects all using pgvector, Byline should
+              spot the pattern and suggest a synthesis post — "Lessons from 4 RAG projects." No other tool does this. It
+              requires pgvector semantic search across all your logged milestones.</div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-num">10</div>
+          <div class="item-content">
+            <div class="item-title">Voice note / quick capture widget <span class="badge badge-amber">Partial</span>
+            </div>
+            <div class="item-desc">The CLI has `byline log "..."`. The dashboard has a text area. But there's no voice
+              note button (Whisper) in the dashboard — it's mentioned in the features section but not actually built.
+              Add a mic button next to the text area that records → transcribes → submits instantly.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:.5rem;font-size:13px;font-weight:500">Priority 3 — polish and depth</div>
+      <div class="card">
+        <div class="item-row">
+          <div class="item-num">11</div>
+          <div class="item-content">
+            <div class="item-title">Build log / changelog feed <span class="badge badge-red">Missing</span></div>
+            <div class="item-desc">A chronological public-facing feed of all your logged milestones (not the posts, the
+              raw milestones). Like an internal changelog. Can be optionally public at byline.local/changelog. Founders
+              love this as a second artifact.</div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-num">12</div>
+          <div class="item-content">
+            <div class="item-title">Subreddit intelligence panel <span class="badge badge-red">Missing</span></div>
+            <div class="item-desc">For Reddit posts — show which subreddits the strategist agent considered, why it
+              picked one, what the top posts in that community look like, and the anti-promo score. Makes the "Reddit
+              Stealth" feature tangible instead of a black box toggle.</div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-num">13</div>
+          <div class="item-content">
+            <div class="item-title">Custom post templates / styles <span class="badge badge-red">Missing</span></div>
+            <div class="item-desc">Let users save their own reusable formats: "problem → solution → lesson" for
+              LinkedIn, "What I shipped / what broke / what I learned" for X threads. The agent uses these as starting
+              structures rather than generating from scratch every time.</div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-num">14</div>
+          <div class="item-content">
+            <div class="item-title">Team / collaborator view <span class="badge badge-red">Missing</span></div>
+            <div class="item-desc">The cloud plan mentions "team workspace" — but there's no UI for it even in prototype
+              form. Add at least a placeholder page showing how multi-user Byline would work (review queue, draft
+              comments, approval flow). Signals the roadmap clearly.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ONBOARDING PANEL -->
+    <div id="panel-onboarding" class="panel">
+      <div class="card card-warn" style="margin-bottom:1rem">
+        <div class="card-title">Current onboarding — the biggest UX failure</div>
+        <div class="card-body">After `docker compose up`, users land on the dashboard with NO empty state guidance. No
+          first-run checklist, no onboarding flow, no example data. The "self-hosted preview" banner exists but does
+          nothing to guide setup. This is a self-hosted tool — your users are technical, but they still need
+          orientation.</div>
+      </div>
+      <div class="grid2" style="margin-bottom:1rem">
+        <div class="card card-idea">
+          <div class="card-title">First-run wizard (5 steps)</div>
+          <div class="card-body">
+            <div class="item-row" style="padding:.4rem 0">
+              <div class="item-num" style="font-size:12px;color:var(--color-text-info);font-weight:500">01</div>
+              <div class="item-content">
+                <div class="item-title" style="font-size:12px">Name your first project</div>
+                <div class="item-desc" style="font-size:11px">fltrd.tech + description + stack</div>
+              </div>
+            </div>
+            <div class="item-row" style="padding:.4rem 0">
+              <div class="item-num" style="font-size:12px;color:var(--color-text-info);font-weight:500">02</div>
+              <div class="item-content">
+                <div class="item-title" style="font-size:12px">Paste 5 old posts for voice training</div>
+                <div class="item-desc" style="font-size:11px">LinkedIn / X / Reddit</div>
+              </div>
+            </div>
+            <div class="item-row" style="padding:.4rem 0">
+              <div class="item-num" style="font-size:12px;color:var(--color-text-info);font-weight:500">03</div>
+              <div class="item-content">
+                <div class="item-title" style="font-size:12px">Connect platforms via Composio</div>
+                <div class="item-desc" style="font-size:11px">Click-through OAuth, handled for you</div>
+              </div>
+            </div>
+            <div class="item-row" style="padding:.4rem 0">
+              <div class="item-num" style="font-size:12px;color:var(--color-text-info);font-weight:500">04</div>
+              <div class="item-content">
+                <div class="item-title" style="font-size:12px">Log your first milestone</div>
+                <div class="item-desc" style="font-size:11px">Live demo — see drafts in real time</div>
+              </div>
+            </div>
+            <div class="item-row" style="padding:.4rem 0;border-bottom:none">
+              <div class="item-num" style="font-size:12px;color:var(--color-text-info);font-weight:500">05</div>
+              <div class="item-content">
+                <div class="item-title" style="font-size:12px">Review and ship your first byline</div>
+                <div class="item-desc" style="font-size:11px">One click to approve + post</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card card-idea">
+          <div class="card-title">Empty state design</div>
+          <div class="card-body">
+            <div
+              style="border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:1.25rem;text-align:center;margin-bottom:.75rem">
+              <i class="ti ti-terminal-2"
+                style="font-size:28px;color:var(--color-text-tertiary);display:block;margin-bottom:.5rem"></i>
+              <div style="font-size:13px;font-weight:500;margin-bottom:.25rem">Log your first milestone</div>
+              <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:.75rem">Type what you shipped.
+                The pipeline runs in seconds.</div>
+              <div class="code-block" style="text-align:left;margin:0">$ byline log "shipped v1 of fltrd.tech search"
+              </div>
+            </div>
+            <div class="card-body" style="font-size:12px">Every section needs its own empty state. Analytics: "Post
+              something first." Voice profile: "Paste 3 posts to get started." Agent log: "No runs yet — log a milestone
+              to trigger the pipeline." Linear does this extremely well — each empty state teaches while waiting.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Checklist / progress bar at top of dashboard</div>
+        <div class="card-body" style="margin-bottom:.75rem">Until all 5 setup steps are complete, show a persistent
+          setup checklist at the top of the main dashboard. Like Vercel's "Get started" or Stripe's onboarding
+          checklist. Dismissable only after completion.</div>
+        <div
+          style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.75rem 1rem">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">
+            <span style="font-size:13px;font-weight:500">Getting started</span>
+            <span style="font-size:12px;color:var(--color-text-secondary)">2 / 5 complete</span>
+          </div>
+          <div
+            style="height:4px;background:var(--color-background-primary);border-radius:2px;overflow:hidden;margin-bottom:.75rem">
+            <div style="width:40%;height:100%;background:#639922;border-radius:2px"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px"><i class="ti ti-circle-check"
+                style="color:#639922;font-size:15px"></i> <span
+                style="color:var(--color-text-secondary);text-decoration:line-through">Created first project</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px"><i class="ti ti-circle-check"
+                style="color:#639922;font-size:15px"></i> <span
+                style="color:var(--color-text-secondary);text-decoration:line-through">Connected LinkedIn</span></div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px"><i class="ti ti-circle-dashed"
+                style="color:var(--color-text-tertiary);font-size:15px"></i> Train voice profile</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px"><i class="ti ti-circle-dashed"
+                style="color:var(--color-text-tertiary);font-size:15px"></i> Log first milestone</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px"><i class="ti ti-circle-dashed"
+                style="color:var(--color-text-tertiary);font-size:15px"></i> Ship first byline</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SELF-HOSTING PANEL -->
+    <div id="panel-selfhost" class="panel">
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-title">Self-hosting experience — what it should feel like</div>
+        <div class="card-body">Self-hosted tools succeed when the setup experience is under 10 minutes and the user
+          feels in control from minute one. Byline's current quick start (clone → copy .env → docker up) is fine but the
+          post-boot experience is a black box. Here's what to add.</div>
+      </div>
+      <div class="grid2" style="margin-bottom:1rem">
+        <div class="card card-idea">
+          <div class="card-title">Health check / system status page</div>
+          <div class="card-body">
+            <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:.75rem">Accessible at <span
+                style="font-family:var(--font-mono)">/system</span> or from the sidebar. Shows all services with
+              real-time ping.</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div
+                style="display:flex;align-items:center;justify-content:space-between;font-size:12px;padding:5px 8px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+                <span>LangGraph API</span>
+                <span style="color:#639922;display:flex;align-items:center;gap:4px"><i class="ti ti-activity"
+                    style="font-size:13px"></i> 42ms</span>
+              </div>
+              <div
+                style="display:flex;align-items:center;justify-content:space-between;font-size:12px;padding:5px 8px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+                <span>pgvector / Postgres</span>
+                <span style="color:#639922;display:flex;align-items:center;gap:4px"><i class="ti ti-activity"
+                    style="font-size:13px"></i> 8ms</span>
+              </div>
+              <div
+                style="display:flex;align-items:center;justify-content:space-between;font-size:12px;padding:5px 8px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+                <span>Composio MCP</span>
+                <span style="color:#639922;display:flex;align-items:center;gap:4px"><i class="ti ti-activity"
+                    style="font-size:13px"></i> 118ms</span>
+              </div>
+              <div
+                style="display:flex;align-items:center;justify-content:space-between;font-size:12px;padding:5px 8px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+                <span>Anthropic API</span>
+                <span style="color:#639922;display:flex;align-items:center;gap:4px"><i class="ti ti-activity"
+                    style="font-size:13px"></i> connected</span>
+              </div>
+              <div
+                style="display:flex;align-items:center;justify-content:space-between;font-size:12px;padding:5px 8px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+                <span>Whisper / audio</span>
+                <span style="color:#854F0B;display:flex;align-items:center;gap:4px"><i class="ti ti-alert-triangle"
+                    style="font-size:13px"></i> not configured</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card card-idea">
+          <div class="card-title">.env visual editor</div>
+          <div class="card-body">
+            <div style="font-size:12px;color:var(--color-text-secondary);margin-bottom:.75rem">Instead of raw .env
+              editing, add a settings page that reads from env and shows grouped, documented fields with validation and
+              secret masking. Like Railway's environment panel.</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div
+                style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-tertiary)">AI
+                provider</div>
+              <div
+                style="display:flex;align-items:center;gap:8px;font-size:12px;background:var(--color-background-secondary);padding:6px 8px;border-radius:var(--border-radius-md)">
+                <span style="min-width:130px;color:var(--color-text-secondary)">ANTHROPIC_API_KEY</span>
+                <span style="font-family:var(--font-mono);letter-spacing:.1em">sk-ant-••••••••••••</span>
+                <i class="ti ti-edit" style="margin-left:auto;font-size:13px;color:var(--color-text-tertiary)"></i>
+              </div>
+              <div
+                style="font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-tertiary);margin-top:4px">
+                Social platforms</div>
+              <div
+                style="display:flex;align-items:center;gap:8px;font-size:12px;background:var(--color-background-secondary);padding:6px 8px;border-radius:var(--border-radius-md)">
+                <span style="min-width:130px;color:var(--color-text-secondary)">COMPOSIO_API_KEY</span>
+                <span style="font-family:var(--font-mono);letter-spacing:.1em">comp_••••••••••</span>
+                <i class="ti ti-edit" style="margin-left:auto;font-size:13px;color:var(--color-text-tertiary)"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">CLI-first vs dashboard-first — my recommendation</div>
+        <div class="card-body" style="line-height:1.7">
+          <strong style="font-weight:500">Go CLI-first for input, dashboard-first for review.</strong> The split is
+          clear:
+          <br><br>
+          <strong style="font-weight:500">CLI does:</strong> log milestone, trigger pipeline, check status, quick
+          approve. Developers want this in their terminal next to their code. `byline log "..."`, `byline status`,
+          `byline approve [id]`, `byline draft [id] --platform linkedin`.
+          <br><br>
+          <strong style="font-weight:500">Dashboard does:</strong> review drafts side-by-side, edit with formatting,
+          view analytics, configure voice profile, manage projects, see agent trace. The visual judgment required for
+          draft review needs a full UI.
+          <br><br>
+          The dashboard should also have a sticky input bar at the bottom (like Claude's chat bar) so keyboard-first
+          users never need to scroll to log something — but the CLI is the primary for that action.
+        </div>
+      </div>
+    </div>
+
+    <!-- USER CONTROL PANEL -->
+    <div id="panel-control" class="panel">
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-title">User control — current state is minimal</div>
+        <div class="card-body">The current dashboard has platform toggles, voice strength slider, critic score floor,
+          posting frequency (low/medium/high), and 5 agent skill toggles. That's a start, but a Founder OS needs much
+          deeper customization. Here's what to add.</div>
+      </div>
+      <div class="grid2" style="margin-bottom:1rem">
+        <div class="card card-idea">
+          <div class="card-title">Per-platform post templates</div>
+          <div class="card-body">Let users define their own post structures per platform. A LinkedIn template might be:
+            hook line → 3 bullet lessons → CTA. An X template: thread opener → 4 thread posts → landing tweet. The agent
+            fills the structure, not invents it.</div>
+        </div>
+        <div class="card card-idea">
+          <div class="card-title">Tone dial per project</div>
+          <div class="card-body">Different projects might warrant different voices. fltrd.tech posts might be more
+            technical; a side-project might be more casual. Let users set per-project tone overrides rather than one
+            global voice profile.</div>
+        </div>
+        <div class="card card-idea">
+          <div class="card-title">Agent skill marketplace</div>
+          <div class="card-body">The "Skills" concept in the doc is the right idea. Tier 1 skills are built-in. Tier 2
+            can be community-contributed skill modules (a "YC voice" skill, a "technical deep-dive" skill, an "indie
+            hacker" Reddit writer). Ship this as the open-source extension point.</div>
+        </div>
+        <div class="card card-idea">
+          <div class="card-title">Keyword / topic blocklist</div>
+          <div class="card-body">Let users specify words or topics to never mention (competitors, sensitive business
+            context, under-NDA tech). The critic agent checks drafts against this list before approval. Simple but
+            high-trust signal.</div>
+        </div>
+        <div class="card card-idea">
+          <div class="card-title">Approval modes</div>
+          <div class="card-body">Three modes: Manual (always review before posting), Semi-auto (auto-post if critic
+            score ≥ threshold), Auto (post everything that passes critic). Make this per-platform. Auto for Threads
+            (low-stakes), manual for LinkedIn (high-stakes).</div>
+        </div>
+        <div class="card card-idea">
+          <div class="card-title">Prompt inspector / override</div>
+          <div class="card-body">Let power users see and edit the actual prompts sent to each agent. Raycast-style "edit
+            this action" mode. Makes the tool feel transparent and hackable — critical for developer adoption.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Enhanced agent config UI</div>
+        <div class="card-body" style="margin-bottom:.75rem">The current agent config is a set of toggles. It needs
+          sub-pages per agent with detailed controls.</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:12px">
+          <div
+            style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.6rem .8rem">
+            <div style="font-weight:500;margin-bottom:4px">Strategist</div>
+            <div style="color:var(--color-text-secondary)">Platform weights, post-worthiness threshold, angle
+              preferences</div>
+          </div>
+          <div
+            style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.6rem .8rem">
+            <div style="font-weight:500;margin-bottom:4px">LinkedIn writer</div>
+            <div style="color:var(--color-text-secondary)">Paragraph length, hook style, CTA behavior, emoji policy
+            </div>
+          </div>
+          <div
+            style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.6rem .8rem">
+            <div style="font-weight:500;margin-bottom:4px">Reddit writer</div>
+            <div style="color:var(--color-text-secondary)">Subreddit list, anti-promo intensity, flair preferences</div>
+          </div>
+          <div
+            style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.6rem .8rem">
+            <div style="font-weight:500;margin-bottom:4px">X writer</div>
+            <div style="color:var(--color-text-secondary)">Thread length, hashtag policy, reply hook style</div>
+          </div>
+          <div
+            style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.6rem .8rem">
+            <div style="font-weight:500;margin-bottom:4px">Critic</div>
+            <div style="color:var(--color-text-secondary)">Score weights, rejection reasons, custom checks</div>
+          </div>
+          <div
+            style="background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.6rem .8rem">
+            <div style="font-weight:500;margin-bottom:4px">Scheduling</div>
+            <div style="color:var(--color-text-secondary)">Best time to post per platform, timezone, frequency cap</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISUAL DESIGN PANEL -->
+    <div id="panel-visual" class="panel">
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-title">Visual design audit</div>
+        <div class="card-body">The landing page has excellent visual design. The dashboard is noticeably weaker. Here's
+          the gap analysis and specific fixes.</div>
+      </div>
+      <div style="margin-bottom:.75rem">
+        <div style="margin-bottom:.5rem;font-size:13px;font-weight:500">Current dashboard score by category</div>
+        <div class="score-row">
+          <div class="score-label">Typography hierarchy</div>
+          <div class="score-bar-bg">
+            <div class="score-bar" style="width:50%;background:#E24B4A"></div>
+          </div>
+          <div class="score-val" style="color:#A32D2D">5/10</div>
+        </div>
+        <div class="score-row">
+          <div class="score-label">Data visualization</div>
+          <div class="score-bar-bg">
+            <div class="score-bar" style="width:40%;background:#E24B4A"></div>
+          </div>
+          <div class="score-val" style="color:#A32D2D">4/10</div>
+        </div>
+        <div class="score-row">
+          <div class="score-label">Empty states</div>
+          <div class="score-bar-bg">
+            <div class="score-bar" style="width:20%;background:#E24B4A"></div>
+          </div>
+          <div class="score-val" style="color:#A32D2D">2/10</div>
+        </div>
+        <div class="score-row">
+          <div class="score-label">Interaction feedback</div>
+          <div class="score-bar-bg">
+            <div class="score-bar" style="width:40%;background:#BA7517"></div>
+          </div>
+          <div class="score-val" style="color:#854F0B">4/10</div>
+        </div>
+        <div class="score-row">
+          <div class="score-label">Color consistency</div>
+          <div class="score-bar-bg">
+            <div class="score-bar" style="width:60%;background:#BA7517"></div>
+          </div>
+          <div class="score-val" style="color:#854F0B">6/10</div>
+        </div>
+        <div class="score-row">
+          <div class="score-label">Mobile responsiveness</div>
+          <div class="score-bar-bg">
+            <div class="score-bar" style="width:30%;background:#E24B4A"></div>
+          </div>
+          <div class="score-val" style="color:#A32D2D">3/10</div>
+        </div>
+        <div class="score-row">
+          <div class="score-label">Overall dev-tool feel</div>
+          <div class="score-bar-bg">
+            <div class="score-bar" style="width:45%;background:#BA7517"></div>
+          </div>
+          <div class="score-val" style="color:#854F0B">4.5/10</div>
+        </div>
+      </div>
+      <hr class="divider">
+      <div class="grid2" style="margin-bottom:1rem">
+        <div class="card card-idea">
+          <div class="card-title">Avatar system</div>
+          <div class="card-body">Use <strong style="font-weight:500">Boring Avatars</strong> (open source) for project
+            avatars. Generated from project name hash — deterministic, beautiful, unique. Each project gets its own
+            color set. Shown in sidebar, project cards, and draft headers.</div>
+          <div class="code-block">import Avatar from 'boring-avatars'
+
+            &lt;Avatar
+            name="fltrd.tech"
+            variant="marble"
+            colors={["#E8593C","#2C2C2A"]}
+            /&gt;</div>
+        </div>
+        <div class="card card-idea">
+          <div class="card-title">Icon library</div>
+          <div class="card-body">Use <strong style="font-weight:500">Tabler Icons</strong> (7000+ outline icons, MIT
+            license) for all UI icons. It's already used in some places. Replace any emoji or inconsistent icons with
+            Tabler throughout the dashboard. The outline style matches the minimal aesthetic exactly.</div>
+          <div class="code-block">npm install @tabler/icons-react
+
+            import { IconRocket, IconBrandLinkedin,
+            IconTerminal2 } from '@tabler/icons-react'</div>
+        </div>
+        <div class="card card-idea">
+          <div class="card-title">Micro-animations</div>
+          <div class="card-body">Three specific animations that make the product feel alive: (1) Pipeline progress —
+            animated dashed line between agent nodes that fills solid on completion. (2) Critic score reveal — counter
+            animates up to the score on load. (3) Draft approval — subtle confetti or checkmark pulse when you click
+            Approve & Ship.</div>
+          <div class="code-block">// Use framer-motion
+            import { motion } from 'framer-motion'
+
+            // Score counter animation
+            const count = useMotionValue(0)
+            const display = useTransform(count,
+            v =&gt; v.toFixed(1))</div>
+        </div>
+        <div class="card card-idea">
+          <div class="card-title">Terminal-style log viewer</div>
+          <div class="card-body">Agent run traces should look like a terminal (dark bg, monospace font, green/yellow/red
+            log levels). Use <strong style="font-weight:500">xterm.js</strong> or just a styled scrolling div. This is
+            the visual language of developer tools — it signals "this is built for you."</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Specific CSS improvements for the dashboard</div>
+        <div class="card-body" style="margin-bottom:.75rem">Five concrete changes that have the biggest visual impact:
+        </div>
+        <div class="item-row">
+          <div class="item-num">1</div>
+          <div class="item-content">
+            <div class="item-title" style="font-size:12px">Add a thin left accent stripe to active sidebar items</div>
+            <div class="item-desc" style="font-size:11px">Like Linear. 2px solid primary color, flush left. Makes active
+              state unmistakable without heavy backgrounds.</div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-num">2</div>
+          <div class="item-content">
+            <div class="item-title" style="font-size:12px">Replace all full-opacity backgrounds on status badges</div>
+            <div class="item-desc" style="font-size:11px">"Posted" = green-100 bg + green-700 text. "Draft" = amber-100
+              + amber-700. "Flagged" = red-100 + red-700. Never full green/red background — too aggressive.</div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-num">3</div>
+          <div class="item-content">
+            <div class="item-title" style="font-size:12px">Add monospace font to all scores, metrics, and dates</div>
+            <div class="item-desc" style="font-size:11px">Critic scores (8.6), platform counts (47), timestamps — use
+              `font-family: var(--font-mono)`. Makes numbers feel precise and developer-native.</div>
+          </div>
+        </div>
+        <div class="item-row">
+          <div class="item-num">4</div>
+          <div class="item-content">
+            <div class="item-title" style="font-size:12px">Improve the KPI card grid</div>
+            <div class="item-desc" style="font-size:11px">Current cards (Posts published, Avg critic score, etc.) have
+              no trend context. Add a tiny sparkline or ↑↓ percentage delta below each number. 2 lines of data per card
+              tells a much richer story.</div>
+          </div>
+        </div>
+        <div class="item-row" style="border-bottom:none">
+          <div class="item-num">5</div>
+          <div class="item-content">
+            <div class="item-title" style="font-size:12px">Dark/light mode toggle in the header</div>
+            <div class="item-desc" style="font-size:11px">Already in the landing page nav (the moon icon). The dashboard
+              also has it. Make sure it's persistent via localStorage and respects system preference on first load.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROMPTS PANEL -->
+    <div id="panel-prompts" class="panel">
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-title">Lovable / Cursor prompts to fix everything</div>
+        <div class="card-body">Structured prompts you can paste directly into Lovable or Cursor. Each prompt is
+          self-contained and builds on the existing codebase. Start with #1 and go in order — they build on each other.
+        </div>
+      </div>
+
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt 01 — sidebar redesign</div>
+        <div class="prompt-text">Redesign the dashboard sidebar to use a two-level hierarchy. Add a workspace section at
+          the top with a Byline logo + "self-hosted" badge. Below that, add three navigation groups: "Workspace"
+          (Overview, Analytics, Feed), "Projects" (one item per project from the database, with a boring-avatar icon,
+          plus an "Add project" button at the bottom), and "Settings" (Voice profile, Integrations, CLI & API). Make the
+          active item have a 2px left border in the primary accent color (#E8593C) with a subtle background. Add an
+          icon-collapse toggle at the bottom to hide labels and show icon-only mode. Use Tabler Icons for all nav icons.
+        </div>
+      </div>
+
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt 02 — status bar footer</div>
+        <div class="prompt-text">Replace the current footer with a persistent bottom status bar (height 36px, fixed to
+          bottom of the sidebar/main area). Show 4 status pills: Composio connection (green check if connected, red X if
+          not), LangGraph health (green with response time in ms), last pipeline run (relative timestamp like "3m ago"),
+          and queue count ("2 pending" or "idle"). On the far right, show the app version (from package.json) and a
+          keyboard shortcut hint for the command palette (⌘K). This bar should always be visible but never interrupt the
+          main content flow.</div>
+      </div>
+
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt 03 — command palette (⌘K)</div>
+        <div class="prompt-text">Add a command palette triggered by ⌘K (or Ctrl+K on Windows). It should overlay the
+          entire dashboard. Include these commands grouped by category: "Actions" — Log new milestone, Run pipeline,
+          Approve last draft; "Navigate" — Go to Overview, Go to Analytics, Go to Voice Profile, Open project [name];
+          "Agent skills" — Toggle Storyteller mode, Toggle Reddit Stealth; "Settings" — Open integrations, Edit .env.
+          Use a fuzzy search filter at the top. Animate the palette in/out with a subtle scale + opacity transition.
+          Dismiss on Escape or click outside. Style it like Linear's command menu — dark background, monospace font for
+          shortcuts, grouped sections with labels.</div>
+      </div>
+
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt 04 — project context pages</div>
+        <div class="prompt-text">Create a project detail page reachable from the sidebar. It should have: a header with
+          the project name, a boring-avatar (use the boring-avatars npm package with variant="marble"), the project
+          tagline, and a GitHub link. Below that, two columns: left column shows "Project context" — an editable card
+          with fields for: description (textarea), tech stack (tag input), current milestone (text), and key metrics
+          (key-value pairs the user can add/edit). Right column shows "Recent bylines" — last 5 milestones logged for
+          this project, each with platform icons, score, and status. Add a "Update context" button that saves changes
+          and triggers a re-embedding of the context in pgvector.</div>
+      </div>
+
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt 05 — voice profile page</div>
+        <div class="prompt-text">Create a Voice Profile page at /voice. It should have three sections: (1) "Train your
+          voice" — a large textarea where users paste 5+ past posts (LinkedIn, X, or Reddit), with a "Analyze posts"
+          button that calls the backend to extract the voice profile. (2) "Your voice fingerprint" — display the
+          extracted profile as a set of visual metrics: avg sentence length (shown as a bar), paragraph density,
+          vocabulary richness, formality score, and a list of phrases you overuse (as tags) and phrases you never use.
+          (3) "Voice check" — a text input where users can paste any draft and get a voice match score + specific flags
+          ("This sentence doesn't sound like you"). Show a before/after diff visualization.</div>
+      </div>
+
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt 06 — first-run onboarding</div>
+        <div class="prompt-text">Add a first-run onboarding wizard that shows when a user has no projects and no voice
+          profile configured. It should be a full-screen modal overlay (not a separate page) with 5 steps: (1) Name your
+          first project — name field, description, tech stack tags, GitHub URL. (2) Voice training — paste 3+ past
+          posts. (3) Connect platforms — OAuth buttons for LinkedIn, X, Reddit, Threads via Composio (show each platform
+          as a card, green check when connected). (4) Log first milestone — a text area with placeholder "What did you
+          ship today?" and a Run Pipeline button that shows the agents executing in real time with step indicators. (5)
+          Review and ship — show the LinkedIn draft with approve/edit buttons. Include a progress bar at the top showing
+          current step. Allow users to skip steps.</div>
+      </div>
+
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt 07 — agent run trace</div>
+        <div class="prompt-text">Add an agent run trace view accessible by clicking "View run" on any byline in the
+          Recent Bylines table. It should look like a terminal output but structured: each of the 5 agents (Strategist,
+          LinkedIn Writer, X Writer, Reddit Writer, Critic) appears as a collapsible section with: agent name, execution
+          time, token usage, input/output truncated preview, and any flags raised. Style the whole panel with a dark
+          background (not full black — use #1a1a18 or similar), monospace font for the output text, and colored
+          prefixes: green for success, yellow for warnings, red for flags. Show a timeline bar at the top showing the
+          relative time each agent took.</div>
+      </div>
+
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt 08 — KPI cards with sparklines</div>
+        <div class="prompt-text">Redesign the 4 top metric cards (Posts Published, Avg Critic Score, Platforms Live,
+          Reach This Month). Each card should show: the main number in large monospace font, a percentage change vs last
+          month (green if positive, red if negative), and a tiny 8-point sparkline chart showing the weekly trend. Use
+          recharts or tremor for the sparklines. Make the cards respond to hover with a subtle border highlight. Add a
+          5th card showing "Voice score trend" — the 8.6 score from the current chart as a card rather than a separate
+          full-width chart.</div>
+      </div>
+
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt 09 — empty states</div>
+        <div class="prompt-text">Add proper empty states to every section that can be empty. For Recent Bylines (no
+          posts yet): center a terminal icon, "Log your first milestone" heading, a code block showing `$ byline log
+          "what you shipped"`, and a button "Or type it here →". For Analytics (no data): a grayed-out chart skeleton
+          with "Post something first — analytics appear after your first byline." For Voice Profile (not trained): show
+          a split showing "Generic AI voice" vs "Your voice" with a placeholder, and a CTA to go train it. Make empty
+          states educational, not apologetic.</div>
+      </div>
+
+      <div class="prompt-block">
+        <div class="prompt-label">Prompt 10 — "The Desk" as primary view</div>
+        <div class="prompt-text">Move the draft review experience ("The Desk") from the landing page demo into a full
+          dashboard route at /desk. When a pipeline run completes, the user is automatically redirected here. The Desk
+          has: left panel showing the original milestone text, project context, and the narrative arc (if set); right
+          panel with 4 platform tabs (LinkedIn, X, Reddit, Threads) each showing the draft with inline editing. Below
+          each draft: the critic score (animated counter from 0 to the score), voice match indicator (checkmark or
+          flag), and platform-specific metadata (LinkedIn: estimated reach; Reddit: suggested subreddit; X: character
+          count / thread length). Approve & Ship button in primary red-orange. An Edit in draft button that unlocks the
+          text for direct editing.</div>
+      </div>
+    </div>
+
+    <!-- LIBRARIES PANEL -->
+    <div id="panel-libs" class="panel">
+      <div class="card" style="margin-bottom:1rem">
+        <div class="card-title">Recommended libraries — open source, MIT-licensed</div>
+        <div class="card-body">Every library here is battle-tested, React-compatible, and appropriate for a
+          developer-first self-hosted tool. Sorted by impact on perceived quality.</div>
+      </div>
+      <div class="card" style="margin-bottom:1rem">
+        <div style="margin-bottom:.5rem;font-size:13px;font-weight:500">Avatars and icons</div>
+        <div class="lib-row">
+          <div class="lib-name"><i class="ti ti-sparkles" style="font-size:14px;margin-right:4px;color:#7F77DD"></i>
+            boring-avatars</div>
+          <div class="lib-desc">Deterministic SVG avatars from a string. Perfect for project cards. Use
+            `variant="marble"` with your brand colors.</div>
+          <div class="lib-badge">npm</div>
+        </div>
+        <div class="lib-row">
+          <div class="lib-name"><i class="ti ti-icons" style="font-size:14px;margin-right:4px;color:#7F77DD"></i>
+            @tabler/icons-react</div>
+          <div class="lib-desc">7000+ outline icons, MIT. Already partially used. Standardize all icons to this.
+            Consistent stroke weight looks much more polished than mixing icon sets.</div>
+          <div class="lib-badge">npm</div>
+        </div>
+        <div class="lib-row">
+          <div class="lib-name"><i class="ti ti-mood-smile" style="font-size:14px;margin-right:4px;color:#7F77DD"></i>
+            react-avatar</div>
+          <div class="lib-desc">User initials + color avatars for the user's own profile in the header. Fallback when no
+            photo.</div>
+          <div class="lib-badge">npm</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:1rem">
+        <div style="margin-bottom:.5rem;font-size:13px;font-weight:500">Animation and interaction</div>
+        <div class="lib-row">
+          <div class="lib-name"><i class="ti ti-player-play" style="font-size:14px;margin-right:4px;color:#639922"></i>
+            framer-motion</div>
+          <div class="lib-desc">For pipeline node animations, counter animations (critic score), draft approval
+            confetti, and page transitions. Use `AnimatePresence` for route transitions.</div>
+          <div class="lib-badge">npm</div>
+        </div>
+        <div class="lib-row">
+          <div class="lib-name"><i class="ti ti-confetti" style="font-size:14px;margin-right:4px;color:#639922"></i>
+            canvas-confetti</div>
+          <div class="lib-desc">Lightweight (3kb) confetti burst for the "Approve & Ship" button. One-line integration.
+            Disproportionate delight for the effort.</div>
+          <div class="lib-badge">npm</div>
+        </div>
+        <div class="lib-row">
+          <div class="lib-name"><i class="ti ti-cursor-text" style="font-size:14px;margin-right:4px;color:#639922"></i>
+            typewriter-effect</div>
+          <div class="lib-desc">For the landing page hero and potentially a welcome message on first login. Already
+            feels native to the Byline brand.</div>
+          <div class="lib-badge">npm</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:1rem">
+        <div style="margin-bottom:.5rem;font-size:13px;font-weight:500">Charts and data</div>
+        <div class="lib-row">
+          <div class="lib-name"><i class="ti ti-chart-bar" style="font-size:14px;margin-right:4px;color:#185FA5"></i>
+            recharts</div>
+          <div class="lib-desc">Already used for the posts/week and voice score charts. Extend with sparklines using
+            `LineChart` with minimal axes. Add `ResponsiveContainer` to every chart for proper sizing.</div>
+          <div class="lib-badge">npm</div>
+        </div>
+        <div class="lib-row">
+          <div class="lib-name"><i class="ti ti-calendar" style="font-size:14px;margin-right:4px;color:#185FA5"></i>
+            react-calendar-heatmap</div>
+          <div class="lib-desc">GitHub-style activity heatmap showing posting frequency over time. A natural addition to
+            the analytics section for "build in public" context.</div>
+          <div class="lib-badge">npm</div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:1rem">
+        <div style="margin-bottom:.5rem;font-size:13px;font-weight:500">Developer-first UI</div>
+        <div class="lib-row">
+          <div class="lib-name"><i class="ti ti-terminal" style="font-size:14px;margin-right:4px;color:#BA7517"></i>
+            xterm.js</div>
+          <div class="lib-desc">For the agent run trace view. Renders a real terminal-style output. Has a React wrapper
+            `@xterm/xterm`. Use the `FitAddon` for responsive sizing.</div>
+          <div class="lib-badge">npm</div>
+        </div>
+        <div class="lib-row">
+          <div class="lib-name"><i class="ti ti-command" style="font-size:14px;margin-right:4px;color:#BA7517"></i> cmdk
+          </div>
+          <div class="lib-desc">The command palette library behind Linear's ⌘K menu. Shadcn/ui ships a cmdk wrapper.
+            Handles fuzzy search, keyboard nav, grouping. 20-minute integration for a massive UX upgrade.</div>
+          <div class="lib-badge">npm</div>
+        </div>
+        <div class="lib-row">
+          <div class="lib-name"><i class="ti ti-code" style="font-size:14px;margin-right:4px;color:#BA7517"></i> shiki
+          </div>
+          <div class="lib-desc">Syntax highlighting for the CLI examples, env variables, and any code snippets in the
+            dashboard or docs. Theme it to match your dark/light mode.</div>
+          <div class="lib-badge">npm</div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="margin-bottom:.5rem;font-size:13px;font-weight:500">Voice and audio</div>
+        <div class="lib-row">
+          <div class="lib-name"><i class="ti ti-microphone" style="font-size:14px;margin-right:4px;color:#D85A30"></i>
+            @xenova/transformers</div>
+          <div class="lib-desc">Run Whisper locally in the browser via WebAssembly. No server needed for voice-to-text.
+            Perfect for the voice note quick-capture button — privacy-first since audio never leaves the device.</div>
+          <div class="lib-badge">npm</div>
+        </div>
+        <div class="lib-row" style="border-bottom:none">
+          <div class="lib-name"><i class="ti ti-waveform" style="font-size:14px;margin-right:4px;color:#D85A30"></i>
+            wavesurfer.js</div>
+          <div class="lib-desc">Waveform visualization for recorded voice notes in the milestone log. Lets users play
+            back before submitting. Small but builds trust in voice capture quality.</div>
+          <div class="lib-badge">npm</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function showPanel(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    event.currentTarget.classList.add('active');
+  }
+</script>

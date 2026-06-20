@@ -1,0 +1,20 @@
+:root, [data-theme="dark"] {
+  --by-bg:      #0C0C0A;
+  --by-bg-2:    #161514;
+  --by-bg-3:    #1D1C19;
+
+  --by-border:  rgba(235,230,220,0.07);
+
+  --by-text:   #EAE5DC;
+  --by-text-2: rgba(234,229,220,0.5);
+  --by-text-3: rgba(234,229,220,0.25);
+
+  --by-accent: #E85E2C;
+  --by-green:  #3FB950;
+  --by-amber:  #F59E0B;
+  --by-red:    #F87171;
+
+  --by-fg:           var(--by-text);
+  --by-fg-secondary: var(--by-text-2);
+  --by-fg-tertiary:  var(--by-text-3);
+}

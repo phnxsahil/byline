@@ -202,7 +202,7 @@ export function OnboardingWizard({ onComplete, onSkip }: OnboardingWizardProps) 
         {/* ── Header + Progress Bar ──────────────────────────────────── */}
         <div style={{ borderBottom: "1px solid #21262D" }}>
           <div style={{ padding: "14px 18px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <span style={{ fontFamily: "'DM Mono', 'IBM Plex Mono', monospace", fontSize: 13, color: "#E6EDF3" }}>byline</span>
+            <span style={{ fontFamily: "'JetBrains Mono', 'IBM Plex Mono', monospace", fontSize: 13, color: "#E6EDF3" }}>byline</span>
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 9, color: "#484F58" }}>Step {step + 1} of {STEPS.length}</span>
               <button onClick={onSkip} style={{ display: "flex", alignItems: "center", padding: "3px 8px", backgroundColor: "transparent", border: "0.5px solid rgba(255,255,255,0.1)", borderRadius: 4, cursor: "pointer", color: "#8B949E", fontFamily: "'IBM Plex Sans'", fontSize: 10 }}>

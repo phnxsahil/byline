@@ -39,6 +39,8 @@ export interface DraftRead {
   reddit_subreddit: string | null;
   critic_score: number | null;
   critic_note: string | null;
+  voice_match_score: number | null;
+  critic_grade: string | null;
   status: string;
   created_at: string;
 }

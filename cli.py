@@ -39,7 +39,7 @@ async def list_narrative_arcs() -> list[dict]:
 
 
 async def create_dispatch(project_id: str, body: str, arc_id: str | None = None) -> dict:
-    async with httpx.AsyncClient() as c:
+    async with httpx.AsyncClient(timeout=30.0) as c:
         payload = {"project_id": project_id, "body": body, "source": "cli"}
         if arc_id:
             payload["arc_id"] = arc_id
@@ -49,7 +49,7 @@ async def create_dispatch(project_id: str, body: str, arc_id: str | None = None)
 
 
 async def trigger_generation(dispatch_id: str) -> None:
-    async with httpx.AsyncClient() as c:
+    async with httpx.AsyncClient(timeout=120.0) as c:
         async with c.stream("GET", f"{API_BASE}/dispatches/{dispatch_id}/generate") as resp:
             async for line in resp.aiter_lines():
                 if not line.startswith("data: "):
@@ -69,7 +69,7 @@ async def trigger_generation(dispatch_id: str) -> None:
 
 
 async def fetch_drafts(dispatch_id: str) -> list[dict]:
-    async with httpx.AsyncClient() as c:
+    async with httpx.AsyncClient(timeout=30.0) as c:
         r = await c.get(f"{API_BASE}/dispatches/{dispatch_id}/drafts")
         r.raise_for_status()
         return r.json()

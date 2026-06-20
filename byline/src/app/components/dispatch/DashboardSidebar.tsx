@@ -341,7 +341,7 @@ export function DashboardSidebar({ activeItem, onNavigate }: DashboardSidebarPro
           <>
             <span
               style={{
-                fontFamily: "'DM Mono', 'IBM Plex Mono', monospace",
+                fontFamily: "'JetBrains Mono', monospace",
                 fontSize: 15,
                 fontWeight: 500,
                 color: "#E6EDF3",

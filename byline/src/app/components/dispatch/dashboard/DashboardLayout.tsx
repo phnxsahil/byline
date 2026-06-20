@@ -11,7 +11,7 @@ import {
   IconX
 } from "@tabler/icons-react";
 import { RunLogPanel } from "./RunLogPanel";
-import { ChatPanel } from "./ChatPanel";
+import { AgentRail, AgentStep } from "./AgentRail";
 import { OverviewTab } from "./OverviewTab";
 import { DeskTab } from "./DeskTab";
 import { SignalTab } from "./SignalTab";
@@ -32,13 +32,14 @@ const DEFAULT_PROJECTS = [
 export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
   const [activeTab, setActiveTab] = useState<DashTab>("overview");
   const [logOpen, setLogOpen] = useState(false);
-  const [chatOpen, setChatOpen] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [runningAgent, setRunningAgent] = useState(0);
+  const [agentSteps, setAgentSteps] = useState<AgentStep[]>([]);
+  const [railState, setRailState] = useState<"collapsed" | "expanded" | "fullscreen">("collapsed");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-  const [runQuery, setRunQuery] = useState<string | null>(null);
+  const [commandPaletteMode, setCommandPaletteMode] = useState<"default" | "dispatch">("default");
   const [docsScrollTarget, setDocsScrollTarget] = useState<string | null>(null);
   const [projects] = useState(DEFAULT_PROJECTS);
   const [activeProject, setActiveProject] = useState(0);
@@ -61,41 +62,224 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
           return;
         }
         e.preventDefault();
+        setCommandPaletteMode("default");
         setCommandPaletteOpen(prev => !prev);
+      }
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === "a") {
+        e.preventDefault();
+        setRailState((prev) => (prev === "fullscreen" ? "expanded" : "fullscreen"));
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  useEffect(() => {
+    if (!commandPaletteOpen) return;
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setCommandPaletteOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [commandPaletteOpen]);
+
+  const makeAgentSteps = (query: string): AgentStep[] => [
+    {
+      agentId: "strategist",
+      startedAt: Date.now(),
+      status: "pending",
+      input: {
+        context: ["Project context loaded", "Voice profile loaded", `Milestone: ${query}`],
+        instructions: "Choose angle, platforms, and narrative arc.",
+      },
+      decisions: [
+        { label: "Waiting on dispatch", detail: "The strategist will classify the incoming milestone before any writer starts." },
+      ],
+    },
+    {
+      agentId: "linkedin",
+      startedAt: Date.now(),
+      status: "pending",
+      input: {
+        context: ["LinkedIn prefers sentence case", "Short paragraphs outperform walls of text"],
+        instructions: "Write a clear build-in-public narrative draft.",
+      },
+      decisions: [
+        { label: "Standing by", detail: "Waiting for strategist output before drafting for LinkedIn." },
+      ],
+    },
+    {
+      agentId: "x",
+      startedAt: Date.now(),
+      status: "pending",
+      input: {
+        context: ["Lowercase voice", "Opinionated first tweet", "3-5 tweets maximum"],
+        instructions: "Turn the milestone into a short, punchy thread.",
+      },
+      decisions: [
+        { label: "Standing by", detail: "Waiting for strategist output before drafting for X." },
+      ],
+    },
+    {
+      agentId: "reddit",
+      startedAt: Date.now(),
+      status: "pending",
+      input: {
+        context: ["Educational framing required", "No promo language in the opening"],
+        instructions: "Only publish if there is enough depth for a useful lesson.",
+      },
+      decisions: [
+        { label: "Standing by", detail: "Waiting for strategist output before evaluating Reddit fit." },
+      ],
+    },
+    {
+      agentId: "critic",
+      startedAt: Date.now(),
+      status: "pending",
+      input: {
+        context: ["Check for AI slop", "Verify platform fit", "Flag risky self-promo"],
+        instructions: "Score every generated draft honestly.",
+      },
+      decisions: [
+        { label: "Waiting for drafts", detail: "The critic only runs once the selected writers finish." },
+      ],
+    },
+  ];
+
   const runPipeline = (query?: string) => {
     if (isRunning) return;
+    const milestone = query?.trim() || "shipped semantic search on fltrd.tech using pgvector";
     setIsRunning(true);
     setLogOpen(true);
+    setRailState(isMobile ? "fullscreen" : "expanded");
     setRunningAgent(0);
-    if (query) {
-      setRunQuery(query);
-    } else {
-      setRunQuery(null);
-    }
-    let i = 0;
-    const interval = setInterval(() => {
-      i++;
-      if (i >= 5) {
-        clearInterval(interval);
+    setAgentSteps(makeAgentSteps(milestone));
+
+    const sequence = [
+      () =>
+        setAgentSteps((prev) =>
+          prev.map((step) =>
+            step.agentId === "strategist"
+              ? {
+                  ...step,
+                  status: "running",
+                  decisions: [
+                    {
+                      label: "Evaluating post-worthiness",
+                      detail: "Reading project context, milestone signal strength, and voice profile before routing platforms.",
+                    },
+                  ],
+                }
+              : step
+          )
+        ),
+      () => {
+        setRunningAgent(1);
+        setAgentSteps((prev) =>
+          prev.map((step) => {
+            if (step.agentId === "strategist") {
+              return {
+                ...step,
+                finishedAt: Date.now(),
+                status: "done",
+                output: { reasoning: "Chosen as a lesson-learned angle with LinkedIn, X, and Threads prioritized." },
+                decisions: [
+                  { label: "Chose lesson_learned", detail: "The milestone is specific enough to support a concrete build story." },
+                  { label: "Selected LinkedIn, X, Threads", detail: "Good fit for broad builder audiences without requiring deep subreddit nuance." },
+                  { label: "Skipped Reddit", detail: "Not enough depth yet for a 400+ word educational post without sounding promotional." },
+                ],
+              };
+            }
+            if (step.agentId === "linkedin" || step.agentId === "x") {
+              return { ...step, status: "running" };
+            }
+            if (step.agentId === "reddit") {
+              return {
+                ...step,
+                finishedAt: Date.now(),
+                status: "blocked",
+                decisions: [
+                  { label: "Blocked for now", detail: "The signal is strong, but the current milestone still needs more technical depth for Reddit." },
+                ],
+              };
+            }
+            return step;
+          })
+        );
+      },
+      () => {
+        setRunningAgent(3);
+        setAgentSteps((prev) =>
+          prev.map((step) => {
+            if (step.agentId === "linkedin") {
+              return {
+                ...step,
+                finishedAt: Date.now(),
+                status: "done",
+                output: { draft: "i spent two days on semantic search and the hard part was not retrieval. it was teaching the system what counts as a signal worth posting." },
+                decisions: [
+                  { label: "Used story-first framing", detail: "LinkedIn draft opens with a learning moment before naming the implementation detail." },
+                  { label: "Kept paragraphs short", detail: "Optimized for mobile skim and 'see more' behavior." },
+                ],
+              };
+            }
+            if (step.agentId === "x") {
+              return {
+                ...step,
+                finishedAt: Date.now(),
+                status: "done",
+                output: { draft: "semantic search was the easy part.\n\nteaching the pipeline what was worth saying publicly was harder.\n\nbyline is finally starting to feel like it notices the right work." },
+                decisions: [
+                  { label: "Made the opinion the hook", detail: "The first line is written as a take instead of a changelog." },
+                ],
+              };
+            }
+            if (step.agentId === "critic") {
+              return { ...step, status: "running" };
+            }
+            return step;
+          })
+        );
+      },
+      () => {
+        setRunningAgent(4);
+        setAgentSteps((prev) =>
+          prev.map((step) =>
+            step.agentId === "critic"
+              ? {
+                  ...step,
+                  finishedAt: Date.now(),
+                  status: "done",
+                  output: { score: 8.6, reasoning: "Clear hook, strong platform fit, Reddit correctly held back." },
+                  decisions: [
+                    { label: "Approved LinkedIn + X", detail: "Both drafts feel close to the intended founder voice and avoid generic AI phrasing." },
+                    { label: "Confirmed Reddit block", detail: "Blocking Reddit is better than forcing weak educational depth." },
+                  ],
+                }
+              : step
+          )
+        );
+      },
+      () => {
         setIsRunning(false);
         setRunningAgent(0);
-      } else {
-        setRunningAgent(i);
-      }
-    }, 1800);
+      },
+    ];
+
+    sequence.forEach((step, index) => {
+      window.setTimeout(step, index * 1200);
+    });
   };
 
-  const handlePublish = () => { runPipeline(); };
+  const handleDispatchClick = () => {
+    setCommandPaletteMode("dispatch");
+    setCommandPaletteOpen(true);
+  };
   const handleQuickPublish = (txt: string) => { runPipeline(txt); };
   const toggleLog = () => setLogOpen(v => !v);
-  const toggleChat = () => setChatOpen(v => !v);
-
+  const toggleRail = () => setRailState((prev) => (prev === "collapsed" ? "expanded" : "collapsed"));
   const handleNavigateToDocHeading = (headingId: string) => {
     setActiveTab("docs");
     setDocsScrollTarget(headingId);
@@ -133,15 +317,15 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
     { id: "docs-getting-started", label: "Docs: Getting Started", shortcut: "G H G", group: "Documentation", action: () => handleNavigateToDocHeading("getting-started") },
     { id: "action-run", label: "Run Agent Pipeline", shortcut: "R", group: "Actions", action: () => runPipeline() },
     { id: "action-logs", label: "Toggle Run Logs", shortcut: "L", group: "Actions", action: () => toggleLog() },
-    { id: "action-chat", label: "Toggle Chat Assistant", shortcut: "C", group: "Actions", action: () => toggleChat() },
+    { id: "action-chat", label: "Toggle Agent Rail", shortcut: "C", group: "Actions", action: () => toggleRail() },
   ];
 
   return (
-    <div style={{ height: "100vh", display: "flex", flexDirection: "column", background: "var(--by-bg)", color: "var(--by-text)", overflow: "hidden" }}>
+    <section style={{ height: "100vh", display: "flex", flexDirection: "column", background: "var(--by-bg)", color: "var(--by-text)", overflow: "hidden" }}>
       <TopBar
+        data-testid="topbar"
         activeTab={activeTab}
-        onTabChange={setActiveTab}
-        onPublish={handlePublish}
+        onDispatchClick={handleDispatchClick}
         onLandingClick={onLandingClick}
         logOpen={logOpen}
         onToggleLog={toggleLog}
@@ -151,15 +335,18 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
         projects={projects}
         activeProject={activeProject}
         setActiveProject={setActiveProject}
-        onSearchClick={() => setCommandPaletteOpen(true)}
+    onSearchClick={() => {
+          setCommandPaletteMode("default");
+          setCommandPaletteOpen(true);
+        }}
       />
 
-      <div style={{ flex: 1, display: "flex", overflow: "hidden", position: "relative" }}>
+      <article style={{ flex: 1, display: "flex", overflow: "hidden", position: "relative" }}>
 
         {isMobile && mobileMenuOpen && (
           <div
             style={{
-              position: "fixed", inset: 0, zIndex: 9,
+              position: "fixed", inset: 0, zIndex: 60,
               display: "flex",
               backgroundColor: "rgba(0,0,0,0.55)",
               backdropFilter: "blur(4px)",
@@ -182,10 +369,12 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
         )}
 
         {!isMobile && (
-          <LeftSidebarNavigation
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-          />
+          <div data-testid="sidebar" style={{ width: 232, flexShrink: 0 }}>
+            <LeftSidebarNavigation
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+            />
+          </div>
         )}
 
         {renderTab()}
@@ -197,23 +386,45 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
           onClose={() => setLogOpen(false)}
         />
 
-        <ChatPanel
-          isOpen={chatOpen}
-          onClose={() => setChatOpen(false)}
-          onRunMilestone={(txt, images) => {
-            handleQuickPublish(txt + (images && images.length > 0 ? ` (${images.length} image(s) attached)` : ""));
-          }}
-          isRunning={isRunning}
-          onNavigate={(tab) => setActiveTab(tab as DashTab)}
-        />
-      </div>
+        {!isMobile && railState !== "fullscreen" && (
+          <AgentRail
+            railState={railState}
+            onRailStateChange={setRailState}
+            agentSteps={agentSteps}
+            isRunning={isRunning}
+            onRunMilestone={(txt, images) => {
+              handleQuickPublish(txt + (images && images.length > 0 ? ` (${images.length} image(s) attached)` : ""));
+            }}
+            onNavigate={(tab) => setActiveTab(tab as DashTab)}
+          />
+        )}
+      </article>
+
+      {railState === "fullscreen" && (
+        <div style={{ position: "fixed", inset: 44, zIndex: 45 }}>
+          <AgentRail
+            railState={railState}
+            onRailStateChange={setRailState}
+            agentSteps={agentSteps}
+            isRunning={isRunning}
+            onRunMilestone={(txt, images) => {
+              handleQuickPublish(txt + (images && images.length > 0 ? ` (${images.length} image(s) attached)` : ""));
+            }}
+            onNavigate={(tab) => setActiveTab(tab as DashTab)}
+          />
+        </div>
+      )}
 
       <StatusBar
         isRunning={isRunning}
         onOpenLog={() => setLogOpen(v => !v)}
         logOpen={logOpen}
-        onOpenChat={toggleChat}
-        chatOpen={chatOpen}
+        onOpenChat={() =>
+          setRailState((prev) =>
+            prev === "collapsed" ? "expanded" : "collapsed"
+          )
+        }
+        chatOpen={railState !== "collapsed"}
       />
 
       <CommandPalette
@@ -221,8 +432,9 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
         onClose={() => setCommandPaletteOpen(false)}
         commands={commands}
         runPipeline={runPipeline}
+        mode={commandPaletteMode}
       />
-    </div>
+    </section>
   );
 }
 
@@ -249,7 +461,7 @@ function LeftSidebarNavigation({
   onCloseMobile,
 }: LeftSidebarNavigationProps) {
   return (
-    <div style={{
+    <div data-testid="sidebar" style={{
       width: 232, height: "100%", background: "var(--by-bg-2)",
       borderRight: "0.5px solid var(--by-border)",
       display: "flex", flexDirection: "column", position: "relative",

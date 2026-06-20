@@ -14,6 +14,8 @@ interface CommandPaletteProps {
   open: boolean;
   onClose: () => void;
   commands: Command[];
+  runPipeline?: (query: string) => void;
+  mode?: "default" | "dispatch";
 }
 
 // ─── Simple fuzzy match ─────────────────────────────────────────────────────
@@ -30,18 +32,41 @@ function fuzzyMatch(query: string, text: string): boolean {
 
 // ─── Command Palette ────────────────────────────────────────────────────────
 
-export function CommandPalette({ open, onClose, commands }: CommandPaletteProps) {
+export function CommandPalette({ open, onClose, commands, runPipeline, mode = "default" }: CommandPaletteProps) {
   const [query, setQuery] = useState("");
   const [selectedIdx, setSelectedIdx] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
   // Filter + group
-  const filtered = query
-    ? commands.filter((c) => fuzzyMatch(query, c.label))
-    : commands;
+  const filtered = mode === "dispatch"
+    ? []
+    : query
+      ? commands.filter((c) => fuzzyMatch(query, c.label))
+      : commands;
 
-  const grouped = filtered.reduce<{ group: string; items: typeof filtered }[]>(
+  const finalItems = [...filtered];
+  const trimmedQuery = query.trim();
+  if (mode === "dispatch" && trimmedQuery) {
+    finalItems.unshift({
+      id: "dispatch-fallback",
+      label: `Dispatch: "${trimmedQuery}"`,
+      group: "Actions",
+      action: () => runPipeline?.(trimmedQuery),
+    });
+  } else {
+    const navMatches = filtered.some((c) => c.group === "Navigation" || c.group === "Documentation");
+    if (trimmedQuery && !navMatches) {
+      finalItems.push({
+        id: "dispatch-fallback",
+        label: `Dispatch: '${query}'`,
+        group: "Actions",
+        action: () => runPipeline?.(query),
+      });
+    }
+  }
+
+  const grouped = finalItems.reduce<{ group: string; items: typeof finalItems }[]>(
     (acc, cmd) => {
       const last = acc[acc.length - 1];
       if (last && last.group === cmd.group) {
@@ -55,7 +80,7 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
   );
 
   // Flat index for keyboard nav
-  const flatItems = filtered;
+  const flatItems = finalItems;
   useEffect(() => { setSelectedIdx(0); }, [query]);
 
   // Focus input on open
@@ -79,12 +104,17 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
         e.preventDefault();
         setSelectedIdx((prev) => Math.max(prev - 1, 0));
       }
+      if (e.key === "Enter" && mode === "dispatch" && trimmedQuery) {
+        runPipeline?.(trimmedQuery);
+        onClose();
+        return;
+      }
       if (e.key === "Enter" && flatItems[selectedIdx]) {
         flatItems[selectedIdx].action();
         onClose();
       }
     },
-    [flatItems, selectedIdx, onClose]
+    [flatItems, mode, onClose, runPipeline, selectedIdx, trimmedQuery]
   );
 
   // Click outside
@@ -96,13 +126,12 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
     [onClose]
   );
 
-  if (!open) return null;
-
-  // Scroll selected into view
   useEffect(() => {
     const el = listRef.current?.querySelector("[data-selected=true]") as HTMLElement | null;
     el?.scrollIntoView({ block: "nearest" });
   }, [selectedIdx]);
+
+  if (!open) return null;
 
   let flatCounter = 0;
 
@@ -150,12 +179,18 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
 
         {/* ── Search input ──────────────────────────────── */}
         <div style={{ padding: "10px 14px", borderBottom: "1px solid #21262D" }}>
-          <input
+              <input
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search commands…"
-            style={{
+            placeholder={mode === "dispatch" ? "Type a milestone to dispatch…" : "Search commands…"}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.preventDefault();
+                onClose();
+              }
+            }}
+              style={{
               width: "100%",
               boxSizing: "border-box",
               backgroundColor: "transparent",
@@ -167,6 +202,11 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
               lineHeight: "28px",
             }}
           />
+          {mode === "dispatch" && (
+            <div style={{ marginTop: 6, fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "#8B949E" }}>
+              Type a milestone and press Enter to dispatch.
+            </div>
+          )}
         </div>
 
         {/* ── Results ───────────────────────────────────── */}
@@ -178,9 +218,14 @@ export function CommandPalette({ open, onClose, commands }: CommandPaletteProps)
             padding: "6px 0",
           }}
         >
-          {grouped.length === 0 && (
+          {grouped.length === 0 && mode !== "dispatch" && (
             <div style={{ padding: "20px 14px", textAlign: "center", fontFamily: "'Inter'", fontSize: 13, color: "#484F58" }}>
               No results for <span style={{ color: "#8B949E" }}>"{query}"</span>
+            </div>
+          )}
+          {grouped.length === 0 && mode === "dispatch" && !trimmedQuery && (
+            <div style={{ padding: "18px 14px 20px", textAlign: "center", fontFamily: "'Inter'", fontSize: 13, color: "#8B949E", lineHeight: 1.5 }}>
+              Type a milestone above, then press Enter to dispatch it.
             </div>
           )}
           {grouped.map((group) => (

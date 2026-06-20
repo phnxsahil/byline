@@ -12,6 +12,7 @@ const SIGNALS = [
   { type: "commit", icon: IconCode, project: "miryn", message: "Initial project scaffold", time: "1d ago", worth: false },
 ];
 
+// DEMO DATA: not yet wired to persisted dispatch history.
 export function SignalTab({ isMobile }: SignalTabProps) {
   return (
     <div style={{

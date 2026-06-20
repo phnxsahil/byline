@@ -30,11 +30,26 @@ const DEFAULT_PROJECTS = [
 ];
 
 export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
+  const STORAGE_KEY = "byline.dashboard.agentSteps";
   const [activeTab, setActiveTab] = useState<DashTab>("overview");
   const [logOpen, setLogOpen] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [runningAgent, setRunningAgent] = useState(0);
-  const [agentSteps, setAgentSteps] = useState<AgentStep[]>([]);
+  const [agentSteps, setAgentSteps] = useState<AgentStep[]>(() => {
+    if (typeof window === "undefined") {
+      return [];
+    }
+
+    try {
+      const stored = window.localStorage.getItem(STORAGE_KEY);
+      if (!stored) {
+        return [];
+      }
+      return JSON.parse(stored) as AgentStep[];
+    } catch {
+      return [];
+    }
+  });
   const [railState, setRailState] = useState<"collapsed" | "expanded" | "fullscreen">("collapsed");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -50,6 +65,14 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(agentSteps));
+    } catch {
+      // ignore storage failures
+    }
+  }, [agentSteps]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -288,7 +311,7 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
   const renderTab = () => {
     switch (activeTab) {
       case "overview": return <OverviewTab onPublish={handleQuickPublish} isMobile={isMobile} />;
-      case "desk":     return <DeskTab isMobile={isMobile} />;
+      case "desk":     return <DeskTab isMobile={isMobile} agentSteps={agentSteps} />;
       case "signal":   return <SignalTab isMobile={isMobile} />;
       case "activity": return <ActivityTab isMobile={isMobile} agentSteps={agentSteps} />;
       case "settings": return <SettingsTab isMobile={isMobile} />;

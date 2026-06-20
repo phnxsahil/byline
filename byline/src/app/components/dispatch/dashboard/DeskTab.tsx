@@ -1,60 +1,106 @@
-import React from "react";
-import { IconCheck, IconEdit, IconMessage2Share, IconSend, IconSparkles } from "@tabler/icons-react";
+import React, { useMemo, useState } from "react";
+import { IconCheck, IconEdit, IconSend, IconSparkles } from "@tabler/icons-react";
+import { AgentStep, STATUS_COLORS } from "./AgentRail";
 
 interface DeskTabProps {
   isMobile: boolean;
+  agentSteps: AgentStep[];
 }
 
-const DRAFTS = [
-  {
-    platform: "LinkedIn",
-    content:
-      "I spent the last 3 days rebuilding Byline's landing page and the hard part was not the motion.\n\nIt was product clarity.\n\nA nicer hero means nothing if someone still cannot tell whether you're a writing tool or an agent system in five seconds.\n\nThe newer version finally leads with what the product actually does:\n\nOne milestone in. A strategist, four platform writers, and a critic run in parallel. You review the output in one desk before it goes anywhere.\n\nThe UI got calmer. The promise got sharper. That mattered more than adding another flashy section.",
-    score: 8.9,
-    status: "ready",
-    note: "strong clarity, tighten final line",
-  },
-  {
-    platform: "X",
-    content:
-      "most product pages don't have a design problem.\n\nthey have a 'what does this actually do?' problem.\n\nreworked byline today so the hero explains the system before it tries to impress you.",
-    score: 9.1,
-    status: "draft",
-    note: "best hook of the set",
-  },
-  {
-    platform: "Reddit",
-    content:
-      "I rebuilt the landing page for my multi-agent writing tool and realized the design wasn't the real blocker.\n\nThe actual issue was that the homepage described aesthetics better than workflow...\n\nIf I turn this into a post, it needs a more educational breakdown of the decisions and mistakes.",
-    score: 7.7,
-    status: "blocked",
-    note: "needs more educational depth",
-  },
-  {
-    platform: "Threads",
-    content:
-      "rebuilt byline's hero today. way calmer now. the product finally explains itself before it starts flexing.",
-    score: 8.3,
-    status: "approved",
-    note: "light and casual, fits platform",
-  },
-];
+const PLATFORM_AGENTS = [
+  { agentId: "linkedin", label: "LinkedIn" },
+  { agentId: "x", label: "X" },
+  { agentId: "reddit", label: "Reddit" },
+  { agentId: "threads", label: "Threads" },
+] as const;
 
-const CRITIC = [
-  "LinkedIn is closest to founder voice right now.",
-  "X has the strongest opener but can get one click more specific.",
-  "Reddit should stay blocked unless we add process detail and what failed first.",
-];
+function getStep(agentSteps: AgentStep[], agentId: AgentStep["agentId"]) {
+  return agentSteps.find((step) => step.agentId === agentId);
+}
 
-export function DeskTab({ isMobile }: DeskTabProps) {
-  const [activePlatform, setActivePlatform] = React.useState(0);
-  const [draftValue, setDraftValue] = React.useState(DRAFTS[0].content);
+function getCriticNotes(criticStep?: AgentStep) {
+  if (!criticStep) return [];
+  return criticStep.decisions.length > 0 ? criticStep.decisions : [];
+}
 
-  React.useEffect(() => {
-    setDraftValue(DRAFTS[activePlatform].content);
-  }, [activePlatform]);
+export function DeskTab({ isMobile, agentSteps }: DeskTabProps) {
+  const [activePlatform, setActivePlatform] = useState<(typeof PLATFORM_AGENTS)[number]["agentId"]>("linkedin");
+  const activePlatformSteps = useMemo(
+    () => PLATFORM_AGENTS.map((platform) => ({ ...platform, step: getStep(agentSteps, platform.agentId) })),
+    [agentSteps],
+  );
+  const activeStep = useMemo(
+    () => getStep(agentSteps, activePlatform),
+    [agentSteps, activePlatform],
+  );
+  const criticStep = useMemo(() => getStep(agentSteps, "critic"), [agentSteps]);
+  const strategistStep = useMemo(() => getStep(agentSteps, "strategist"), [agentSteps]);
 
-  const draft = DRAFTS[activePlatform];
+  if (agentSteps.length === 0) {
+    return (
+      <div
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          padding: isMobile ? "16px" : "24px",
+          display: "grid",
+          placeItems: "center",
+        }}
+      >
+        <div
+          style={{
+            maxWidth: 520,
+            width: "100%",
+            padding: 24,
+            borderRadius: 18,
+            background: "var(--by-bg-2)",
+            border: "0.5px solid var(--by-border)",
+            textAlign: "center",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 10,
+              color: "var(--by-text-3)",
+              textTransform: "uppercase",
+              letterSpacing: "0.08em",
+            }}
+          >
+            The Desk
+          </div>
+          <div
+            style={{
+              marginTop: 12,
+              fontFamily: "'Inter', system-ui, sans-serif",
+              fontSize: 18,
+              color: "var(--by-text)",
+              fontWeight: 600,
+            }}
+          >
+            No drafts yet. Run a pipeline from Overview or the Agent Rail to see drafts here.
+          </div>
+          <div
+            style={{
+              marginTop: 10,
+              fontFamily: "'Inter', system-ui, sans-serif",
+              fontSize: 13,
+              color: "var(--by-text-2)",
+              lineHeight: 1.65,
+            }}
+          >
+            Once a run completes, this panel will show the same drafts, scores, and critic notes as the rail and activity trace.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const criticScore = criticStep?.output?.score ?? null;
+  const criticSummary = criticStep?.output?.reasoning ?? "Critic output not available yet.";
+  const criticNotes = getCriticNotes(criticStep);
+  const selectedLabel = PLATFORM_AGENTS.find((platform) => platform.agentId === activePlatform)?.label ?? "LinkedIn";
+  const selectedStep = activeStep;
 
   return (
     <div
@@ -94,7 +140,15 @@ export function DeskTab({ isMobile }: DeskTabProps) {
             }}
           >
             <div>
-              <div style={{ fontFamily: "DM Mono, monospace", fontSize: 10, color: "var(--by-text-3)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+              <div
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 10,
+                  color: "var(--by-text-3)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                }}
+              >
                 the desk
               </div>
               <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: "var(--by-text-2)", marginTop: 4 }}>
@@ -111,12 +165,12 @@ export function DeskTab({ isMobile }: DeskTabProps) {
                 borderRadius: 999,
                 background: "rgba(232,94,44,0.1)",
                 color: "var(--by-accent)",
-                fontFamily: "DM Mono, monospace",
+                fontFamily: "'IBM Plex Mono', monospace",
                 fontSize: 11,
               }}
             >
               <IconSparkles size={13} stroke={1.8} />
-              critic score {draft.score}/10
+              critic score {criticScore !== null ? `${criticScore}/10` : "—"}
             </div>
           </div>
 
@@ -127,117 +181,214 @@ export function DeskTab({ isMobile }: DeskTabProps) {
               overflowX: "auto",
             }}
           >
-            {DRAFTS.map((item, i) => (
+            {activePlatformSteps.map((item) => (
               <button
-                key={item.platform}
-                onClick={() => setActivePlatform(i)}
+                key={item.agentId}
+                onClick={() => setActivePlatform(item.agentId)}
                 style={{
                   flex: 1,
                   minWidth: 110,
                   padding: "14px 14px 13px",
-                  background: i === activePlatform ? "rgba(255,255,255,0.03)" : "transparent",
+                  background: item.agentId === activePlatform ? "rgba(255,255,255,0.03)" : "transparent",
                   border: "none",
-                  borderBottom: i === activePlatform ? "1.5px solid var(--by-accent)" : "1.5px solid transparent",
+                  borderBottom: `1.5px solid ${item.agentId === activePlatform ? "var(--by-accent)" : "transparent"}`,
                   cursor: "pointer",
                   fontFamily: "'Inter', sans-serif",
                   fontSize: 12,
-                  color: i === activePlatform ? "var(--by-text)" : "var(--by-text-3)",
-                  fontWeight: i === activePlatform ? 600 : 500,
+                  color: item.agentId === activePlatform ? "var(--by-text)" : "var(--by-text-3)",
+                  fontWeight: item.agentId === activePlatform ? 600 : 500,
                 }}
               >
-                {item.platform}
+                {item.label}
               </button>
             ))}
           </div>
 
-          <div style={{ padding: 16 }}>
+          <div style={{ padding: 16, display: "grid", gap: 14 }}>
             <div
               style={{
+                borderRadius: 16,
+                padding: 14,
+                background: "var(--by-bg-2)",
+                border: `0.5px solid ${selectedStep?.status === "pending" ? "var(--by-border)" : STATUS_COLORS[selectedStep?.status ?? "pending"]}`,
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
+                flexDirection: "column",
                 gap: 12,
-                flexWrap: "wrap",
-                marginBottom: 12,
               }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-                <span style={{ fontFamily: "DM Mono, monospace", fontSize: 11, color: "var(--by-text-3)" }}>
-                  platform: <span style={{ color: "var(--by-text)" }}>{draft.platform}</span>
-                </span>
-                <span style={{ fontFamily: "DM Mono, monospace", fontSize: 11, color: "var(--by-text-3)" }}>
-                  status:{" "}
-                  <span
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                  <div
                     style={{
-                      color:
-                        draft.status === "approved"
-                          ? "var(--by-green)"
-                          : draft.status === "blocked"
-                            ? "var(--by-accent)"
-                            : "var(--by-text)",
+                      width: 10,
+                      height: 10,
+                      borderRadius: "50%",
+                      background: selectedStep?.status === "pending" ? "transparent" : STATUS_COLORS[selectedStep?.status ?? "pending"],
+                      border:
+                        selectedStep?.status === "pending"
+                          ? "1px solid var(--by-text-3)"
+                          : selectedStep?.status === "error"
+                            ? "1px solid #ffffff"
+                            : "1px solid transparent",
+                    }}
+                  />
+                  <div
+                    style={{
+                      fontFamily: "'Inter', system-ui, sans-serif",
+                      fontSize: 14,
+                      fontWeight: 600,
+                      color: "var(--by-text)",
                     }}
                   >
-                    {draft.status}
-                  </span>
-                </span>
-              </div>
-              <span style={{ fontFamily: "DM Mono, monospace", fontSize: 11, color: "var(--by-text-3)" }}>{draft.note}</span>
-            </div>
-
-            <textarea
-              value={draftValue}
-              onChange={(e) => setDraftValue(e.target.value)}
-              style={{
-                width: "100%",
-                minHeight: 310,
-                background: "rgba(255,255,255,0.025)",
-                border: "0.5px solid rgba(255,255,255,0.08)",
-                borderRadius: 16,
-                padding: "14px 16px",
-                color: "var(--by-text)",
-                fontFamily: "'Inter', sans-serif",
-                fontSize: 14,
-                resize: "vertical",
-                outline: "none",
-                lineHeight: 1.75,
-                boxSizing: "border-box",
-              }}
-            />
-
-            <div
-              style={{
-                display: "flex",
-                gap: 8,
-                marginTop: 14,
-                justifyContent: "flex-end",
-                flexWrap: "wrap",
-              }}
-            >
-              {[
-                { label: "Edit", icon: IconEdit, solid: false },
-                { label: "Approve", icon: IconCheck, solid: false },
-                { label: "Post", icon: IconSend, solid: true },
-              ].map((action) => (
-                <button
-                  key={action.label}
+                    {selectedLabel}
+                  </div>
+                </div>
+                <div
                   style={{
-                    fontFamily: "DM Mono, monospace",
-                    fontSize: 11,
-                    padding: "9px 14px",
-                    border: action.solid ? "none" : "0.5px solid rgba(255,255,255,0.08)",
-                    background: action.solid ? "var(--by-accent)" : "rgba(255,255,255,0.02)",
-                    color: action.solid ? "#F5F2EC" : "var(--by-text)",
-                    borderRadius: 10,
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 10,
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    color: STATUS_COLORS[selectedStep?.status ?? "pending"],
                   }}
                 >
-                  <action.icon size={12} stroke={1.8} />
-                  {action.label}
-                </button>
-              ))}
+                  {selectedStep?.status ?? "pending"}
+                </div>
+              </div>
+
+              <details
+                style={{
+                  border: "0.5px solid var(--by-border)",
+                  borderRadius: 8,
+                  padding: "8px 10px",
+                  background: "var(--by-bg-3)",
+                }}
+              >
+                <summary
+                  style={{
+                    cursor: "pointer",
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 10,
+                    color: "var(--by-text-2)",
+                    listStyle: "none",
+                  }}
+                >
+                  What it received
+                </summary>
+                <div
+                  style={{
+                    marginTop: 8,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 6,
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 10,
+                    color: "var(--by-text-2)",
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {(selectedStep?.input.context ?? []).map((line) => (
+                    <div key={`${activePlatform}-${line}`}>• {line}</div>
+                  ))}
+                  <div style={{ color: "var(--by-text-3)" }}>{selectedStep?.input.instructions}</div>
+                </div>
+              </details>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <div
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 10,
+                    color: "var(--by-text-2)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                  }}
+                >
+                  What it decided
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {(selectedStep?.decisions ?? []).map((decision) => (
+                    <div
+                      key={`${activePlatform}-${decision.label}`}
+                      style={{
+                        display: "flex",
+                        alignItems: "flex-start",
+                        gap: 8,
+                      }}
+                    >
+                      <span
+                        style={{
+                          color: STATUS_COLORS[selectedStep?.status ?? "pending"],
+                          fontSize: 10,
+                          marginTop: 1,
+                          flexShrink: 0,
+                        }}
+                      >
+                        →
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "'IBM Plex Mono', monospace",
+                          fontSize: 10,
+                          color: "var(--by-text-2)",
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        <span style={{ color: "var(--by-text)" }}>[{decision.label}]</span>{" "}
+                        {decision.detail}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {!selectedStep && (
+                <div
+                  style={{
+                    padding: "12px 12px",
+                    borderRadius: 12,
+                    border: "0.5px dashed var(--by-border)",
+                    background: "rgba(255,255,255,0.02)",
+                    fontFamily: "'Inter', system-ui, sans-serif",
+                    fontSize: 13,
+                    color: "var(--by-text-2)",
+                    lineHeight: 1.6,
+                  }}
+                >
+                  No draft was generated for {selectedLabel} in this run.
+                </div>
+              )}
+
+              {selectedStep?.status === "done" && selectedStep?.output?.draft && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  <div
+                    style={{
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: 10,
+                      color: "var(--by-text-2)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.06em",
+                    }}
+                  >
+                    Output
+                  </div>
+                  <div
+                    style={{
+                      padding: "8px 10px",
+                      background: "var(--by-bg)",
+                      borderRadius: 8,
+                      border: "0.5px solid var(--by-border)",
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: 10,
+                      color: "var(--by-text)",
+                      lineHeight: 1.55,
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
+                    {selectedStep.output.draft}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -251,27 +402,42 @@ export function DeskTab({ isMobile }: DeskTabProps) {
               padding: "16px",
             }}
           >
-            <div style={{ fontFamily: "DM Mono, monospace", fontSize: 10, color: "var(--by-text-3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>
-              critic notes
-            </div>
+              <div
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 10,
+                  color: "var(--by-text-3)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  marginBottom: 12,
+                }}
+              >
+                critic notes
+              </div>
             <div style={{ display: "grid", gap: 10 }}>
-              {CRITIC.map((note) => (
-                <div
-                  key={note}
-                  style={{
-                    padding: "12px 12px",
-                    borderRadius: 14,
-                    background: "rgba(255,255,255,0.03)",
-                    border: "0.5px solid rgba(255,255,255,0.06)",
-                    color: "var(--by-text-2)",
-                    fontFamily: "'Inter', sans-serif",
-                    fontSize: 13,
-                    lineHeight: 1.65,
-                  }}
-                >
-                  {note}
+              {criticNotes.length > 0 ? (
+                criticNotes.map((note) => (
+                  <div
+                    key={note.label}
+                    style={{
+                      padding: "12px 12px",
+                      borderRadius: 14,
+                      background: "rgba(255,255,255,0.03)",
+                      border: "0.5px solid rgba(255,255,255,0.06)",
+                      color: "var(--by-text-2)",
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: 13,
+                      lineHeight: 1.65,
+                    }}
+                  >
+                    <span style={{ color: "var(--by-text)" }}>{note.label}:</span> {note.detail}
+                  </div>
+                ))
+              ) : (
+                <div style={{ color: "var(--by-text-3)", fontFamily: "'Inter', sans-serif", fontSize: 13 }}>
+                  No critic notes yet.
                 </div>
-              ))}
+              )}
             </div>
           </div>
 
@@ -283,14 +449,23 @@ export function DeskTab({ isMobile }: DeskTabProps) {
               padding: "16px",
             }}
           >
-            <div style={{ fontFamily: "DM Mono, monospace", fontSize: 10, color: "var(--by-text-3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>
+            <div
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 10,
+                color: "var(--by-text-3)",
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                marginBottom: 12,
+              }}
+            >
               approval flow
             </div>
             <div style={{ display: "grid", gap: 10 }}>
               {[
-                { label: "voice match", value: "strong" },
-                { label: "platform fit", value: "high" },
-                { label: "self promo risk", value: draft.platform === "Reddit" ? "medium" : "low" },
+                { label: "strategist", value: strategistStep?.output?.reasoning ?? "Waiting on strategist output" },
+                { label: "critic", value: criticSummary },
+                { label: "final state", value: criticStep?.status === "blocked" ? "Blocked runs stay visible in storage and on the rail." : "Last run remains hydrated from localStorage." },
               ].map((row) => (
                 <div
                   key={row.label}
@@ -298,14 +473,15 @@ export function DeskTab({ isMobile }: DeskTabProps) {
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "space-between",
+                    gap: 12,
                     padding: "11px 12px",
                     borderRadius: 14,
                     background: "rgba(10,10,12,0.24)",
                     border: "0.5px solid rgba(255,255,255,0.05)",
                   }}
                 >
-                  <span style={{ color: "var(--by-text-3)", fontFamily: "DM Mono, monospace", fontSize: 11 }}>{row.label}</span>
-                  <span style={{ color: "var(--by-text)", fontFamily: "'Inter', sans-serif", fontSize: 13 }}>{row.value}</span>
+                  <span style={{ color: "var(--by-text-3)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}>{row.label}</span>
+                  <span style={{ color: "var(--by-text)", fontFamily: "'Inter', sans-serif", fontSize: 13, textAlign: "right" }}>{row.value}</span>
                 </div>
               ))}
             </div>
@@ -319,7 +495,7 @@ export function DeskTab({ isMobile }: DeskTabProps) {
               border: "0.5px solid rgba(255,255,255,0.08)",
               background: "rgba(255,255,255,0.03)",
               color: "var(--by-text)",
-              fontFamily: "DM Mono, monospace",
+              fontFamily: "'IBM Plex Mono', monospace",
               fontSize: 11,
               cursor: "pointer",
               display: "inline-flex",
@@ -328,7 +504,7 @@ export function DeskTab({ isMobile }: DeskTabProps) {
               gap: 8,
             }}
           >
-            <IconMessage2Share size={14} stroke={1.7} />
+            <IconSend size={14} stroke={1.7} />
             send back to strategist
           </button>
         </div>

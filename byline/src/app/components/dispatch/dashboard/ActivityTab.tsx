@@ -45,6 +45,7 @@ const FILTERS: { id: ActivityFilter; label: string; tone?: "blocked" }[] = [
   { id: "blocked", label: "Blocked", tone: "blocked" },
 ];
 
+// DEMO DATA: not yet wired to persisted dispatch history.
 function getMilestone(agentSteps: AgentStep[]) {
   const milestoneLine = agentSteps
     .flatMap((step) => step.input.context)

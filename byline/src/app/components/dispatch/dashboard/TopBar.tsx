@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { IconBolt, IconChevronDown, IconCommand, IconMenu2, IconTerminal2 } from "@tabler/icons-react";
+import { IconBolt, IconChevronDown, IconCommand, IconMenu2 } from "@tabler/icons-react";
 import Avatar from "boring-avatars";
 
 export type DashTab = "overview" | "desk" | "signal" | "activity" | "settings" | "docs";
@@ -15,8 +15,6 @@ interface TopBarProps {
   activeTab: DashTab;
   onDispatchClick: () => void;
   onLandingClick: () => void;
-  logOpen: boolean;
-  onToggleLog: () => void;
   isRunning: boolean;
   isMobile: boolean;
   onMenuClick: () => void;
@@ -31,8 +29,6 @@ export function TopBar({
   activeTab,
   onDispatchClick,
   onLandingClick,
-  logOpen,
-  onToggleLog,
   isRunning,
   isMobile,
   onMenuClick,
@@ -291,32 +287,6 @@ export function TopBar({
       )}
 
       <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-        {!isMobile && (
-          <button
-            onClick={onToggleLog}
-            title="Pipeline run log"
-            style={{
-              height: 36,
-              padding: "0 12px",
-              borderRadius: 10,
-              background: logOpen ? "rgba(232,94,44,0.12)" : "rgba(255,255,255,0.03)",
-              border: "0.5px solid " + (logOpen ? "rgba(232,94,44,0.3)" : "rgba(255,255,255,0.08)"),
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              color: logOpen ? "#E85E2C" : "var(--by-text-3)",
-              position: "relative",
-              fontFamily: "DM Mono, monospace",
-              fontSize: 11,
-            }}
-          >
-            <IconTerminal2 size={14} stroke={1.6} />
-            <span>Run log</span>
-            {isRunning && <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#E85E2C" }} />}
-          </button>
-        )}
-
         <button
           onClick={onDispatchClick}
           style={{

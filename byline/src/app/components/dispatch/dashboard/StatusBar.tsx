@@ -1,15 +1,13 @@
 import React from "react";
-import { IconTerminal2, IconMessageCircle } from "@tabler/icons-react";
+import { IconMessageCircle } from "@tabler/icons-react";
 
 interface StatusBarProps {
   isRunning: boolean;
-  onOpenLog: () => void;
-  logOpen: boolean;
   onOpenChat: () => void;
   chatOpen: boolean;
 }
 
-export function StatusBar({ isRunning, onOpenLog, logOpen, onOpenChat, chatOpen }: StatusBarProps) {
+export function StatusBar({ isRunning, onOpenChat, chatOpen }: StatusBarProps) {
   return (
     <div style={{
       height: 28, background: "var(--by-bg-2)", borderTop: "0.5px solid var(--by-border)",
@@ -26,16 +24,6 @@ export function StatusBar({ isRunning, onOpenLog, logOpen, onOpenChat, chatOpen 
       </div>
 
       <div style={{ flex: 1 }} />
-
-      <button onClick={onOpenLog} style={{
-        display: "flex", alignItems: "center", gap: 4,
-        background: "none", border: "none", cursor: "pointer",
-        color: logOpen ? "var(--by-accent)" : "var(--by-text-3)",
-        fontFamily: "'JetBrains Mono', monospace", fontSize: 10, padding: "2px 6px",
-      }}>
-        <IconTerminal2 size={12} stroke={1.5} />
-        <span>Logs</span>
-      </button>
 
       <button onClick={onOpenChat} style={{
         display: "flex", alignItems: "center", gap: 4,

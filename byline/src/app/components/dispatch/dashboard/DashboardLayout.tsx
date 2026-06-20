@@ -10,7 +10,6 @@ import {
   IconBook,
   IconX
 } from "@tabler/icons-react";
-import { RunLogPanel } from "./RunLogPanel";
 import { AgentRail, AgentStep } from "./AgentRail";
 import { OverviewTab } from "./OverviewTab";
 import { DeskTab } from "./DeskTab";
@@ -32,7 +31,6 @@ const DEFAULT_PROJECTS = [
 export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
   const STORAGE_KEY = "byline.dashboard.agentSteps";
   const [activeTab, setActiveTab] = useState<DashTab>("overview");
-  const [logOpen, setLogOpen] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [runningAgent, setRunningAgent] = useState(0);
   const [agentSteps, setAgentSteps] = useState<AgentStep[]>(() => {
@@ -175,7 +173,6 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
     if (isRunning) return;
     const milestone = query?.trim() || "shipped semantic search on fltrd.tech using pgvector";
     setIsRunning(true);
-    setLogOpen(true);
     setRailState(isMobile ? "fullscreen" : "expanded");
     setRunningAgent(0);
     setAgentSteps(makeAgentSteps(milestone));
@@ -301,7 +298,6 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
     setCommandPaletteOpen(true);
   };
   const handleQuickPublish = (txt: string) => { runPipeline(txt); };
-  const toggleLog = () => setLogOpen(v => !v);
   const toggleRail = () => setRailState((prev) => (prev === "collapsed" ? "expanded" : "collapsed"));
   const handleNavigateToDocHeading = (headingId: string) => {
     setActiveTab("docs");
@@ -339,7 +335,6 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
     { id: "docs-documentation", label: "Docs: Documentation", shortcut: "G H D", group: "Documentation", action: () => handleNavigateToDocHeading("documentation") },
     { id: "docs-getting-started", label: "Docs: Getting Started", shortcut: "G H G", group: "Documentation", action: () => handleNavigateToDocHeading("getting-started") },
     { id: "action-run", label: "Run Agent Pipeline", shortcut: "R", group: "Actions", action: () => runPipeline() },
-    { id: "action-logs", label: "Toggle Run Logs", shortcut: "L", group: "Actions", action: () => toggleLog() },
     { id: "action-chat", label: "Toggle Agent Rail", shortcut: "C", group: "Actions", action: () => toggleRail() },
   ];
 
@@ -350,15 +345,13 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
         activeTab={activeTab}
         onDispatchClick={handleDispatchClick}
         onLandingClick={onLandingClick}
-        logOpen={logOpen}
-        onToggleLog={toggleLog}
         isRunning={isRunning}
         isMobile={isMobile}
         onMenuClick={() => setMobileMenuOpen(v => !v)}
         projects={projects}
         activeProject={activeProject}
         setActiveProject={setActiveProject}
-    onSearchClick={() => {
+        onSearchClick={() => {
           setCommandPaletteMode("default");
           setCommandPaletteOpen(true);
         }}
@@ -402,13 +395,6 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
 
         {renderTab()}
 
-        <RunLogPanel
-          isOpen={logOpen}
-          isRunning={isRunning}
-          runningAgent={runningAgent}
-          onClose={() => setLogOpen(false)}
-        />
-
         {!isMobile && railState !== "fullscreen" && (
           <AgentRail
             railState={railState}
@@ -440,8 +426,6 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
 
       <StatusBar
         isRunning={isRunning}
-        onOpenLog={() => setLogOpen(v => !v)}
-        logOpen={logOpen}
         onOpenChat={() =>
           setRailState((prev) =>
             prev === "collapsed" ? "expanded" : "collapsed"

@@ -290,7 +290,7 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
       case "overview": return <OverviewTab onPublish={handleQuickPublish} isMobile={isMobile} />;
       case "desk":     return <DeskTab isMobile={isMobile} />;
       case "signal":   return <SignalTab isMobile={isMobile} />;
-      case "activity": return <ActivityTab isMobile={isMobile} />;
+      case "activity": return <ActivityTab isMobile={isMobile} agentSteps={agentSteps} />;
       case "settings": return <SettingsTab isMobile={isMobile} />;
       case "docs":     return (
         <DocsTab

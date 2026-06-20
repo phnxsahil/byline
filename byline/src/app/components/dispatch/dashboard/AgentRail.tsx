@@ -29,7 +29,7 @@ interface AgentRailProps {
 
 type AgentId = AgentStep["agentId"];
 
-const AGENTS_LIST: { id: AgentId; name: string }[] = [
+export const AGENTS_LIST: { id: AgentId; name: string }[] = [
   { id: "strategist", name: "Strategist" },
   { id: "linkedin", name: "LinkedIn Writer" },
   { id: "x", name: "X Writer" },
@@ -37,7 +37,7 @@ const AGENTS_LIST: { id: AgentId; name: string }[] = [
   { id: "critic", name: "Critic" },
 ];
 
-const STATUS_COLORS: Record<AgentStep["status"], string> = {
+export const STATUS_COLORS: Record<AgentStep["status"], string> = {
   pending: "var(--by-text-3)",
   running: "var(--by-amber)",
   done: "var(--by-green)",

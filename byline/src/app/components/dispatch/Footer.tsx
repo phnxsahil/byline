@@ -1,250 +1,238 @@
 import React, { useState } from "react";
+import { IconArrowUpRight, IconBrandGithub, IconCircleDashedCheck, IconSparkles } from "@tabler/icons-react";
 import { Logo } from "./Logo";
 
-// ─── Nav links ────────────────────────────────────────────────────────────────
-
 const LINKS = [
-  { label: "GitHub",      href: "https://github.com/sahil/byline" },
-  { label: "Docs",        href: "#docs" },
-  { label: "Changelog",   href: "#docs/changelog" },
-  { label: "Twitter / X",  href: "https://x.com" },
+  { label: "GitHub", href: "https://github.com/sahil/byline" },
+  { label: "Docs", href: "#docs" },
+  { label: "The Desk", href: "#dashboard" },
+  { label: "Pricing", href: "#pricing" },
 ];
 
 function FooterLink({ label, href }: { label: string; href: string }) {
   const [hov, setHov] = useState(false);
+
   return (
     <a
       href={href}
-      style={{
-        fontFamily: "'IBM Plex Mono', monospace",
-        fontSize: 11,
-        fontWeight: 400,
-        color: hov ? "var(--text-footer-primary)" : "var(--text-footer-secondary)",
-        textDecoration: "none",
-        transition: "color 0.12s ease",
-        whiteSpace: "nowrap",
-      }}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 8,
+        textDecoration: "none",
+        color: hov ? "var(--by-text)" : "var(--by-text-2)",
+        fontFamily: "'Inter', system-ui, sans-serif",
+        fontSize: 14,
+        fontWeight: 500,
+        transition: "color 0.14s ease",
+      }}
     >
-      {label}
+      <span>{label}</span>
+      <IconArrowUpRight size={14} stroke={1.7} />
     </a>
   );
 }
 
-// ─── Tech badge (right column) ────────────────────────────────────────────────
-
-function TechBadge({
-  label,
-  color,
-  abbr,
-}: {
-  label: string;
-  color: string;
-  abbr: string;
-}) {
-  return (
-    <div
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 5,
-        padding: "3px 8px",
-        border: "0.5px solid var(--border-footer)",
-        borderRadius: 4,
-        backgroundColor: "rgba(255,255,255,0.03)",
-      }}
-    >
-      <span
-        style={{
-          display: "inline-block",
-          width: 4,
-          height: 4,
-          borderRadius: "50%",
-          backgroundColor: color,
-          flexShrink: 0,
-        }}
-      />
-      <span
-        style={{
-          fontFamily: "JetBrains Mono, IBM Plex Mono, monospace",
-          fontSize: 9,
-          color: "var(--text-footer-secondary)",
-          letterSpacing: "0.04em",
-        }}
-      >
-        {abbr}
-      </span>
-      <span
-        style={{
-          fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
-          fontSize: 9,
-          color: "var(--text-footer-secondary)",
-          opacity: 0.7,
-        }}
-      >
-        {label}
-      </span>
-    </div>
-  );
-}
-
-const TECH = [
-  { label: "Anthropic",  color: "#E85E2C", abbr: "Claude"    },
-  { label: "Composio",   color: "#22C55E", abbr: "MCP"       },
-  { label: "LangGraph",  color: "#6366F1", abbr: "LG"        },
-];
-
-// ─── Footer ───────────────────────────────────────────────────────────────────
-
 export function Footer() {
   return (
-    <footer style={{ backgroundColor: "var(--bg)", paddingBottom: 40, paddingTop: 8, transition: "background-color 0.3s ease" }}>
+    <footer
+      style={{
+        background:
+          "linear-gradient(180deg, rgba(245,241,234,0) 0%, rgba(240,234,225,0.68) 14%, rgba(236,230,221,0.9) 100%)",
+        padding: "32px 0 42px",
+      }}
+    >
       <style>{`
-        .byline-footer-inner {
-          max-width: 960px;
+        .byline-footer-shell {
+          max-width: 1320px;
           margin: 0 auto;
-          display: grid;
-          grid-template-columns: 1fr 1.2fr 1fr;
-          align-items: stretch;
-          border: 0.5px solid var(--border);
-          border-radius: 8px;
-          background-color: var(--bg-footer);
-          overflow: hidden;
-          box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04), 0 1px 4px rgba(0,0,0,0.03);
-          transition: background-color 0.3s ease, border-color 0.3s ease;
+          padding: 0 40px;
         }
-
-        .byline-footer-col {
-          padding: 24px 28px;
+        .byline-footer-card {
+          border-radius: 28px;
+          border: 0.5px solid rgba(17,17,17,0.08);
+          background: rgba(250,247,241,0.82);
+          box-shadow: 0 24px 44px rgba(17,17,17,0.05);
+          overflow: hidden;
+        }
+        .byline-footer-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.9fr);
+        }
+        .byline-footer-main,
+        .byline-footer-side {
+          padding: 28px 30px;
+        }
+        .byline-footer-side {
+          border-left: 0.5px solid rgba(17,17,17,0.08);
           display: flex;
           flex-direction: column;
-          justify-content: center;
-          border-right: 0.5px solid var(--border-footer);
-          transition: border-color 0.3s ease;
+          justify-content: space-between;
+          gap: 22px;
+          background: rgba(255,255,255,0.34);
         }
-
-        .byline-footer-col:last-child {
-          border-right: none;
-        }
-
-        .byline-footer-center {
-          align-items: center;
-          gap: 16px;
-        }
-
-        .byline-footer-right {
-          align-items: flex-end;
-          gap: 12px;
-        }
-
-        .byline-footer-badges {
+        .byline-footer-meta {
           display: flex;
-          gap: 6px;
+          align-items: center;
+          gap: 10px;
           flex-wrap: wrap;
-          justify-content: flex-end;
+          margin-top: 18px;
         }
-
-        @media (max-width: 767px) {
-          .byline-footer-inner {
-            margin: 0 16px;
-            grid-template-columns: 1fr !important;
-            border-radius: 8px;
+        .byline-footer-links {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 14px 18px;
+          margin-top: 28px;
+        }
+        @media (max-width: 899px) {
+          .byline-footer-shell {
+            padding: 0 18px;
           }
-          .byline-footer-col {
-            border-right: none !important;
-            border-bottom: 0.5px solid var(--border-footer);
-            padding: 20px 24px;
-            align-items: flex-start !important;
+          .byline-footer-grid {
+            grid-template-columns: 1fr;
           }
-          .byline-footer-col:last-child {
-            border-bottom: none;
+          .byline-footer-side {
+            border-left: none;
+            border-top: 0.5px solid rgba(17,17,17,0.08);
           }
-          .byline-footer-badges {
-            justify-content: flex-start !important;
+          .byline-footer-links {
+            grid-template-columns: 1fr;
           }
         }
       `}</style>
 
-      <div className="byline-footer-inner">
-        {/* Column 1: Brand & License */}
-        <div className="byline-footer-col">
-          <div style={{ marginBottom: 12 }}>
-            <Logo size={14} dark={true} />
-          </div>
-          <div
-            style={{
-              fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
-              fontSize: 11,
-              fontWeight: 400,
-              color: "var(--text-footer-secondary)",
-              lineHeight: 1.5,
-              transition: "color 0.3s ease",
-            }}
-          >
-            MIT License · Built in public by{" "}
-            <a
-              href="https://github.com/sahil/byline"
-              style={{
-                color: "var(--text-footer-primary)",
-                textDecoration: "none",
-                borderBottom: "1px dashed var(--text-footer-secondary)",
-                transition: "color 0.3s ease, border-color 0.3s ease",
-              }}
-            >
-              @sahil
-            </a>
-          </div>
-        </div>
+      <div className="byline-footer-shell">
+        <div className="byline-footer-card">
+          <div className="byline-footer-grid">
+            <div className="byline-footer-main">
+              <div style={{ marginBottom: 18 }}>
+                <Logo size={15} dark={false} />
+              </div>
 
-        {/* Column 2: Navigation Links */}
-        <div className="byline-footer-col byline-footer-center">
-          <div
-            style={{
-              fontFamily: "JetBrains Mono, IBM Plex Mono, monospace",
-              fontSize: 9,
-              color: "var(--text-footer-secondary)",
-              letterSpacing: "0.08em",
-              textTransform: "uppercase",
-              transition: "color 0.3s ease",
-            }}
-          >
-            navigation
-          </div>
-          <nav
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 16,
-              flexWrap: "wrap",
-              justifyContent: "center",
-            }}
-          >
-            {LINKS.map((l) => (
-              <FooterLink key={l.label} {...l} />
-            ))}
-          </nav>
-        </div>
+              <h2
+                style={{
+                  margin: 0,
+                  fontFamily: "Space Grotesk, Inter, sans-serif",
+                  fontSize: "clamp(1.8rem, 4vw, 2.8rem)",
+                  lineHeight: 1,
+                  letterSpacing: "-0.06em",
+                  color: "var(--by-text)",
+                  maxWidth: 700,
+                }}
+              >
+                stop choosing between shipping the work and being seen for it.
+              </h2>
 
-        {/* Column 3: Stack Badges */}
-        <div className="byline-footer-col byline-footer-right">
-          <div
-            style={{
-              fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
-              fontSize: 11,
-              fontWeight: 400,
-              color: "var(--text-footer-secondary)",
-              lineHeight: 1.5,
-              textAlign: "right",
-              transition: "color 0.3s ease",
-            }}
-          >
-            Engine: LangGraph + Claude
-          </div>
-          <div className="byline-footer-badges">
-            {TECH.map((t) => (
-              <TechBadge key={t.abbr} {...t} />
-            ))}
+              <p
+                style={{
+                  margin: "18px 0 0",
+                  maxWidth: 640,
+                  fontFamily: "'Inter', system-ui, sans-serif",
+                  fontSize: 15,
+                  lineHeight: 1.72,
+                  color: "var(--by-text-2)",
+                }}
+              >
+                Byline watches the work, assembles the angle, drafts platform-native posts, and keeps the
+                human review loop where it belongs: at your desk.
+              </p>
+
+              <div className="byline-footer-links">
+                {LINKS.map((link) => (
+                  <FooterLink key={link.label} {...link} />
+                ))}
+              </div>
+            </div>
+
+            <div className="byline-footer-side">
+              <div>
+                <div
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 11,
+                    color: "var(--by-text-2)",
+                    letterSpacing: "0.08em",
+                    marginBottom: 14,
+                  }}
+                >
+                  product notes
+                </div>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gap: 12,
+                  }}
+                >
+                  {[
+                    "5 agents in the loop",
+                    "4 publishing surfaces",
+                    "0 lock-in if you want to self-host",
+                  ].map((item) => (
+                    <div key={item} style={{ display: "flex", alignItems: "center", gap: 10, color: "var(--by-text-2)" }}>
+                      <IconCircleDashedCheck size={15} stroke={1.6} />
+                      <span style={{ fontFamily: "'Inter', system-ui, sans-serif", fontSize: 14 }}>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="byline-footer-meta">
+                  <span
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                      padding: "8px 10px",
+                      borderRadius: 999,
+                      background: "rgba(255,255,255,0.55)",
+                      border: "0.5px solid rgba(17,17,17,0.08)",
+                      color: "var(--by-text-2)",
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: 11,
+                    }}
+                  >
+                    <IconSparkles size={13} stroke={1.7} />
+                    MIT licensed
+                  </span>
+                  <a
+                    href="https://github.com/sahil/byline"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 8,
+                      padding: "8px 10px",
+                      borderRadius: 999,
+                      background: "rgba(255,255,255,0.55)",
+                      border: "0.5px solid rgba(17,17,17,0.08)",
+                      textDecoration: "none",
+                      color: "var(--by-text-2)",
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontSize: 11,
+                    }}
+                  >
+                    <IconBrandGithub size={13} stroke={1.7} />
+                    github.com/sahil/byline
+                  </a>
+                </div>
+
+                <div
+                  style={{
+                    marginTop: 18,
+                    fontFamily: "'Inter', system-ui, sans-serif",
+                    fontSize: 13,
+                    lineHeight: 1.65,
+                    color: "var(--by-text-2)",
+                  }}
+                >
+                  Built in public by Sahil. Editorial control room for developer-founders who want the
+                  output to sound like them, not like the model.
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

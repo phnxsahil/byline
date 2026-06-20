@@ -19,7 +19,7 @@ export function SignalTab({ isMobile }: SignalTabProps) {
       display: "flex", flexDirection: "column", gap: 16,
     }}>
       <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 10, color: "var(--by-text-3)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-        Signal Feed — Incoming from watchers
+        SIGNAL FEED
       </div>
 
       <div style={{

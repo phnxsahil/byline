@@ -267,7 +267,7 @@ export function DispatchWorkspace({ onLandingClick }: DispatchWorkspaceProps) {
         <div className="mx-auto flex min-h-screen max-w-6xl items-center justify-center px-6">
           <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-[0.28em] text-carbon">
             <LoaderCircle className="size-4 animate-spin" />
-            Loading the wire room
+            Loading the desk
           </div>
         </div>
       </div>
@@ -281,7 +281,7 @@ export function DispatchWorkspace({ onLandingClick }: DispatchWorkspaceProps) {
           <div>
             <div className="mb-2 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-stamp">
               <span className="size-2 rounded-full bg-stamp" />
-              Dispatch workspace
+              Byline desk
             </div>
             <h1 className="font-display text-3xl tracking-[-0.04em]">The Wire & The Desk</h1>
             <p className="mt-1 max-w-2xl text-sm text-carbon">
@@ -302,7 +302,7 @@ export function DispatchWorkspace({ onLandingClick }: DispatchWorkspaceProps) {
               className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-medium text-paper transition-colors hover:bg-wire cursor-pointer"
             >
               <Plus className="size-4" />
-              New dispatch
+              New milestone
             </button>
           </div>
         </header>
@@ -330,7 +330,7 @@ export function DispatchWorkspace({ onLandingClick }: DispatchWorkspaceProps) {
                   className="flex w-full flex-col items-start gap-3 rounded-[22px] border border-dashed border-ink/15 bg-paper px-4 py-5 text-left transition-colors hover:border-wire/30 cursor-pointer"
                 >
                   <span className="font-mono text-[11px] uppercase tracking-[0.28em] text-carbon">Nothing in the wire</span>
-                  <span className="text-sm text-ink">Log a dispatch to start the first real pipeline run.</span>
+                  <span className="text-sm text-ink">Log a milestone to start the first real pipeline run.</span>
                 </button>
               ) : null}
 
@@ -531,7 +531,7 @@ export function DispatchWorkspace({ onLandingClick }: DispatchWorkspaceProps) {
                   <div className="mb-3 font-mono text-[11px] uppercase tracking-[0.28em] text-carbon">Nothing in the desk</div>
                   <h2 className="font-display text-3xl tracking-[-0.04em]">Nothing in the wire.</h2>
                   <p className="mt-3 text-sm leading-6 text-carbon">
-                    Log a dispatch to start the real Phase 0 loop and watch platform stamps land in sequence.
+                    Log a milestone to start the real Phase 0 loop and watch platform stamps land in sequence.
                   </p>
                   <button
                     type="button"
@@ -539,7 +539,7 @@ export function DispatchWorkspace({ onLandingClick }: DispatchWorkspaceProps) {
                     className="mt-6 inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-medium text-paper transition-colors hover:bg-wire cursor-pointer"
                   >
                     <Plus className="size-4" />
-                    New dispatch
+                    New milestone
                   </button>
                 </div>
               </div>
@@ -553,7 +553,7 @@ export function DispatchWorkspace({ onLandingClick }: DispatchWorkspaceProps) {
           <div className="w-full max-w-2xl rounded-[30px] border border-ink/10 bg-paper p-5 shadow-[0_30px_100px_rgba(26,25,22,0.22)]">
             <div className="mb-5 flex items-start justify-between gap-3">
               <div>
-                <div className="mb-2 font-mono text-[11px] uppercase tracking-[0.28em] text-carbon">New dispatch</div>
+                <div className="mb-2 font-mono text-[11px] uppercase tracking-[0.28em] text-carbon">New milestone</div>
                 <h3 className="font-display text-3xl tracking-[-0.04em]">Send a fresh update down the wire</h3>
               </div>
               <button
@@ -599,18 +599,18 @@ export function DispatchWorkspace({ onLandingClick }: DispatchWorkspaceProps) {
             </div>
 
             <label className="mt-4 block space-y-2">
-              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-carbon">Raw dispatch</span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.24em] text-carbon">Raw milestone</span>
               <textarea
                 value={composerBody}
                 onChange={(event) => setComposerBody(event.target.value)}
                 className="min-h-[180px] w-full rounded-[22px] border border-ink/10 bg-white px-4 py-4 text-sm leading-7 text-ink outline-none focus:border-wire"
-                placeholder="Shipped pgvector retrieval for dispatch memory. Draft quality improved because the pipeline now remembers the actual project context."
+                placeholder="Shipped pgvector retrieval for milestone memory. Draft quality improved because the pipeline now remembers the actual project context."
               />
             </label>
 
             <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
               <p className="max-w-xl text-sm leading-6 text-carbon">
-                The desk will open the new dispatch immediately and stream per-platform stamp updates as each writer completes.
+                The desk will open the new milestone immediately and stream per-platform stamp updates as each writer completes.
               </p>
               <button
                 type="button"
@@ -619,7 +619,7 @@ export function DispatchWorkspace({ onLandingClick }: DispatchWorkspaceProps) {
                 className="inline-flex items-center gap-2 rounded-full bg-ink px-4 py-2 text-sm font-medium text-paper transition-colors hover:bg-wire disabled:opacity-50 cursor-pointer"
               >
                 <Send className="size-4" />
-                Log dispatch
+                Log milestone
               </button>
             </div>
           </div>

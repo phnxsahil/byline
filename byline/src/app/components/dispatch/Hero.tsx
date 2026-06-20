@@ -1,16 +1,20 @@
 import React, { useState } from "react";
-import { IconBrandGithub, IconServer, IconCpu, IconPlug } from "@tabler/icons-react";
-
-// ─── Terminal data ────────────────────────────────────────────────────────────
+import {
+  IconBrandGithub,
+  IconBrandOpenSource,
+  IconPlugConnected,
+  IconRobot,
+  IconTopologyStar3,
+} from "@tabler/icons-react";
 
 interface TermLine {
   type: "comment" | "prompt" | "arrow" | "success";
   text: string;
-  gap?: number; // bottom margin after this line (px)
+  gap?: number;
 }
 
 const LINES: TermLine[] = [
-  { type: "comment", text: "# byline — log a milestone", gap: 14 },
+  { type: "comment", text: "# byline - log a milestone", gap: 14 },
   {
     type: "prompt",
     text: '$ byline log "shipped semantic search on fltrd.tech using pgvector"',
@@ -18,26 +22,25 @@ const LINES: TermLine[] = [
   },
   {
     type: "arrow",
-    text: '→ Strategist: post-worthy · angle: "the caching problem nobody talks about"',
+    text: '-> Strategist: post-worthy - angle: "the caching problem nobody talks about"',
   },
-  { type: "arrow", text: "→ Writing for: linkedin · x · r/webdev · threads", gap: 14 },
-  { type: "success", text: "✓ 4 drafts ready · critic score 8.6/10 · awaiting review" },
+  { type: "arrow", text: "-> Writing for: linkedin - x - r/webdev - threads", gap: 14 },
+  { type: "success", text: "v 4 drafts ready - critic score 8.6/10 - awaiting review" },
 ];
 
 const LINE_COLOR: Record<TermLine["type"], string> = {
-  comment: "rgba(255,255,255,0.38)",
-  prompt: "rgba(255,255,255,0.92)",
-  arrow: "rgba(255,255,255,0.45)",
-  success: "#22C55E",
+  comment: "var(--by-text-3)",
+  prompt: "var(--by-text)",
+  arrow: "var(--by-text-2)",
+  success: "var(--by-green)",
 };
 
 const TRUST = [
-  { Icon: IconServer, label: "Self-hostable" },
-  { Icon: IconCpu, label: "LangGraph + Claude" },
-  { Icon: IconPlug, label: "Composio-powered distribution" },
+  { Icon: IconBrandOpenSource, label: "open source" },
+  { Icon: IconRobot, label: "self-hostable" },
+  { Icon: IconTopologyStar3, label: "langgraph + claude" },
+  { Icon: IconPlugConnected, label: "composio" },
 ];
-
-// ─── Eyebrow pill ─────────────────────────────────────────────────────────────
 
 function EyebrowPill() {
   return (
@@ -45,11 +48,12 @@ function EyebrowPill() {
       style={{
         display: "inline-flex",
         alignItems: "center",
-        gap: 8,
-        padding: "4px 12px 4px 8px",
-        border: "0.5px solid var(--border)",
-        borderRadius: 20,
-        backgroundColor: "var(--surface-secondary)",
+        gap: 10,
+        padding: "5px 12px 5px 8px",
+        border: "0.5px solid var(--by-border)",
+        borderRadius: 999,
+        background: "rgba(255,255,255,0.04)",
+        boxShadow: "0 1px 0 rgba(255,255,255,0.04) inset",
       }}
     >
       <span
@@ -58,7 +62,7 @@ function EyebrowPill() {
           width: 7,
           height: 7,
           borderRadius: "50%",
-          backgroundColor: "#22C55E",
+          backgroundColor: "var(--by-green)",
           display: "inline-block",
           flexShrink: 0,
         }}
@@ -67,47 +71,47 @@ function EyebrowPill() {
         style={{
           fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 11,
-          fontWeight: 400,
-          color: "var(--text-secondary)",
-          letterSpacing: "0.02em",
+          fontWeight: 500,
+          color: "rgba(15,15,13,0.7)",
+          letterSpacing: "0.01em",
           whiteSpace: "nowrap",
         }}
       >
-        Your byline. Everywhere you ship.
+        multi-agent content engine for builders who ship in public
       </span>
     </div>
   );
 }
 
-// ─── CTA buttons ──────────────────────────────────────────────────────────────
-
 function CTAPrimary() {
   const [hov, setHov] = useState(false);
+
   return (
     <a
       href="#docs"
-      className="dispatch-cta-btn"
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
         display: "inline-flex",
         alignItems: "center",
-        padding: "10px 20px",
-        backgroundColor: hov ? "#C7501E" : "#E85E2C",
-        borderRadius: 4,
+        justifyContent: "center",
+        minWidth: 176,
+        padding: "14px 20px",
+        backgroundColor: hov ? "var(--by-bg-3)" : "var(--by-bg-2)",
+        color: "var(--by-text)",
+        borderRadius: 8,
         textDecoration: "none",
-        transition: "background-color 0.12s ease",
-        flexShrink: 0,
-        boxShadow: hov ? "0 4px 12px rgba(232,94,44,0.18)" : "none",
+        border: "0.5px solid var(--by-border)",
+        boxShadow: hov ? "0 14px 30px rgba(49,48,45,0.16)" : "0 8px 20px rgba(49,48,45,0.08)",
+        transition: "all 0.16s ease",
       }}
     >
       <span
         style={{
           fontFamily: "'Inter', system-ui, sans-serif",
-          fontSize: 13,
-          fontWeight: 500,
-          color: "#F5F2EC",
-          letterSpacing: "-0.01em",
+          fontSize: 14,
+          fontWeight: 600,
+          letterSpacing: "-0.02em",
           whiteSpace: "nowrap",
         }}
       >
@@ -119,6 +123,7 @@ function CTAPrimary() {
 
 function CTAGhost() {
   const [hov, setHov] = useState(false);
+
   return (
     <a
       href="https://github.com/sahil/byline"
@@ -129,24 +134,26 @@ function CTAGhost() {
       style={{
         display: "inline-flex",
         alignItems: "center",
-        gap: 7,
-        padding: "10px 20px",
-        border: hov ? "0.5px solid var(--text-primary)" : "0.5px solid var(--border)",
-        borderRadius: 4,
+        justifyContent: "center",
+        gap: 8,
+        minWidth: 176,
+        padding: "14px 20px",
+        border: hov ? "0.5px solid var(--by-border)" : "0.5px solid var(--by-border)",
+        borderRadius: 8,
         textDecoration: "none",
-        backgroundColor: hov ? "var(--surface)" : "transparent",
-        transition: "all 0.12s ease",
-        flexShrink: 0,
+        backgroundColor: hov ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)",
+        boxShadow: hov ? "0 10px 24px var(--by-border)" : "none",
+        transition: "all 0.16s ease",
       }}
     >
-      <IconBrandGithub size={14} color="var(--text-primary)" stroke={1.75} />
+      <IconBrandGithub size={15} color="var(--by-bg)" stroke={1.7} />
       <span
         style={{
           fontFamily: "'Inter', system-ui, sans-serif",
-          fontSize: 13,
-          fontWeight: 400,
-          color: "var(--text-primary)",
-          letterSpacing: "-0.01em",
+          fontSize: 14,
+          fontWeight: 500,
+          color: "var(--by-bg)",
+          letterSpacing: "-0.02em",
           whiteSpace: "nowrap",
         }}
       >
@@ -156,62 +163,61 @@ function CTAGhost() {
   );
 }
 
-// ─── Terminal card ────────────────────────────────────────────────────────────
-// Lines are always rendered; each gets .dispatch-term-line + .dispatch-term-line-N
-// so animations.css drives the staggered fadeInUp entirely in CSS.
-
 function TerminalCard() {
   return (
     <div
       className="dispatch-hero-terminal"
       style={{
-        backgroundColor: "var(--bg-terminal)",
-        borderRadius: 12,
-        border: "0.5px solid var(--border)",
-        boxShadow:
-          "0 20px 50px rgba(15,15,13,0.12), 0 4px 10px rgba(15,15,13,0.05)",
+        backgroundColor: "var(--by-bg-2)",
+        borderRadius: 22,
+        border: "1px solid var(--by-border)",
+        boxShadow: "0 32px 60px rgba(0,0,0,0.28), 0 4px 16px rgba(0,0,0,0.14)",
         overflow: "hidden",
-        transition: "background-color 0.3s ease, border-color 0.3s ease",
       }}
     >
-      {/* Title bar */}
       <div
         style={{
-          padding: "12px 16px",
-          borderBottom: "0.5px solid var(--border)",
+          padding: "16px 18px",
+          borderBottom: "0.5px solid rgba(255,255,255,0.08)",
           display: "flex",
           alignItems: "center",
-          gap: 7,
-          flexShrink: 0,
+          gap: 8,
         }}
       >
-        {(["#E85E2C", "#F5A623", "#22C55E"] as const).map((c) => (
+        {(["var(--by-text-3)", "var(--by-amber)", "var(--by-green)"] as const).map((c) => (
           <div
             key={c}
             style={{
-              width: 8,
-              height: 8,
+              width: 10,
+              height: 10,
               borderRadius: "50%",
               backgroundColor: c,
-              opacity: 0.88,
+              opacity: 0.92,
             }}
           />
         ))}
         <span
           style={{
-            marginLeft: 8,
-            fontFamily: "JetBrains Mono, DM Mono, monospace",
-            fontSize: 11,
-            color: "rgba(255,255,255,0.22)",
-            letterSpacing: "0.04em",
+            marginLeft: 10,
+            fontFamily: "IBM Plex Mono, monospace",
+            fontSize: 12,
+            color: "rgba(255,255,255,0.28)",
+            letterSpacing: "0.03em",
           }}
         >
-          byline — zsh
+          byline - zsh
         </span>
       </div>
 
-      {/* Body — all lines pre-rendered, CSS handles the staggered reveal */}
-      <div style={{ padding: "20px 22px 24px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+      <div
+        style={{
+          padding: "30px 28px 26px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          minHeight: "100%",
+        }}
+      >
         <div>
           {LINES.map((line, i) => (
             <div
@@ -221,9 +227,9 @@ function TerminalCard() {
             >
               <span
                 style={{
-                  fontFamily: "JetBrains Mono, DM Mono, monospace",
-                  fontSize: 12,
-                  lineHeight: 1.7,
+                  fontFamily: "IBM Plex Mono, monospace",
+                  fontSize: 13,
+                  lineHeight: 1.9,
                   color: LINE_COLOR[line.type],
                   whiteSpace: "pre-wrap",
                   wordBreak: "break-word",
@@ -236,13 +242,12 @@ function TerminalCard() {
           ))}
         </div>
 
-        {/* Cursor / prompt input line */}
-        <div className="dispatch-term-cursor" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <div className="dispatch-term-cursor" style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <span
             style={{
-              fontFamily: "JetBrains Mono, DM Mono, monospace",
-              fontSize: 12,
-              color: "rgba(255,255,255,0.85)",
+            fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 13,
+              color: "rgba(255,255,255,0.88)",
             }}
           >
             $ byline
@@ -251,9 +256,9 @@ function TerminalCard() {
             className="dispatch-cursor"
             style={{
               display: "inline-block",
-              width: 6,
-              height: 12,
-              backgroundColor: "#E85E2C",
+              width: 7,
+              height: 14,
+              backgroundColor: "var(--by-accent)",
             }}
           />
         </div>
@@ -262,155 +267,157 @@ function TerminalCard() {
   );
 }
 
-// ─── Hero ─────────────────────────────────────────────────────────────────────
-
 export function Hero() {
-
   return (
     <section
       style={{
-        backgroundColor: "var(--bg)",
-        paddingBottom: 96,
-        transition: "background-color 0.3s ease",
+        background:
+          "radial-gradient(circle at top center, rgba(18,17,15,0.96) 0%, rgba(15,15,13,0.98) 36%, var(--by-bg) 100%)",
+        paddingBottom: 110,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      {/* Keyframe animations */}
       <style>{`
         @keyframes dispatch-pulse {
-          0%   { box-shadow: 0 0 0 0   rgba(34, 197, 94, 0.6); }
-          70%  { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
-          100% { box-shadow: 0 0 0 0   rgba(34, 197, 94, 0); }
+          0% { box-shadow: 0 0 0 0 rgba(42, 179, 90, 0.42); }
+          70% { box-shadow: 0 0 0 8px rgba(42, 179, 90, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(42, 179, 90, 0); }
         }
         .dispatch-pulse-dot {
           animation: dispatch-pulse 2.4s ease-out infinite;
         }
-
         @keyframes dispatch-blink {
           0%, 100% { opacity: 1; }
-          50%       { opacity: 0; }
+          50% { opacity: 0; }
         }
         .dispatch-cursor {
           animation: dispatch-blink 1s step-end infinite;
         }
-
         .dispatch-hero-inner {
           padding-left: 40px;
           padding-right: 40px;
         }
         .dispatch-hero-grid {
           display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 64px;
+          grid-template-columns: minmax(0, 1.02fr) minmax(380px, 0.98fr);
+          gap: 72px;
           align-items: center;
         }
         .dispatch-hero-terminal {
-          aspect-ratio: 16 / 10.5;
+          aspect-ratio: 1.12 / 0.86;
           display: flex;
           flex-direction: column;
         }
+        @media (max-width: 980px) {
+          .dispatch-hero-grid {
+            grid-template-columns: 1fr;
+            gap: 36px;
+          }
+          .dispatch-hero-terminal {
+            max-width: 720px;
+            margin: 0 auto;
+          }
+        }
         @media (max-width: 767px) {
           .dispatch-hero-inner {
-            padding-left: 20px !important;
-            padding-right: 20px !important;
-          }
-          .dispatch-hero-grid {
-            grid-template-columns: 1fr !important;
-            gap: 40px !important;
+            padding-left: 18px !important;
+            padding-right: 18px !important;
           }
           .dispatch-hero-terminal {
             aspect-ratio: auto !important;
-            min-height: 250px;
+            min-height: 320px;
           }
         }
       `}</style>
 
       <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "radial-gradient(circle at 78% 30%, var(--by-text) 0%, rgba(255,255,255,0) 34%), linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0))",
+          pointerEvents: "none",
+        }}
+      />
+
+      <div
         className="dispatch-hero-inner"
         style={{
-          maxWidth: 1080,
+          maxWidth: 1320,
           margin: "0 auto",
-          paddingTop: 108, /* 52px fixed nav + 56px breathing room */
+          paddingTop: 136,
+          position: "relative",
+          zIndex: 1,
         }}
       >
         <div className="dispatch-hero-grid">
-
-          {/* ── Left column ───────────────────────────────────────────────── */}
-          <div className="dispatch-hero-content">
-
-            {/* Eyebrow */}
+          <div style={{ maxWidth: 620 }}>
             <div style={{ marginBottom: 22 }}>
               <EyebrowPill />
             </div>
 
-            {/* Headline */}
-            <h1 style={{ margin: "0 0 18px", padding: 0, lineHeight: 1 }}>
+            <div
+              style={{
+                fontFamily: "IBM Plex Mono, monospace",
+                fontSize: 13,
+                color: "var(--by-text-3)",
+                letterSpacing: "0.05em",
+                marginBottom: 28,
+              }}
+            >
+              {"<>"} open source
+            </div>
+
+            <h1 style={{ margin: "0 0 24px", padding: 0, lineHeight: 0.94 }}>
               <span
                 style={{
                   display: "block",
-                  fontFamily: "Space Grotesk, system-ui, sans-serif",
-                  fontSize: 40,
+                  fontFamily: "Space Grotesk, Inter, sans-serif",
+                  fontSize: "clamp(3.8rem, 8vw, 6.2rem)",
                   fontWeight: 700,
-                  color: "var(--text-primary)",
-                  letterSpacing: "-0.04em",
-                  lineHeight: 1.08,
-                  transition: "color 0.3s ease",
+                  color: "var(--by-text)",
+                  letterSpacing: "-0.07em",
                 }}
               >
-                Your byline.
+                Stop choosing between
               </span>
               <span
                 style={{
                   display: "block",
-                  fontFamily: "Space Grotesk, system-ui, sans-serif",
-                  fontSize: 40,
+                  fontFamily: "Space Grotesk, Inter, sans-serif",
+                  fontSize: "clamp(3.8rem, 8vw, 6.2rem)",
                   fontWeight: 700,
-                  color: "#E85E2C",
-                  letterSpacing: "-0.04em",
-                  lineHeight: 1.08,
+                  color: "var(--by-accent)",
+                  letterSpacing: "-0.07em",
                 }}
               >
-                Everywhere you ship.
+                shipping and being visible
               </span>
             </h1>
 
-            {/* Sub + watcher line */}
             <p
               style={{
-                margin: "0 0 8px",
+                margin: "0 0 26px",
                 fontFamily: "'Inter', system-ui, sans-serif",
-                fontSize: 15,
+                fontSize: 16,
                 fontWeight: 400,
-                color: "var(--text-secondary)",
-                maxWidth: 400,
-                lineHeight: 1.65,
-                transition: "color 0.3s ease",
+                color: "var(--by-text-2)",
+                maxWidth: 620,
+                lineHeight: 1.72,
               }}
             >
-              One milestone. Five specialized agents. Your voice — published natively across LinkedIn, X, Reddit, and Threads.
-            </p>
-            <p
-              style={{
-                margin: "0 0 24px",
-                fontFamily: "'Inter', system-ui, sans-serif",
-                fontSize: 13,
-                fontWeight: 400,
-                color: "var(--text-tertiary, var(--text-secondary))",
-                maxWidth: 400,
-                lineHeight: 1.6,
-                opacity: 0.72,
-                transition: "color 0.3s ease",
-              }}
-            >
-              Or connect your GitHub — Byline watches your commits and surfaces drafts before you even think to post.
+              One milestone. Five specialized AI agents run in parallel: a strategist, four platform
+              writers, and a critic that keeps your voice intact before anything ships to LinkedIn, X,
+              Reddit, or Threads.
             </p>
 
-            {/* CTA row — Fix #5: 18px gap to trust badges (was 26px) */}
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 10,
-                marginBottom: 18,
+                gap: 12,
+                marginBottom: 26,
                 flexWrap: "wrap",
               }}
             >
@@ -418,43 +425,43 @@ export function Hero() {
               <CTAGhost />
             </div>
 
-            {/* Trust bar — Fix #6: mid-dot separators instead of faint icons */}
             <div
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 0,
+                gap: 20,
                 flexWrap: "wrap",
               }}
             >
-              {TRUST.map(({ label }, idx) => (
-                <React.Fragment key={label}>
+              {TRUST.map(({ Icon, label }) => (
+                <div
+                  key={label}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  color: "var(--by-text-2)",
+                }}
+                >
+                  <Icon size={15} stroke={1.5} />
                   <span
                     style={{
                       fontFamily: "'Inter', system-ui, sans-serif",
-                      fontSize: 11,
-                      fontWeight: 400,
-                      color: "var(--text-secondary)",
+                      fontSize: 13,
+                      fontWeight: 500,
                       whiteSpace: "nowrap",
-                      transition: "color 0.3s ease",
                     }}
                   >
                     {label}
                   </span>
-                  {idx < TRUST.length - 1 && (
-                    <span style={{ margin: "0 8px", color: "var(--border)", fontSize: 14 }}>·</span>
-                  )}
-                </React.Fragment>
+                </div>
               ))}
             </div>
-
           </div>
 
-          {/* ── Right column ──────────────────────────────────────────────── */}
           <div>
             <TerminalCard />
           </div>
-
         </div>
       </div>
     </section>

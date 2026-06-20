@@ -39,16 +39,16 @@ function FeatureRow({
     >
       <IconCheck
         size={14}
-        color={muted ? "var(--text-secondary)" : "var(--accent)"}
+        color={muted ? "var(--by-text-2)" : "var(--by-accent)"}
         stroke={2}
         style={{ flexShrink: 0, marginTop: 2, opacity: muted ? 0.6 : 1 }}
       />
       <span
         style={{
-          fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 13,
           fontWeight: 400,
-          color: muted ? "var(--text-secondary)" : "var(--text-primary)",
+          color: muted ? "var(--by-text-2)" : "var(--by-text)",
           opacity: muted ? 0.7 : 1,
           lineHeight: 1.5,
           transition: "color 0.3s ease",
@@ -69,8 +69,8 @@ function SelfHostedCard() {
     <div
       style={{
         position: "relative",
-        backgroundColor: "var(--surface)",
-        border: "1px solid var(--accent)",
+        backgroundColor: "var(--by-bg-2)",
+        border: "1px solid var(--by-accent)",
         borderRadius: 14,
         padding: "28px 24px 24px",
         display: "flex",
@@ -86,17 +86,17 @@ function SelfHostedCard() {
           position: "absolute",
           top: 16,
           right: 16,
-          backgroundColor: "var(--accent)",
+          backgroundColor: "var(--by-accent)",
           borderRadius: 20,
           padding: "3px 9px",
         }}
       >
         <span
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 10,
             fontWeight: 500,
-            color: "#FAFAF8",
+            color: "var(--by-text)",
             letterSpacing: "0.08em",
             textTransform: "uppercase",
           }}
@@ -108,10 +108,10 @@ function SelfHostedCard() {
       {/* Plan name */}
       <div
         style={{
-          fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 18,
           fontWeight: 500,
-          color: "var(--text-primary)",
+          color: "var(--by-text)",
           letterSpacing: "-0.015em",
           marginBottom: 16,
           paddingRight: 100, /* clear the badge */
@@ -125,10 +125,10 @@ function SelfHostedCard() {
       <div style={{ display: "flex", alignItems: "baseline", gap: 2, marginBottom: 4 }}>
         <span
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 32,
             fontWeight: 500,
-            color: "var(--accent)",
+            color: "var(--by-accent)",
             letterSpacing: "-0.03em",
             lineHeight: 1,
             transition: "color 0.3s ease",
@@ -139,10 +139,10 @@ function SelfHostedCard() {
       </div>
       <div
         style={{
-          fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 12,
           fontWeight: 400,
-          color: "var(--text-secondary)",
+          color: "var(--by-text-2)",
           opacity: 0.8,
           marginBottom: 24,
           transition: "color 0.3s ease",
@@ -154,7 +154,7 @@ function SelfHostedCard() {
       {/* Divider */}
       <div
         style={{
-          borderTop: "0.5px solid var(--border)",
+          borderTop: "0.5px solid var(--by-border)",
           marginBottom: 20,
           transition: "border-color 0.3s ease",
         }}
@@ -185,7 +185,7 @@ function SelfHostedCard() {
           gap: 8,
           width: "100%",
           padding: "11px 0",
-          backgroundColor: hov ? "#C7501E" : "var(--accent)",
+          backgroundColor: hov ? "var(--by-bg-3)" : "var(--by-accent)",
           borderRadius: 8,
           textDecoration: "none",
           transition: "background-color 0.12s ease",
@@ -194,13 +194,13 @@ function SelfHostedCard() {
         onMouseEnter={() => setHov(true)}
         onMouseLeave={() => setHov(false)}
       >
-        <IconBrandGithub size={14} color="#FAFAF8" stroke={2} />
+        <IconBrandGithub size={14} color="var(--by-text)" stroke={2} />
         <span
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 13,
             fontWeight: 500,
-            color: "#FAFAF8",
+            color: "var(--by-text)",
             letterSpacing: "-0.01em",
           }}
         >
@@ -220,8 +220,8 @@ function CloudCard() {
     <div
       style={{
         position: "relative",
-        backgroundColor: "var(--surface)",
-        border: "0.5px solid var(--border)",
+        backgroundColor: "var(--by-bg-2)",
+        border: "0.5px solid var(--by-border)",
         borderRadius: 14,
         padding: "28px 24px 24px",
         display: "flex",
@@ -236,18 +236,18 @@ function CloudCard() {
           position: "absolute",
           top: 16,
           right: 16,
-          backgroundColor: "var(--surface-secondary)",
+          backgroundColor: "var(--by-bg-3)",
           borderRadius: 20,
           padding: "3px 9px",
-          border: "0.5px solid var(--border)",
+          border: "0.5px solid var(--by-border)",
         }}
       >
         <span
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 10,
             fontWeight: 500,
-            color: "var(--text-secondary)",
+            color: "var(--by-text-2)",
             opacity: 0.7,
             letterSpacing: "0.08em",
             textTransform: "uppercase",
@@ -260,10 +260,10 @@ function CloudCard() {
       {/* Plan name */}
       <div
         style={{
-          fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 18,
           fontWeight: 500,
-          color: "var(--text-secondary)",
+          color: "var(--by-text-2)",
           letterSpacing: "-0.015em",
           marginBottom: 16,
           paddingRight: 110,
@@ -276,46 +276,34 @@ function CloudCard() {
       <div style={{ display: "flex", alignItems: "baseline", gap: 2, marginBottom: 4 }}>
         <span
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 32,
             fontWeight: 500,
-            color: "var(--text-secondary)",
+            color: "var(--by-text-2)",
             letterSpacing: "-0.03em",
             lineHeight: 1,
           }}
         >
-          ~$9
-        </span>
-        <span
-          style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
-            fontSize: 16,
-            fontWeight: 400,
-            color: "var(--text-secondary)",
-            opacity: 0.7,
-            marginLeft: 2,
-          }}
-        >
-          /mo
+          Coming soon
         </span>
       </div>
       <div
         style={{
-          fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 12,
           fontWeight: 400,
-          color: "var(--text-secondary)",
+          color: "var(--by-text-2)",
           opacity: 0.6,
           marginBottom: 24,
         }}
       >
-        estimated · early access
+        Coming soon
       </div>
 
       {/* Divider */}
       <div
         style={{
-          borderTop: "0.5px solid var(--border)",
+          borderTop: "0.5px solid var(--by-border)",
           marginBottom: 20,
         }}
       />
@@ -344,11 +332,11 @@ function CloudCard() {
           justifyContent: "center",
           width: "100%",
           padding: "11px 0",
-          border: "0.5px solid var(--border)",
+          border: "0.5px solid var(--by-border)",
           borderRadius: 8,
           textDecoration: "none",
           transition: "all 0.12s ease",
-          backgroundColor: hov ? "var(--surface-secondary)" : "transparent",
+          backgroundColor: hov ? "var(--by-bg-3)" : "transparent",
           boxSizing: "border-box",
         } as React.CSSProperties}
         onMouseEnter={() => setHov(true)}
@@ -356,10 +344,10 @@ function CloudCard() {
       >
         <span
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 13,
             fontWeight: 400,
-            color: "var(--text-secondary)",
+            color: "var(--by-text-2)",
             letterSpacing: "-0.01em",
           }}
         >
@@ -374,7 +362,7 @@ function CloudCard() {
 
 export function PricingSection() {
   return (
-    <section id="pricing" className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96, transition: "background-color 0.3s ease" }}>
+    <section id="pricing" className="dispatch-reveal" style={{ backgroundColor: "var(--by-bg)", paddingBottom: 96, transition: "background-color 0.3s ease" }}>
       <style>{`
         .dispatch-pricing-inner {
           max-width: 1080px;
@@ -405,10 +393,10 @@ export function PricingSection() {
         {/* Eyebrow */}
         <div
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 10,
             fontWeight: 400,
-            color: "var(--text-secondary)",
+            color: "var(--by-text-2)",
             opacity: 0.7,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
@@ -425,7 +413,7 @@ export function PricingSection() {
             fontFamily: "Space Grotesk, system-ui, sans-serif",
             fontSize: 28,
             fontWeight: 500,
-            color: "var(--text-primary)",
+            color: "var(--by-text)",
             letterSpacing: "-0.02em",
             lineHeight: 1.2,
             margin: "0 0 40px",
@@ -446,10 +434,10 @@ export function PricingSection() {
         {/* Footnote */}
         <p
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 12,
             fontWeight: 400,
-            color: "var(--text-secondary)",
+            color: "var(--by-text-2)",
             opacity: 0.7,
             lineHeight: 1.6,
             textAlign: "center",

@@ -16,82 +16,84 @@ interface Platform {
 
 interface Step {
   num: number;
+  status: "pending" | "running" | "done" | "blocked" | "error";
   Icon: React.FC<{ size: number; color: string; stroke: number }>;
   title: string;
   note?: string;
   platforms?: Platform[];
-  border: string;
-  iconColor: string;
 }
+
+const STATUS_COLORS = {
+  pending: "var(--by-text-3)",
+  running: "var(--by-amber)",
+  done: "var(--by-green)",
+  blocked: "var(--by-red)",
+  error: "var(--by-red)",
+} as const;
 
 const STEPS: Step[] = [
   {
     num: 1,
+    status: "pending",
     Icon: IconTerminal2,
     title: "You log a milestone",
-    border: "0.5px solid var(--border)",
-    iconColor: "var(--text-secondary)",
   },
   {
     num: 2,
+    status: "running",
     Icon: IconDatabase,
     title: "Project memory retrieves context",
-    border: "1px solid var(--accent)",
-    iconColor: "var(--accent)",
   },
   {
     num: 3,
+    status: "done",
     Icon: IconChessKnight,
     title: "Strategist agent decides angle",
     note: "Is it post-worthy? What story?",
-    border: "0.5px solid var(--border)",
-    iconColor: "var(--text-secondary)",
   },
   {
     num: 4,
+    status: "done",
     Icon: IconPencil,
     title: "Platform writers draft",
     platforms: [
-      { label: "in",  bg: "#0A66C2" },
-      { label: "𝕏",  bg: "var(--bg-terminal)" },
-      { label: "r/",  bg: "#FF4500" },
-      { label: "Th",  bg: "var(--bg-terminal)" },
+      { label: "in",  bg: "var(--by-accent)" },
+      { label: "𝕏",  bg: "var(--by-bg-3)" },
+      { label: "r/",  bg: "var(--by-red)" },
+      { label: "Th",  bg: "var(--by-bg-3)" },
     ],
-    border: "0.5px solid var(--border)",
-    iconColor: "var(--text-secondary)",
   },
   {
     num: 5,
+    status: "done",
     Icon: IconShieldCheck,
     title: "Critic scores & you approve",
-    border: "1px solid #22C55E",
-    iconColor: "#22C55E",
   },
 ];
 
 // ─── Step card ────────────────────────────────────────────────────────────────
 
 function StepCard({ step }: { step: Step }) {
-  const { num, Icon, title, note, platforms, border, iconColor } = step;
-  const isAccent = num === 2;
-  const isSuccess = num === 5;
+  const { num, status, Icon, title, note, platforms } = step;
+  const isRunning = status === "running";
+  const isDone = status === "done";
 
   return (
     <div
       className="dispatch-hiw-step"
       style={{
-        backgroundColor: "var(--surface)",
-        border,
+        backgroundColor: "var(--by-bg-2)",
+        border: `0.5px solid ${status === "pending" ? "var(--by-border)" : STATUS_COLORS[status]}`,
         borderRadius: 12,
         padding: "16px 16px 14px",
         display: "flex",
         flexDirection: "column",
         gap: 10,
         position: "relative",
-        boxShadow: isAccent
-          ? "0 0 0 3px rgba(232,94,44,0.06)"
-          : isSuccess
-          ? "0 0 0 3px rgba(34,197,94,0.06)"
+        boxShadow: isRunning
+          ? "0 0 0 3px rgba(245,158,11,0.08)"
+          : isDone
+          ? "0 0 0 3px rgba(63,185,80,0.08)"
           : "none",
         transition: "background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease",
       }}
@@ -102,9 +104,9 @@ function StepCard({ step }: { step: Step }) {
           position: "absolute",
           top: 12,
           right: 12,
-          fontFamily: "JetBrains Mono, IBM Plex Mono, monospace",
+          fontFamily: "'IBM Plex Mono', monospace",
           fontSize: 10,
-          color: "var(--text-secondary)",
+          color: "var(--by-text-2)",
           opacity: 0.6,
           letterSpacing: "0.04em",
           lineHeight: 1,
@@ -114,15 +116,15 @@ function StepCard({ step }: { step: Step }) {
       </span>
 
       {/* Icon */}
-      <Icon size={22} color={iconColor} stroke={1.75} />
+      <Icon size={22} color={STATUS_COLORS[status]} stroke={1.75} />
 
       {/* Title */}
       <div
         style={{
-          fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+          fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 13,
           fontWeight: 500,
-          color: "var(--text-primary)",
+          color: "var(--by-text)",
           letterSpacing: "-0.01em",
           lineHeight: 1.3,
           paddingRight: 20, /* clear the number badge */
@@ -135,10 +137,10 @@ function StepCard({ step }: { step: Step }) {
       {note && (
         <div
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
-            fontSize: 11,
-            fontWeight: 400,
-            color: "var(--text-secondary)",
+          fontFamily: "'Inter', system-ui, sans-serif",
+          fontSize: 11,
+          fontWeight: 400,
+          color: "var(--by-text-2)",
             lineHeight: 1.5,
             fontStyle: "italic",
           }}
@@ -160,10 +162,10 @@ function StepCard({ step }: { step: Step }) {
                 padding: "2px 7px",
                 backgroundColor: bg,
                 borderRadius: 4,
-                fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+                fontFamily: "'Inter', system-ui, sans-serif",
                 fontSize: 10,
                 fontWeight: 600,
-                color: "#F5F2EC",
+                color: "var(--by-text)",
                 letterSpacing: "0.01em",
                 lineHeight: 1.4,
               }}
@@ -239,7 +241,7 @@ function Connector() {
 
 export function HowItWorksSection() {
   return (
-    <section className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96, transition: "background-color 0.3s ease" }}>
+    <section className="dispatch-reveal" style={{ backgroundColor: "var(--by-bg)", paddingBottom: 96, transition: "background-color 0.3s ease" }}>
       <style>{`
         .dispatch-hiw-inner {
           max-width: 1080px;
@@ -315,10 +317,10 @@ export function HowItWorksSection() {
         {/* Eyebrow */}
         <div
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 10,
             fontWeight: 400,
-            color: "var(--text-secondary)",
+            color: "var(--by-text-2)",
             opacity: 0.7,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
@@ -334,7 +336,7 @@ export function HowItWorksSection() {
             fontFamily: "Space Grotesk, system-ui, sans-serif",
             fontSize: 28,
             fontWeight: 500,
-            color: "var(--text-primary)",
+            color: "var(--by-text)",
             letterSpacing: "-0.02em",
             lineHeight: 1.2,
             margin: "0 0 12px",
@@ -348,10 +350,10 @@ export function HowItWorksSection() {
         {/* Sub */}
         <p
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 14,
             fontWeight: 400,
-            color: "var(--text-secondary)",
+            color: "var(--by-text-2)",
             lineHeight: 1.65,
             maxWidth: 480,
             margin: "0 0 40px",
@@ -375,10 +377,10 @@ export function HowItWorksSection() {
         {/* Footer note */}
         <p
           style={{
-            fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+            fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 12,
             fontWeight: 400,
-            color: "var(--text-secondary)",
+            color: "var(--by-text-2)",
             opacity: 0.8,
             lineHeight: 1.6,
             fontStyle: "italic",

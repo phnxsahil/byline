@@ -678,6 +678,7 @@ function BylinesTable({
 // ─── Main Dashboard ──────────────────────────────────────────────────────────
 
 export function DashboardSection() {
+  return <DashboardLayout onLandingClick={() => window.location.hash = ""} />;
 
   // ── Command palette state ──────────────────────────────────────────────────
   const [paletteOpen, setPaletteOpen] = useState(false);

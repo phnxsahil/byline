@@ -65,7 +65,7 @@ function Navbar() {
         <a href="#top" className="flex items-center gap-2">
           <span className="size-2.5 rounded-full bg-stamp" />
           <span className="font-display text-base font-semibold tracking-tight uppercase">
-            Dispatch
+            byline
           </span>
         </a>
         <div className="hidden items-center gap-7 text-sm font-medium text-carbon md:flex">
@@ -117,10 +117,10 @@ function Hero() {
           <h1 className="mb-8 font-display text-6xl leading-[0.9] tracking-tighter text-balance md:text-7xl xl:text-8xl">
             Ship things.
             <br />
-            <span className="text-stamp">Dispatch the rest.</span>
+            <span className="text-stamp">Byline does the rest.</span>
           </h1>
           <p className="mb-10 max-w-lg text-pretty text-base leading-relaxed text-carbon md:text-lg">
-            The personal wire service for builders. Log a raw update about what you built. Dispatch
+            The personal wire service for builders. Log a raw update about what you built. Byline
             remembers your projects and writes platform-perfect posts in your exact voice.
           </p>
           <p className="mb-10 max-w-lg text-sm leading-relaxed text-carbon/70">
@@ -250,7 +250,7 @@ function HeroPlayground() {
             <div className="size-2.5 rounded-full bg-mint/20" />
           </div>
           <span className="font-mono text-[9px] uppercase tracking-widest text-carbon">
-            dispatch.sandbox · playground
+            byline.sandbox · playground
           </span>
           <span className="w-10" />
         </div>
@@ -468,7 +468,7 @@ function FeaturesSection() {
                 Persistent project memory
               </h3>
               <p className="max-w-md text-carbon">
-                Dispatch keeps a live graph of every project you're building — stack, status,
+                Byline keeps a live graph of every project you're building — stack, status,
                 history. Every dispatch is grounded in real context, not generic AI filler.
               </p>
             </div>
@@ -491,7 +491,7 @@ function FeaturesSection() {
                   ChaiPaani <span className="text-carbon">· React Native · live</span>
                 </div>
                 <div>
-                  Dispatch <span className="text-carbon">· LangGraph · building</span>
+                  Byline <span className="text-carbon">· LangGraph · building</span>
                 </div>
               </div>
             </div>
@@ -529,7 +529,7 @@ function FeaturesSection() {
               </div>
               <h3 className="mb-3 font-display text-2xl tracking-tight">Narrative arcs</h3>
               <p className="max-w-md text-paper/60">
-                Tag dispatches to storylines — "Job search 2026", "Building Dispatch in public".
+                Tag dispatches to storylines — "Job search 2026", "Building Byline in public".
                 Posts build a series instead of disconnected announcements.
               </p>
             </div>
@@ -541,7 +541,7 @@ function FeaturesSection() {
                 Job Search 2026
               </span>
               <span className="rounded border border-paper/15 px-3 py-1 font-mono text-[11px] uppercase tracking-wider">
-                Shipping Dispatch
+                Shipping Byline
               </span>
             </div>
           </div>
@@ -747,7 +747,7 @@ function WireDeskPreview() {
               <div className="size-2.5 rounded-full bg-ink/15" />
             </div>
             <span className="font-mono text-[10px] uppercase tracking-widest text-carbon">
-              dispatch.local · the wire room
+              byline.local · the wire room
             </span>
             <span className="w-12" />
           </div>
@@ -886,7 +886,7 @@ function StorySection() {
     { name: "Engine API", desc: "Backend API services" },
     { name: "Extension Kit", desc: "Browser extensions" },
     { name: "Portal Mobile", desc: "Mobile applications" },
-    { name: "Dispatch", desc: "This platform", highlight: true },
+    { name: "Byline", desc: "This platform", highlight: true },
   ];
   return (
     <section id="story" className="px-6 py-24">
@@ -908,7 +908,7 @@ function StorySection() {
           knows my work and writes like I do."
         </blockquote>
         <div className="mt-4 text-center font-mono text-[11px] uppercase tracking-widest text-carbon">
-          — the builder behind Dispatch
+          — the builder behind Byline
         </div>
 
         <div className="mt-16 flex flex-wrap justify-center gap-3">
@@ -1002,7 +1002,7 @@ function Footer() {
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 md:flex-row">
         <div className="flex items-center gap-2">
           <span className="size-2.5 rounded-full bg-stamp" />
-          <span className="font-display font-semibold uppercase tracking-tight">Dispatch</span>
+          <span className="font-display font-semibold uppercase tracking-tight">Byline</span>
         </div>
         <div className="flex gap-7 text-sm text-carbon">
           <a

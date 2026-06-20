@@ -44,8 +44,11 @@ export function StatusBar({ isRunning, onOpenLog, logOpen, onOpenChat, chatOpen 
         fontFamily: "'JetBrains Mono', monospace", fontSize: 10, padding: "2px 6px",
       }}>
         <IconMessageCircle size={12} stroke={1.5} />
-        <span>Chat</span>
+        <span>{chatOpen ? "Rail open" : "Open rail"}</span>
       </button>
+
+      <span>⌘K command palette</span>
+      <span>⌘⇧A fullscreen rail</span>
     </div>
   );
 }

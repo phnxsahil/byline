@@ -44,6 +44,23 @@ export default function App() {
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
+  // Force dark mode on dashboard, restore user theme on landing/docs
+  useEffect(() => {
+    if (view === "dashboard") {
+      document.documentElement.setAttribute("data-theme", "dark");
+      document.documentElement.classList.add("dark");
+    } else {
+      const saved = localStorage.getItem("byline-theme");
+      const initialTheme = saved === "light" || saved === "dark" ? saved : "light";
+      document.documentElement.setAttribute("data-theme", initialTheme);
+      if (initialTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    }
+  }, [view]);
+
   // ── Scroll-triggered reveals ──────────────────────────────────────────────
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -70,7 +87,7 @@ export default function App() {
   return (
     <div
       style={{
-        backgroundColor: "var(--by-bg)",
+        backgroundColor: "var(--bg)",
         minHeight: "100vh",
         fontFamily: "'Inter', system-ui, sans-serif",
         transition: "background-color 0.3s ease",
@@ -82,8 +99,8 @@ export default function App() {
         /* Warm body font */
         body {
           font-family: 'Inter', system-ui, sans-serif;
-          background: var(--by-bg);
-          color: var(--by-text);
+          background: var(--bg);
+          color: var(--text-primary);
           transition: background-color 0.3s ease, color 0.3s ease;
         }
 

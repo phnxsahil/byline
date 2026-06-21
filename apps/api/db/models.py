@@ -143,6 +143,8 @@ class Outlet(Base):
     is_connected: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     connected_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     last_posted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    approval_mode: Mapped[str] = mapped_column(Text, default="review_required", server_default="review_required", nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+
 

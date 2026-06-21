@@ -8,8 +8,8 @@ def test_fallback_strategist_marks_real_dispatch_post_worthy():
         active_arcs=[{"name": "Building Dispatch in public"}],
         recent_posts=[],
     )
-    assert result["post_worthy"] is True
-    assert "linkedin" in result["target_platforms"]
+    assert result["should_post"] is True
+    assert "linkedin" in result["platforms"]
 
 
 def test_fallback_writer_produces_platform_specific_output():
@@ -22,4 +22,5 @@ def test_fallback_writer_produces_platform_specific_output():
 def test_fallback_critic_flags_short_copy():
     result = fallback_critic("linkedin", "too short", "too short", [])
     assert result["passed"] is False
-    assert result["score"] < 7
+    assert result["overall_score"] < 7
+

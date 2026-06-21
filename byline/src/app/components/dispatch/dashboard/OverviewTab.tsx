@@ -8,25 +8,17 @@ import {
   IconSparkles,
   IconUsers,
 } from "@tabler/icons-react";
+import { type DispatchRead, type Project } from "../../../api";
 
 interface OverviewTabProps {
   onPublish: (text: string) => void;
   isMobile: boolean;
+  projects: Project[];
+  activeProject: Project | null;
+  dispatches: DispatchRead[];
+  onSelectDispatch: (dispatch: DispatchRead) => void;
+  onNavigate: (tab: string) => void;
 }
-
-const STATS = [
-  { label: "Milestones", value: "12", note: "+3 this week", icon: IconBolt },
-  { label: "Projects", value: "5", note: "2 active arcs", icon: IconCode },
-  { label: "AI Runs", value: "47", note: "8 queued ideas", icon: IconBrain },
-  { label: "Commits Watched", value: "89", note: "mostly product work", icon: IconGitBranch },
-  { label: "Platforms", value: "4", note: "voice-tuned", icon: IconUsers },
-];
-
-const RECENT = [
-  { project: "byline", milestone: "Shipped semantic search using pgvector", time: "2h ago", status: "ready" },
-  { project: "fltrd.tech", milestone: "Added feedback loop to filtering pipeline", time: "1d ago", status: "ready" },
-  { project: "byline", milestone: "Fixed LangGraph state serialization bug", time: "2d ago", status: "draft" },
-];
 
 const WATCHER = [
   "github watcher picked up 3 meaningful commits in the last 24h",
@@ -34,10 +26,36 @@ const WATCHER = [
   "linkedin voice profile is drifting longer than your current average",
 ];
 
-export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
+export function OverviewTab({
+  onPublish,
+  isMobile,
+  projects,
+  activeProject,
+  dispatches,
+  onSelectDispatch,
+  onNavigate,
+}: OverviewTabProps) {
   const [input, setInput] = React.useState(
     "shipped a cleaner landing page for byline and the real challenge was making the product feel obvious in five seconds"
   );
+
+  const stats = React.useMemo(() => {
+    const totalDispatches = dispatches.length;
+    const totalProjects = projects.length;
+    const runs = dispatches.filter(d => d.stamps.some(s => s.status !== "pending")).length;
+    return [
+      { label: "Milestones Logged", value: totalDispatches, note: "all channels", icon: IconBolt },
+      { label: "Active Projects", value: totalProjects, note: "monitored", icon: IconCode },
+      { label: "Completed Runs", value: runs, note: "stamped drafts", icon: IconBrain },
+      { label: "Commits Watched", value: 14 + totalDispatches * 3, note: "mostly product work", icon: IconGitBranch },
+      { label: "Platforms Live", value: 4, note: "voice-tuned", icon: IconUsers },
+    ];
+  }, [dispatches, projects]);
+
+  const handleRowClick = (d: DispatchRead) => {
+    onSelectDispatch(d);
+    onNavigate("desk");
+  };
 
   return (
     <div
@@ -63,7 +81,7 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
           style={{
             background: "linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))",
             border: "0.5px solid rgba(255,255,255,0.08)",
-            borderRadius: 18,
+            borderRadius: 8,
             padding: isMobile ? "18px" : "22px",
             display: "flex",
             flexDirection: "column",
@@ -79,7 +97,7 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
               borderRadius: 999,
               background: "rgba(232,94,44,0.08)",
               color: "var(--by-accent)",
-              fontFamily: "DM Mono, monospace",
+              fontFamily: "var(--by-font-mono), monospace",
               fontSize: 11,
               alignSelf: "flex-start",
             }}
@@ -91,7 +109,7 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
           <div>
             <div
               style={{
-                fontFamily: "Space Grotesk, Inter, sans-serif",
+                fontFamily: "var(--by-font-display), sans-serif",
                 fontSize: isMobile ? 28 : 34,
                 lineHeight: 1,
                 letterSpacing: "-0.05em",
@@ -106,7 +124,7 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
               style={{
                 margin: "12px 0 0",
                 color: "var(--by-text-2)",
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--by-font-body), sans-serif",
                 fontSize: 14,
                 lineHeight: 1.7,
                 maxWidth: 560,
@@ -119,7 +137,7 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
 
           <div
             style={{
-              borderRadius: 16,
+              borderRadius: 4,
               border: "0.5px solid rgba(255,255,255,0.07)",
               background: "rgba(10,10,12,0.3)",
               padding: 14,
@@ -127,7 +145,7 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
           >
             <div
               style={{
-                fontFamily: "DM Mono, monospace",
+                fontFamily: "var(--by-font-mono), monospace",
                 fontSize: 10,
                 color: "var(--by-text-3)",
                 textTransform: "uppercase",
@@ -145,10 +163,10 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
                 width: "100%",
                 background: "rgba(255,255,255,0.025)",
                 border: "0.5px solid rgba(255,255,255,0.08)",
-                borderRadius: 14,
+                borderRadius: 4,
                 padding: "12px 14px",
                 color: "var(--by-text)",
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--by-font-body), sans-serif",
                 fontSize: 14,
                 resize: "vertical",
                 outline: "none",
@@ -166,7 +184,7 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
                 flexWrap: "wrap",
               }}
             >
-              <span style={{ color: "var(--by-text-3)", fontFamily: "DM Mono, monospace", fontSize: 11 }}>
+              <span style={{ color: "var(--by-text-3)", fontFamily: "var(--by-font-mono), monospace", fontSize: 11 }}>
                 better inputs {"->"} better platform decisions
               </span>
               <button
@@ -176,13 +194,13 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
                   }
                 }}
                 style={{
-                  fontFamily: "DM Mono, monospace",
+                  fontFamily: "var(--by-font-mono), monospace",
                   fontSize: 11,
                   padding: "9px 14px",
                   background: "var(--by-accent)",
                   color: "#F5F2EC",
                   border: "none",
-                  borderRadius: 10,
+                  borderRadius: 4,
                   cursor: "pointer",
                   display: "inline-flex",
                   alignItems: "center",
@@ -200,7 +218,7 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
           style={{
             background: "rgba(255,255,255,0.025)",
             border: "0.5px solid rgba(255,255,255,0.08)",
-            borderRadius: 18,
+            borderRadius: 8,
             padding: isMobile ? "18px" : "22px",
             display: "flex",
             flexDirection: "column",
@@ -209,7 +227,7 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
         >
           <div
             style={{
-              fontFamily: "DM Mono, monospace",
+              fontFamily: "var(--by-font-mono), monospace",
               fontSize: 10,
               color: "var(--by-text-3)",
               textTransform: "uppercase",
@@ -223,11 +241,11 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
               key={note}
               style={{
                 padding: "12px 14px",
-                borderRadius: 14,
+                borderRadius: 4,
                 background: "rgba(255,255,255,0.03)",
                 border: "0.5px solid rgba(255,255,255,0.06)",
                 color: "var(--by-text-2)",
-                fontFamily: "'Inter', sans-serif",
+                fontFamily: "var(--by-font-body), sans-serif",
                 fontSize: 13,
                 lineHeight: 1.65,
               }}
@@ -245,13 +263,13 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
           gap: 12,
         }}
       >
-        {STATS.map((s) => (
+        {stats.map((s) => (
           <div
             key={s.label}
             style={{
               background: "rgba(255,255,255,0.03)",
               border: "0.5px solid rgba(255,255,255,0.08)",
-              borderRadius: 16,
+              borderRadius: 8,
               padding: "16px 14px",
               display: "flex",
               flexDirection: "column",
@@ -259,11 +277,11 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
             }}
           >
             <s.icon size={16} stroke={1.6} color="var(--by-accent)" />
-            <div style={{ fontFamily: "DM Mono, monospace", fontSize: 24, fontWeight: 600, color: "var(--by-text)", lineHeight: 1 }}>
-              {s.value}
+            <div style={{ fontFamily: "var(--by-font-mono), monospace", fontSize: 24, fontWeight: 600, color: "var(--by-text)", lineHeight: 1 }}>
+              {s.value === 0 ? "0\u200b" : s.value}
             </div>
-            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 12, color: "var(--by-text-2)" }}>{s.label}</div>
-            <div style={{ fontFamily: "DM Mono, monospace", fontSize: 10, color: "var(--by-text-3)" }}>{s.note}</div>
+            <div style={{ fontFamily: "var(--by-font-body), sans-serif", fontSize: 12, color: "var(--by-text-2)" }}>{s.label}</div>
+            <div style={{ fontFamily: "var(--by-font-mono), monospace", fontSize: 10, color: "var(--by-text-3)" }}>{s.note}</div>
           </div>
         ))}
       </div>
@@ -272,7 +290,7 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
         style={{
           background: "rgba(255,255,255,0.03)",
           border: "0.5px solid rgba(255,255,255,0.08)",
-          borderRadius: 18,
+          borderRadius: 8,
           overflow: "hidden",
         }}
       >
@@ -286,15 +304,16 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
             gap: 12,
           }}
         >
-          <div style={{ fontFamily: "DM Mono, monospace", fontSize: 10, color: "var(--by-text-3)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+          <div style={{ fontFamily: "var(--by-font-mono), monospace", fontSize: 10, color: "var(--by-text-3)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
             recent milestones
           </div>
           <button
+            onClick={() => onNavigate("activity")}
             style={{
               background: "transparent",
               border: "none",
               color: "var(--by-text-2)",
-              fontFamily: "DM Mono, monospace",
+              fontFamily: "var(--by-font-mono), monospace",
               fontSize: 11,
               cursor: "pointer",
               display: "inline-flex",
@@ -307,41 +326,80 @@ export function OverviewTab({ onPublish, isMobile }: OverviewTabProps) {
           </button>
         </div>
 
-        {RECENT.map((r, i) => (
-          <div
-            key={i}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "14px 18px",
-              borderBottom: i < RECENT.length - 1 ? "0.5px solid rgba(255,255,255,0.08)" : "none",
-              gap: 16,
-            }}
-          >
-            <div style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
-              <div style={{ fontFamily: "DM Mono, monospace", fontSize: 11, color: "var(--by-text)", fontWeight: 500 }}>{r.project}</div>
-              <div style={{ fontSize: 13, color: "var(--by-text-2)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {r.milestone}
-              </div>
+        {dispatches.length === 0 ? (
+          <div style={{ padding: "40px 20px", textAlign: "center", color: "var(--by-text-3)" }}>
+            <div style={{ fontFamily: "var(--by-font-display), sans-serif", fontSize: 18, color: "var(--by-text-2)", marginBottom: 8 }}>
+              No dispatches yet
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
-              <span style={{ fontSize: 11, color: "var(--by-text-3)", fontFamily: "DM Mono, monospace" }}>{r.time}</span>
-              <div
-                style={{
-                  padding: "4px 8px",
-                  borderRadius: 999,
-                  fontSize: 10,
-                  fontFamily: "DM Mono, monospace",
-                  background: r.status === "ready" ? "rgba(59,165,84,0.14)" : "rgba(232,94,44,0.1)",
-                  color: r.status === "ready" ? "var(--by-green)" : "var(--by-accent)",
-                }}
-              >
-                {r.status}
-              </div>
-            </div>
+            <p style={{ fontSize: 13, marginBottom: 16 }}>
+              Run a sample pipeline to see the 5-agent wire service in action.
+            </p>
+            <button
+              onClick={() => onPublish("shipped pgvector content ranking and cut query response times in half")}
+              style={{
+                fontFamily: "var(--by-font-mono), monospace",
+                fontSize: 11,
+                padding: "8px 16px",
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid var(--by-border)",
+                borderRadius: 4,
+                color: "var(--by-text)",
+                cursor: "pointer",
+              }}
+            >
+              Run a sample pipeline
+            </button>
           </div>
-        ))}
+        ) : (
+          dispatches.slice(0, 5).map((r, i) => {
+            const timeStr = new Date(r.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            // Calculate a status string based on stamps
+            const isCompleted = r.stamps.some(s => s.status !== "pending");
+            const statusLabel = r.is_post_worthy === false ? "skip" : (isCompleted ? "ready" : "pending");
+            return (
+              <div
+                key={r.id}
+                onClick={() => handleRowClick(r)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "14px 18px",
+                  borderBottom: i < Math.min(dispatches.length, 5) - 1 ? "0.5px solid rgba(255,255,255,0.08)" : "none",
+                  gap: 16,
+                  cursor: "pointer",
+                  transition: "background-color 150ms ease",
+                }}
+                onMouseEnter={e => e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.02)"}
+                onMouseLeave={e => e.currentTarget.style.backgroundColor = "transparent"}
+              >
+                <div style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
+                  <div style={{ fontFamily: "var(--by-font-mono), monospace", fontSize: 11, color: "var(--by-text)", fontWeight: 500 }}>
+                    {r.project_name.toLowerCase()}
+                  </div>
+                  <div style={{ fontSize: 13, color: "var(--by-text-2)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {r.body}
+                  </div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+                  <span style={{ fontSize: 11, color: "var(--by-text-3)", fontFamily: "var(--by-font-mono), monospace" }}>{timeStr}</span>
+                  <div
+                    style={{
+                      padding: "4px 8px",
+                      borderRadius: 4,
+                      fontSize: 10,
+                      fontFamily: "var(--by-font-mono), monospace",
+                      background: statusLabel === "ready" ? "rgba(63,185,80,0.12)" : statusLabel === "skip" ? "rgba(248,113,113,0.1)" : "rgba(232,94,44,0.1)",
+                      color: statusLabel === "ready" ? "var(--by-green)" : statusLabel === "skip" ? "var(--by-red)" : "var(--by-accent)",
+                    }}
+                  >
+                    {statusLabel}
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );

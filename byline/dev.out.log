@@ -1,0 +1,176 @@
+
+> @figma/my-make-file@0.0.1 dev
+> vite --host 127.0.0.1 --port 4173
+
+
+  [32m[1mVITE[22m v6.3.5[39m  [2mready in [0m[1m948[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m4173[22m/[39m
+[2m11:33:05 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DashboardLayout.tsx, /src/styles/index.css[22m
+[2m11:33:12 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DeskTab.tsx, /src/styles/index.css[22m
+[2m11:33:59 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DeskTab.tsx, /src/styles/index.css[22m
+[2m11:34:48 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DeskTab.tsx, /src/styles/index.css[22m
+[2m11:35:02 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\ActivityTab.tsx, /src/styles/index.css[22m
+[2m11:35:06 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\SignalTab.tsx, /src/styles/index.css[22m
+[2m11:36:40 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DeskTab.tsx, /src/styles/index.css[22m
+[2m11:44:21 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/dashboard/LeftPanel.tsx[22m
+[2m11:48:40 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/dashboard/ChatPanel.tsx[22m
+[2m11:50:05 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DashboardLayout.tsx, /src/styles/index.css[22m
+[2m11:50:05 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DashboardLayout.tsx, /src/styles/index.css[22m
+[2m11:50:05 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\RunLogPanel.tsx, /src/styles/index.css[22m
+[2m11:50:06 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DashboardLayout.tsx, /src/styles/index.css[22m
+[2m11:50:06 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DashboardLayout.tsx, /src/styles/index.css[22m
+[2m11:50:07 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DashboardLayout.tsx, /src/styles/index.css[22m
+[2m11:50:07 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DashboardLayout.tsx, /src/styles/index.css[22m
+[2m11:50:09 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DashboardLayout.tsx, /src/styles/index.css[22m
+[2m11:50:13 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DashboardLayout.tsx, /src/styles/index.css[22m
+[2m11:50:14 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DashboardLayout.tsx, /src/styles/index.css[22m
+[2m11:50:30 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\TopBar.tsx, /src/styles/index.css[22m
+[2m11:50:31 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\TopBar.tsx, /src/styles/index.css[22m
+[2m11:50:32 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\TopBar.tsx, /src/styles/index.css[22m
+[2m11:50:34 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\TopBar.tsx, /src/styles/index.css[22m
+[2m11:50:46 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\StatusBar.tsx, /src/styles/index.css[22m
+[2m11:50:46 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\StatusBar.tsx, /src/styles/index.css[22m
+[2m11:50:47 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\StatusBar.tsx, /src/styles/index.css[22m
+[2m11:50:48 pm[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\StatusBar.tsx, /src/styles/index.css[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/imports/pasted_text/index.html[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\CommandPalette.tsx, /src/styles/index.css[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\ActivityTab.tsx, /src/styles/index.css[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\AgentRail.tsx, /src/styles/index.css[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DashboardLayout.tsx, /src/styles/index.css[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DocsTab.tsx, /src/styles/index.css[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\OverviewTab.tsx, /src/styles/index.css[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\SettingsTab.tsx, /src/styles/index.css[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/dashboard/SetupChecklist.tsx[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\SignalTab.tsx, /src/styles/index.css[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\StatusBar.tsx, /src/styles/index.css[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\TopBar.tsx, /src/styles/index.css[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DeskTab.tsx, /src/styles/index.css[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/lib/dispatch/api.ts[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/lib/dispatch/types.ts[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/lib/utils.ts[22m
+[2m12:03:42 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/Badge.tsx[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/Button.tsx[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/Card.tsx[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/DashboardSection.tsx, /src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/DocsSection.tsx, /src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/Footer.tsx, /src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/Hero.tsx, /src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/HowItWorks.tsx, /src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/IntegrationsSection.tsx, /src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\Logo.tsx, /src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/Navbar.tsx, /src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/PricingSection.tsx, /src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/SocialProofSection.tsx[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/Stamp.tsx[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/TerminalBlock.tsx[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css, /src/app/components/dispatch/DashboardSection.tsx, /@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\DashboardSidebar.tsx, /@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\VoiceProfileSection.tsx, /@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\ProjectDetailPage.tsx, /@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\OnboardingWizard.tsx[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\DashboardSidebar.tsx, /src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/LandingPageV2.tsx[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/navigation-menu.tsx[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\OnboardingWizard.tsx, /src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\ProjectDetailPage.tsx, /src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/ReviewDesk.tsx[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\StatusBar.tsx, /src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\VoiceProfileSection.tsx, /src/styles/index.css[22m
+[2m12:03:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/workspace.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/Badge.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css, /src/app/components/dispatch/DashboardSection.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/Button.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/Card.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/DashboardSection.tsx, /src/styles/index.css[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/DocsSection.tsx, /src/styles/index.css[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/Footer.tsx, /src/styles/index.css[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/Hero.tsx, /src/styles/index.css[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/HowItWorks.tsx, /src/styles/index.css[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/IntegrationsSection.tsx, /src/styles/index.css[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\Logo.tsx, /src/styles/index.css[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/Navbar.tsx, /src/styles/index.css[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/PricingSection.tsx, /src/styles/index.css[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\SocialProofSection.tsx, /src/styles/index.css[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/Stamp.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/TerminalBlock.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\CommandPalette.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\DashboardSidebar.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/LandingPageV2.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\OnboardingWizard.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\ProjectDetailPage.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/ReviewDesk.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\StatusBar.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\VoiceProfileSection.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/imports/pasted_text/index.html[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/navigation-menu.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/workspace.tsx[22m
+[2m12:05:43 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/styles/byline-tokens.css[22m
+[2m12:05:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/lib/utils.ts[22m
+[2m12:05:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\ActivityTab.tsx[22m
+[2m12:05:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\AgentRail.tsx[22m
+[2m12:05:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DashboardLayout.tsx[22m
+[2m12:05:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DeskTab.tsx[22m
+[2m12:05:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DocsTab.tsx[22m
+[2m12:05:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\OverviewTab.tsx[22m
+[2m12:05:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\SettingsTab.tsx[22m
+[2m12:05:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/dashboard/SetupChecklist.tsx[22m
+[2m12:05:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\SignalTab.tsx[22m
+[2m12:05:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\StatusBar.tsx[22m
+[2m12:05:44 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\TopBar.tsx[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\CommandPalette.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\ActivityTab.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\AgentRail.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DashboardLayout.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DeskTab.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\DocsTab.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\OverviewTab.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\SettingsTab.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/dashboard/SetupChecklist.tsx[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\SignalTab.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\StatusBar.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\dashboard\TopBar.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/lib/dispatch/api.ts[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/lib/dispatch/types.ts[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/lib/utils.ts[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/imports/pasted_text/index.html[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/Badge.tsx[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/Button.tsx[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/Card.tsx[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/DashboardSection.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/DocsSection.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/Footer.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/Hero.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/HowItWorks.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/IntegrationsSection.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\Logo.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/Navbar.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/dispatch/PricingSection.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\SocialProofSection.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/Stamp.tsx[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/TerminalBlock.tsx[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\DashboardSidebar.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/LandingPageV2.tsx[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\OnboardingWizard.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\ProjectDetailPage.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/ReviewDesk.tsx[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\StatusBar.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/D:\Projects\dispatch\byline\src\app\components\dispatch\VoiceProfileSection.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/navigation-menu.tsx[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/app/components/dispatch/workspace.tsx[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/App.tsx, /src/styles/index.css[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/styles/index.css, /src/app/components/dispatch/DashboardSection.tsx[22m
+[2m12:07:09 am[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/imports/pasted_text/index.html[22m

@@ -2,15 +2,14 @@ import React, { useState } from "react";
 
 interface LogoProps {
   size?: number; // font size
-  dark?: boolean;
 }
 
-export function Logo({ size = 14, dark = false }: LogoProps) {
+export function Logo({ size = 14 }: LogoProps) {
   const [hovered, setHovered] = useState(false);
 
   const colors = {
     linkedin: "#0A66C2",
-    x: dark ? "#FAFAF8" : "#0F0F0D",
+    x: "var(--text-primary)",
     reddit: "#FF4500",
     threads: "#F59E0B",
   };
@@ -43,7 +42,7 @@ export function Logo({ size = 14, dark = false }: LogoProps) {
             fontFamily: "Space Grotesk, system-ui, sans-serif",
             fontSize: size,
             fontWeight: size > 16 ? 600 : 500,
-            color: dark ? "#FAFAF8" : "var(--text-primary)",
+            color: "var(--text-primary)",
             letterSpacing: "-0.03em",
             lineHeight: 1.1,
             transition: "color 0.3s ease",

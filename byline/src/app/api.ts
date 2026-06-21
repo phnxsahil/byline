@@ -190,3 +190,26 @@ export function streamGeneration(
 
   return controller;
 }
+
+export interface Outlet {
+  id: string;
+  platform: string;
+  is_connected: boolean;
+  display_name: string | null;
+  connected_at: string | null;
+}
+
+export async function getOutlets(): Promise<Outlet[]> {
+  return request<Outlet[]>("/outlets");
+}
+
+export async function patchOutlet(
+  platform: string,
+  payload: { is_connected?: boolean; display_name?: string | null }
+): Promise<Outlet> {
+  return request<Outlet>(`/outlets/${platform}`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+

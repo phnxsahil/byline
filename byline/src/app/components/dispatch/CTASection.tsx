@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IconTerminal2, IconCopy, IconCheck } from "@tabler/icons-react";
+import { IconTerminal2, IconCopy, IconCheck, IconBrandGithub } from "@tabler/icons-react";
 
 // ─── Stamp ────────────────────────────────────────────────────────────────────
 // Two absolutely stacked divs driven by CSS @keyframes (animations.css):
@@ -67,34 +67,19 @@ function CTAHeading() {
   return (
     <h2
       style={{
-        fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
+        fontFamily: "Space Grotesk, system-ui, sans-serif",
         fontSize: 32,
         fontWeight: 500,
         color: "var(--text-primary)",
-        letterSpacing: "-0.022em",
+        letterSpacing: "-0.03em",
         lineHeight: 1.2,
         textAlign: "center",
-        margin: "0 0 16px",
+        margin: "0 0 24px",
         padding: 0,
         transition: "color 0.3s ease",
       }}
     >
-      Stop choosing between
-      <br />
-      <em
-        style={{
-          fontFamily: "Instrument Serif, Georgia, serif",
-          fontStyle: "italic",
-          fontWeight: 400,
-          color: "var(--accent)",
-        }}
-      >
-        shipping
-      </em>
-      {" "}
-      <span style={{ fontFamily: "'IBM Plex Sans', system-ui, sans-serif", fontWeight: 500, color: "var(--text-primary)", transition: "color 0.3s ease" }}>
-        and being visible.
-      </span>
+      Ready to stop choosing?
     </h2>
   );
 }
@@ -275,6 +260,87 @@ function GitHubLink() {
   );
 }
 
+// ─── Prominent CTA Buttons ────────────────────────────────────────────────────
+
+function CTAPrimary() {
+  const [hov, setHov] = useState(false);
+
+  return (
+    <a
+      href="#docs"
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        minWidth: 176,
+        padding: "14px 20px",
+        backgroundColor: hov ? "var(--text-secondary)" : "var(--text-primary)",
+        color: "var(--bg)",
+        borderRadius: 8,
+        textDecoration: "none",
+        border: "0.5px solid var(--border)",
+        boxShadow: hov ? "0 10px 24px rgba(0,0,0,0.12)" : "none",
+        transition: "all 0.16s ease",
+      }}
+    >
+      <span
+        style={{
+          fontFamily: "'Inter', system-ui, sans-serif",
+          fontSize: 14,
+          fontWeight: 600,
+          letterSpacing: "-0.02em",
+          whiteSpace: "nowrap",
+        }}
+      >
+        Read the Docs
+      </span>
+    </a>
+  );
+}
+
+function CTAGhost() {
+  const [hov, setHov] = useState(false);
+
+  return (
+    <a
+      href="https://github.com/sahil/byline"
+      target="_blank"
+      rel="noopener noreferrer"
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+        minWidth: 176,
+        padding: "14px 20px",
+        border: "0.5px solid var(--border)",
+        borderRadius: 8,
+        textDecoration: "none",
+        backgroundColor: hov ? "var(--border)" : "transparent",
+        color: "var(--text-primary)",
+        transition: "all 0.16s ease",
+      }}
+    >
+      <IconBrandGithub size={15} color="currentColor" stroke={1.7} />
+      <span
+        style={{
+          fontFamily: "'Inter', system-ui, sans-serif",
+          fontSize: 14,
+          fontWeight: 500,
+          letterSpacing: "-0.02em",
+          whiteSpace: "nowrap",
+        }}
+      >
+        Star on GitHub
+      </span>
+    </a>
+  );
+}
+
 // ─── Section ──────────────────────────────────────────────────────────────────
 
 export function CTASection() {
@@ -333,7 +399,22 @@ export function CTASection() {
           Open source. Self-hostable. Built in public, for builders who build in public.
         </p>
 
-        {/* Quick start code copy box */}
+        {/* Prominent Hero CTA Buttons */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 12,
+            marginBottom: 24,
+            flexWrap: "wrap",
+          }}
+        >
+          <CTAPrimary />
+          <CTAGhost />
+        </div>
+
+        {/* Demoted Quick start code copy box */}
         <div style={{ width: "100%", marginBottom: 32 }}>
           <QuickStart />
         </div>

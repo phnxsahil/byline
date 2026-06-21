@@ -146,13 +146,13 @@ function CTAGhost() {
         transition: "all 0.16s ease",
       }}
     >
-      <IconBrandGithub size={15} color="var(--by-bg)" stroke={1.7} />
+      <IconBrandGithub size={15} color="var(--by-text)" stroke={1.7} />
       <span
         style={{
           fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 14,
           fontWeight: 500,
-          color: "var(--by-bg)",
+          color: "var(--by-text)",
           letterSpacing: "-0.02em",
           whiteSpace: "nowrap",
         }}
@@ -271,8 +271,7 @@ export function Hero() {
   return (
     <section
       style={{
-        background:
-          "radial-gradient(circle at top center, rgba(18,17,15,0.96) 0%, rgba(15,15,13,0.98) 36%, var(--by-bg) 100%)",
+        background: "var(--hero-bg)",
         paddingBottom: 110,
         position: "relative",
         overflow: "hidden",
@@ -392,7 +391,19 @@ export function Hero() {
                   letterSpacing: "-0.07em",
                 }}
               >
-                shipping and being visible
+                shipping the work
+              </span>
+              <span
+                style={{
+                  display: "block",
+                  fontFamily: "Space Grotesk, Inter, sans-serif",
+                  fontSize: "clamp(3.8rem, 8vw, 6.2rem)",
+                  fontWeight: 700,
+                  color: "var(--by-accent)",
+                  letterSpacing: "-0.07em",
+                }}
+              >
+                and being seen for it.
               </span>
             </h1>
 

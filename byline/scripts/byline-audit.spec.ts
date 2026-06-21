@@ -74,7 +74,7 @@ test.describe('Landing Page', () => {
     await page.goto(BASE_URL);
     await page.waitForLoadState('networkidle');
     const toggleBox = await page.locator('[aria-label="Toggle theme"]').boundingBox();
-    const dashBox = await page.locator('a:has-text("dashboard"), button:has-text("dashboard")').first().boundingBox();
+    const dashBox = await page.locator('a:has-text("dashboard"), button:has-text("dashboard"), a:has-text("desk"), button:has-text("desk")').first().boundingBox();
     const readDocsBox = await page.locator('a:has-text("read docs"), button:has-text("read docs")').first().boundingBox();
     if (toggleBox && dashBox && readDocsBox) {
       const toggleIsAfterDash = toggleBox.x > dashBox.x;
@@ -155,6 +155,7 @@ test.describe('Dashboard', () => {
     });
     // Dark colors: #0F0F0D = rgb(15,15,13), #0D1117 = rgb(13,17,23), #161B22 = rgb(22,27,34)
     const isDark = 
+      bodyBg.includes('12, 12, 10') ||   // #0C0C0A Byline background
       bodyBg.includes('15, 15, 13') ||   // #0F0F0D warm dark (reference)
       bodyBg.includes('13, 17, 23') ||   // #0D1117 GitHub dark
       bodyBg.includes('22, 27, 34') ||   // #161B22

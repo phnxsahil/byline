@@ -241,7 +241,7 @@ function Connector() {
 
 export function HowItWorksSection() {
   return (
-    <section className="dispatch-reveal" style={{ backgroundColor: "var(--by-bg)", paddingBottom: 96, transition: "background-color 0.3s ease" }}>
+    <section className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96, transition: "background-color 0.3s ease" }}>
       <style>{`
         .dispatch-hiw-inner {
           max-width: 1080px;

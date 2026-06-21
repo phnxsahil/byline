@@ -273,7 +273,7 @@ export function DocsSection() {
   };
 
   return (
-    <section style={{ backgroundColor: "var(--by-bg)", minHeight: "calc(100vh - 56px)", paddingTop: 80, paddingBottom: 64, transition: "background-color 0.3s ease" }}>
+    <section style={{ backgroundColor: "var(--bg)", minHeight: "calc(100vh - 56px)", paddingTop: 80, paddingBottom: 64, transition: "background-color 0.3s ease" }}>
       <style>{`
         .dispatch-docs-grid {
           display: grid;

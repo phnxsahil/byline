@@ -362,7 +362,7 @@ function CloudCard() {
 
 export function PricingSection() {
   return (
-    <section id="pricing" className="dispatch-reveal" style={{ backgroundColor: "var(--by-bg)", paddingBottom: 96, transition: "background-color 0.3s ease" }}>
+    <section id="pricing" className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96, transition: "background-color 0.3s ease" }}>
       <style>{`
         .dispatch-pricing-inner {
           max-width: 1080px;

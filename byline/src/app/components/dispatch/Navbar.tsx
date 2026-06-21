@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IconBook2, IconMoon, IconSun } from "@tabler/icons-react";
+import { IconBook2, IconMenu2, IconX, IconSun, IconMoon } from "@tabler/icons-react";
 import { Logo } from "./Logo";
 
 const NAV_LINKS = [
@@ -7,6 +7,7 @@ const NAV_LINKS = [
   { label: "features", href: "#features" },
   { label: "docs", href: "#docs" },
   { label: "pricing", href: "#pricing" },
+  { label: "github", href: "https://github.com/sahil/byline" },
 ];
 
 function NavLink({ label, href }: { label: string; href: string }) {
@@ -55,8 +56,8 @@ function ThemeToggle({
         width: 38,
         height: 38,
         borderRadius: 10,
-        border: "0.5px solid rgba(17,17,17,0.08)",
-        background: hov ? "rgba(15,15,13,0.045)" : "transparent",
+        border: "0.5px solid var(--by-border)",
+        background: hov ? "rgba(255,255,255,0.08)" : "transparent",
         cursor: "pointer",
         transition: "all 0.14s ease",
         color: "var(--by-text-2)",
@@ -85,6 +86,7 @@ function DocsButton() {
         height: 38,
         padding: "0 16px",
         borderRadius: 10,
+        border: "0.5px solid var(--by-border)",
         backgroundColor: hov ? "var(--by-bg-3)" : "var(--by-bg-2)",
         color: "var(--by-text)",
         textDecoration: "none",
@@ -119,9 +121,9 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
       <div
         style={{
           borderRadius: 22,
-          border: "0.5px solid rgba(17,17,17,0.08)",
-          background: "rgba(251,248,242,0.95)",
-          boxShadow: "0 24px 54px rgba(17,17,17,0.12)",
+          border: "0.5px solid var(--by-border)",
+          background: "rgba(22, 21, 20, 0.95)",
+          boxShadow: "0 24px 54px rgba(0, 0, 0, 0.5)",
           backdropFilter: "blur(18px)",
           WebkitBackdropFilter: "blur(18px)",
           padding: 16,
@@ -153,14 +155,13 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
                 borderRadius: 14,
                 textDecoration: "none",
                 color: "var(--by-text)",
-                background: "rgba(255,255,255,0.46)",
+                background: "rgba(255,255,255,0.03)",
                 fontFamily: "'Inter', system-ui, sans-serif",
                 fontSize: 15,
                 fontWeight: 500,
               }}
             >
               <span>{link.label}</span>
-              <span style={{ color: "var(--by-text-3)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}>open</span>
             </a>
           ))}
         </div>
@@ -176,11 +177,11 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
               height: 42,
               borderRadius: 14,
               textDecoration: "none",
-              border: "0.5px solid rgba(17,17,17,0.08)",
+              border: "0.5px solid var(--by-border)",
               color: "var(--by-text)",
               fontFamily: "'IBM Plex Mono', monospace",
               fontSize: 12,
-              background: "rgba(255,255,255,0.6)",
+              background: "rgba(255,255,255,0.03)",
             }}
           >
             open desk
@@ -210,6 +211,11 @@ export function Navbar() {
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
     localStorage.setItem("byline-theme", theme);
   }, [theme]);
 
@@ -245,15 +251,16 @@ export function Navbar() {
           grid-template-columns: auto 1fr auto;
           align-items: center;
           border-radius: 18px;
-          border: 0.5px solid rgba(17,17,17,0.08);
-          background: rgba(252,249,244,0.82);
-          box-shadow: 0 14px 38px rgba(17,17,17,0.06);
+          border: 0.5px solid var(--by-border);
+          background: rgba(22, 21, 20, 0.82);
+          box-shadow: 0 14px 38px rgba(0, 0, 0, 0.35);
           backdrop-filter: blur(18px);
           -webkit-backdrop-filter: blur(18px);
           transition: box-shadow 0.18s ease, transform 0.18s ease, background-color 0.18s ease;
         }
         .dispatch-nav.scrolled {
-          box-shadow: 0 18px 40px rgba(17,17,17,0.09);
+          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+          background: rgba(12, 12, 10, 0.92);
         }
         .dispatch-nav-block {
           height: 100%;
@@ -262,7 +269,7 @@ export function Navbar() {
           padding: 0 16px;
         }
         .dispatch-nav-block + .dispatch-nav-block {
-          border-left: 0.5px solid rgba(17,17,17,0.08);
+          border-left: 0.5px solid var(--by-border);
         }
         .dispatch-nav-links {
           justify-content: center;
@@ -273,8 +280,43 @@ export function Navbar() {
           gap: 10px;
           justify-content: flex-end;
         }
+        .dispatch-nav-btn {
+          display: inline-flex;
+          align-items: center;
+          height: 38px;
+          padding: 0 14px;
+          border-radius: 10px;
+          border: 0.5px solid var(--by-border);
+          text-decoration: none;
+          color: var(--by-text-2);
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 12px;
+          background: rgba(255,255,255,0.03);
+          transition: all 0.14s ease;
+        }
+        .dispatch-nav-btn:hover {
+          color: var(--by-text);
+          background: rgba(255,255,255,0.08);
+          border-color: rgba(235, 230, 220, 0.15);
+        }
         .dispatch-nav-mobile-trigger {
+          width: 38px;
+          height: 38px;
+          border-radius: 10px;
+          border: 0.5px solid var(--by-border);
+          background: rgba(255,255,255,0.03);
+          color: var(--by-text);
+          cursor: pointer;
           display: none;
+          align-items: center;
+          justify-content: center;
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 14px;
+          transition: all 0.14s ease;
+        }
+        .dispatch-nav-mobile-trigger:hover {
+          background: rgba(255,255,255,0.08);
+          border-color: rgba(235, 230, 220, 0.15);
         }
         @media (max-width: 899px) {
           .dispatch-nav {
@@ -343,23 +385,10 @@ export function Navbar() {
                 <button
                   onClick={() => setMenuOpen((value) => !value)}
                   aria-label={menuOpen ? "Close menu" : "Open menu"}
-                  style={{
-                    width: 38,
-                    height: 38,
-                    borderRadius: 10,
-                    border: "0.5px solid rgba(17,17,17,0.08)",
-                    background: "rgba(255,255,255,0.45)",
-                    color: "var(--by-text)",
-                    cursor: "pointer",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: 14,
-                    flexShrink: 0,
-                  }}
+                  className="dispatch-nav-mobile-trigger"
+                  style={{ display: "inline-flex" }}
                 >
-                  {menuOpen ? "x" : "="}
+                  {menuOpen ? <IconX size={18} /> : <IconMenu2 size={18} />}
                 </button>
               </div>
             </>
@@ -380,47 +409,20 @@ export function Navbar() {
               <div className="dispatch-nav-block dispatch-nav-right">
                 <a
                   href="#dashboard"
-                  className="dispatch-nav-desktop-only"
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    height: 38,
-                    padding: "0 14px",
-                    borderRadius: 10,
-                    border: "0.5px solid rgba(17,17,17,0.08)",
-                    textDecoration: "none",
-                    color: "var(--by-text-2)",
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: 12,
-                    background: "rgba(255,255,255,0.45)",
-                  }}
+                  className="dispatch-nav-btn dispatch-nav-desktop-only"
                 >
                   desk
                 </a>
-                <ThemeToggle theme={theme} onChange={setTheme} />
                 <div className="dispatch-nav-desktop-only">
                   <DocsButton />
                 </div>
+                <ThemeToggle theme={theme} onChange={setTheme} />
                 <button
                   className="dispatch-nav-mobile-trigger"
                   onClick={() => setMenuOpen((value) => !value)}
                   aria-label={menuOpen ? "Close menu" : "Open menu"}
-                  style={{
-                    width: 38,
-                    height: 38,
-                    borderRadius: 10,
-                    border: "0.5px solid rgba(17,17,17,0.08)",
-                    background: "rgba(255,255,255,0.45)",
-                    color: "var(--by-text)",
-                    cursor: "pointer",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: 14,
-                  }}
                 >
-                  {menuOpen ? "x" : "="}
+                  {menuOpen ? <IconX size={18} /> : <IconMenu2 size={18} />}
                 </button>
               </div>
             </>

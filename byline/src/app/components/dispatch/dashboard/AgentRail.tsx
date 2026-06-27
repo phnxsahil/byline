@@ -9,7 +9,7 @@ import {
 } from "@tabler/icons-react";
 
 export interface AgentStep {
-  agentId: "strategist" | "linkedin" | "x" | "reddit" | "critic";
+  agentId: "strategist" | "linkedin" | "x" | "reddit" | "qa" | "critic";
   startedAt: number;
   finishedAt?: number;
   status: "pending" | "running" | "done" | "blocked" | "error";
@@ -34,6 +34,7 @@ export const AGENTS_LIST: { id: AgentId; name: string }[] = [
   { id: "linkedin", name: "LinkedIn Writer" },
   { id: "x", name: "X Writer" },
   { id: "reddit", name: "Reddit Writer" },
+  { id: "qa", name: "QA Agent" },
   { id: "critic", name: "Critic" },
 ];
 

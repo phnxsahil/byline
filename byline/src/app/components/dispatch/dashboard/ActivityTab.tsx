@@ -147,15 +147,55 @@ function reconstructSteps(dispatch: DispatchRead, drafts: DraftRead[]): AgentSte
     });
   }
 
-  // 3. Critic
-  let criticStatus: AgentStep["status"] = "pending";
-  let criticDecisions: AgentStep["decisions"] = [];
-  let criticOutput: AgentStep["output"] = undefined;
-
   const activeDrafts = drafts.filter(d => dispatch.suggested_platforms?.includes(d.platform));
   const hasBlockedDraft = activeDrafts.some(d => d.status === "rejected" || (d.critic_score !== null && d.critic_score < 7));
   const allDraftsDone = dispatch.suggested_platforms && dispatch.suggested_platforms.length > 0 && 
                          dispatch.suggested_platforms.every(p => drafts.some(d => d.platform === p));
+
+  // 3. QA Agent
+  let qaStatus: AgentStep["status"] = "pending";
+  let qaDecisions: AgentStep["decisions"] = [];
+  let qaOutput: AgentStep["output"] = undefined;
+
+  if (hasBlockedDraft) {
+    qaStatus = "blocked";
+    qaDecisions = [
+      { label: "Validation failed", detail: "QA Agent identified formatting or constraint violations." }
+    ];
+  } else if (allDraftsDone) {
+    qaStatus = "done";
+    qaDecisions = [
+      { label: "Linting completed", detail: "Guidelines validated: character limits, hooks, formatting layout." },
+      { label: "Anti-slop check passed", detail: "Scanned for forbidden AI marketing phrases." }
+    ];
+  } else if (dispatch.is_post_worthy === false) {
+    qaStatus = "pending";
+    qaDecisions = [
+      { label: "Skipped", detail: "Strategist held the milestone." }
+    ];
+  } else if (dispatch.is_post_worthy === true) {
+    qaStatus = "running";
+    qaDecisions = [
+      { label: "Analyzing stream", detail: "Validating character counts, styles, and guidelines." }
+    ];
+  }
+
+  steps.push({
+    agentId: "qa",
+    startedAt: createdTime,
+    status: qaStatus,
+    input: {
+      context: ["Draft validation", "Length compliance", "Token overlap rules"],
+      instructions: "Validate character limits and formatting layout before Critic review."
+    },
+    decisions: qaDecisions,
+    output: qaOutput
+  });
+
+  // 4. Critic
+  let criticStatus: AgentStep["status"] = "pending";
+  let criticDecisions: AgentStep["decisions"] = [];
+  let criticOutput: AgentStep["output"] = undefined;
 
   if (hasBlockedDraft) {
     criticStatus = "blocked";

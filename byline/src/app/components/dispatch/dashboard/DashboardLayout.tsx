@@ -255,6 +255,30 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
       ],
     },
     {
+      agentId: "reddit",
+      startedAt: Date.now(),
+      status: "pending",
+      input: {
+        context: ["Educational framing required", "No promo language in the opening"],
+        instructions: "Only publish if there is enough depth for a useful lesson.",
+      },
+      decisions: [
+        { label: "Standing by", detail: "Waiting for strategist output before drafting for Reddit." },
+      ],
+    },
+    {
+      agentId: "qa",
+      startedAt: Date.now(),
+      status: "pending",
+      input: {
+        context: ["Draft validation", "Length compliance", "Token overlap rules"],
+        instructions: "Validate character limits and formatting layout before Critic review.",
+      },
+      decisions: [
+        { label: "Standing by", detail: "Waiting for platform drafts to validate." },
+      ],
+    },
+    {
       agentId: "critic",
       startedAt: Date.now(),
       status: "pending",
@@ -333,6 +357,34 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
               }
               return s;
             });
+
+            // Update QA Agent status dynamically
+            const writersRunning = nextSteps.some(s => ["linkedin", "x", "reddit"].includes(s.agentId) && s.status === "running");
+            const writersDone = nextSteps.filter(s => ["linkedin", "x", "reddit"].includes(s.agentId)).every(s => s.status === "done" || s.status === "blocked" || s.status === "pending");
+            const writersDoneCount = nextSteps.filter(s => ["linkedin", "x", "reddit"].includes(s.agentId) && (s.status === "done" || s.status === "blocked")).length;
+
+            nextSteps = nextSteps.map(s => {
+              if (s.agentId === "qa") {
+                if (writersRunning) {
+                  return {
+                    ...s,
+                    status: "running" as const,
+                    decisions: [{ label: "Analyzing stream", detail: "Validating character counts, styles, and guidelines." }]
+                  };
+                } else if (writersDoneCount > 0 && writersDone) {
+                  return {
+                    ...s,
+                    status: "done" as const,
+                    finishedAt: Date.now(),
+                    decisions: [
+                      { label: "Linting completed", detail: "Guidelines validated: character limits, hooks, formatting layout." },
+                      { label: "Anti-slop check passed", detail: "Scanned for forbidden AI marketing phrases." }
+                    ]
+                  };
+                }
+              }
+              return s;
+            });
             
             return nextSteps;
           });
@@ -382,18 +434,19 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
     setAgentSteps(makeAgentSteps(milestoneText));
 
     const sequence = [
-      () => setAgentSteps((prev) => prev.map((s) => s.agentId === "strategist" ? { ...s, status: "running" } : s)),
+      () => setAgentSteps((prev) => prev.map((s) => s.agentId === "strategist" ? { ...s, status: "running", decisions: [{ label: "Running Strategist", detail: "Analyzing milestone content." }] } : s)),
       () => {
         setRunningAgent(1);
-        setAgentSteps((prev) => prev.map((s) => s.agentId === "strategist" ? { ...s, status: "done" } : s));
+        setAgentSteps((prev) => prev.map((s) => s.agentId === "strategist" ? { ...s, status: "done", finishedAt: Date.now(), decisions: [{ label: "Analysis complete", detail: "Milestone post-worthy. Routing to LinkedIn and X." }] } : s.agentId === "linkedin" || s.agentId === "x" ? { ...s, status: "running", decisions: [{ label: "Drafting", detail: "Generating native copy." }] } : s.agentId === "qa" ? { ...s, status: "running", decisions: [{ label: "Analyzing stream", detail: "Validating constraints in parallel." }] } : s));
       },
       () => {
         setRunningAgent(3);
-        setAgentSteps((prev) => prev.map((s) => ["linkedin", "x"].includes(s.agentId) ? { ...s, status: "done" } : s));
+        setAgentSteps((prev) => prev.map((s) => ["linkedin", "x"].includes(s.agentId) ? { ...s, status: "done", decisions: [{ label: "Draft complete", detail: "Native draft generated." }] } : s.agentId === "qa" ? { ...s, status: "done", finishedAt: Date.now(), decisions: [{ label: "Linting completed", detail: "Guidelines validated: character limits, hooks." }] } : s.agentId === "critic" ? { ...s, status: "running", decisions: [{ label: "Verifying", detail: "Running anti-slop and voice compliance." }] } : s));
       },
       () => {
         setIsRunning(false);
         setRunningAgent(0);
+        setAgentSteps((prev) => prev.map((s) => s.agentId === "critic" ? { ...s, status: "done", finishedAt: Date.now(), decisions: [{ label: "Verification complete", detail: "Reviewed voice and compliance constraints." }] } : s));
         
         const newMockId = `disp-mock-${Date.now()}`;
         const newMockDisp: DispatchRead = {

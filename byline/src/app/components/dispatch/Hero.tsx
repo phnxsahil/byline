@@ -50,10 +50,10 @@ function EyebrowPill() {
         alignItems: "center",
         gap: 10,
         padding: "5px 12px 5px 8px",
-        border: "0.5px solid var(--by-border)",
+        border: "0.5px solid var(--border)",
         borderRadius: 999,
-        background: "rgba(255,255,255,0.04)",
-        boxShadow: "0 1px 0 rgba(255,255,255,0.04) inset",
+        background: "var(--surface)",
+        boxShadow: "0 1px 0 var(--border) inset",
       }}
     >
       <span
@@ -72,7 +72,7 @@ function EyebrowPill() {
           fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 11,
           fontWeight: 500,
-          color: "rgba(15,15,13,0.7)",
+          color: "var(--text-secondary)",
           letterSpacing: "0.01em",
           whiteSpace: "nowrap",
         }}
@@ -97,13 +97,13 @@ function CTAPrimary() {
         justifyContent: "center",
         minWidth: 176,
         padding: "14px 20px",
-        backgroundColor: hov ? "var(--by-bg-3)" : "var(--by-bg-2)",
-        color: "var(--by-text)",
+        backgroundColor: hov ? "rgba(22,22,22,0.9)" : "var(--text-primary)",
+        color: "var(--bg)",
         borderRadius: 8,
         textDecoration: "none",
-        border: "0.5px solid var(--by-border)",
-        boxShadow: hov ? "0 14px 30px rgba(49,48,45,0.16)" : "0 8px 20px rgba(49,48,45,0.08)",
-        transition: "all 0.16s ease",
+        border: "0.5px solid transparent",
+        boxShadow: hov ? "0 12px 28px rgba(49,48,45,0.18)" : "0 6px 16px rgba(49,48,45,0.08)",
+        transition: "background-color 0.14s ease, box-shadow 0.14s ease",
       }}
     >
       <span
@@ -138,12 +138,12 @@ function CTAGhost() {
         gap: 8,
         minWidth: 176,
         padding: "14px 20px",
-        border: hov ? "0.5px solid var(--by-border)" : "0.5px solid var(--by-border)",
+        border: "0.5px solid var(--border)",
         borderRadius: 8,
         textDecoration: "none",
-        backgroundColor: hov ? "rgba(255,255,255,0.04)" : "rgba(255,255,255,0.02)",
-        boxShadow: hov ? "0 10px 24px var(--by-border)" : "none",
-        transition: "all 0.16s ease",
+        backgroundColor: hov ? "var(--surface)" : "transparent",
+        boxShadow: hov ? "0 8px 20px rgba(0,0,0,0.05)" : "none",
+        transition: "background-color 0.14s ease, box-shadow 0.14s ease",
       }}
     >
       <IconBrandGithub size={15} color="var(--by-text)" stroke={1.7} />
@@ -168,9 +168,9 @@ function TerminalCard() {
     <div
       className="dispatch-hero-terminal"
       style={{
-        backgroundColor: "var(--by-bg-2)",
+        backgroundColor: "var(--bg-terminal)",
         borderRadius: 22,
-        border: "1px solid var(--by-border)",
+        border: "1px solid rgba(255,255,255,0.08)",
         boxShadow: "0 32px 60px rgba(0,0,0,0.28), 0 4px 16px rgba(0,0,0,0.14)",
         overflow: "hidden",
       }}
@@ -331,16 +331,6 @@ export function Hero() {
       `}</style>
 
       <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "radial-gradient(circle at 78% 30%, var(--by-text) 0%, rgba(255,255,255,0) 34%), linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0))",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div
         className="dispatch-hero-inner"
         style={{
           maxWidth: 1320,
@@ -360,7 +350,8 @@ export function Hero() {
               style={{
                 fontFamily: "IBM Plex Mono, monospace",
                 fontSize: 13,
-                color: "var(--by-text-3)",
+                color: "var(--text-secondary)",
+                opacity: 0.6,
                 letterSpacing: "0.05em",
                 marginBottom: 28,
               }}
@@ -373,9 +364,9 @@ export function Hero() {
                 style={{
                   display: "block",
                   fontFamily: "Space Grotesk, Inter, sans-serif",
-                  fontSize: "clamp(3.8rem, 8vw, 6.2rem)",
+                  fontSize: "clamp(2.28rem, 4.8vw, 3.72rem)",
                   fontWeight: 700,
-                  color: "var(--by-text)",
+                  color: "var(--text-primary)",
                   letterSpacing: "-0.07em",
                 }}
               >
@@ -385,7 +376,7 @@ export function Hero() {
                 style={{
                   display: "block",
                   fontFamily: "Space Grotesk, Inter, sans-serif",
-                  fontSize: "clamp(3.8rem, 8vw, 6.2rem)",
+                  fontSize: "clamp(2.28rem, 4.8vw, 3.72rem)",
                   fontWeight: 700,
                   color: "var(--by-accent)",
                   letterSpacing: "-0.07em",
@@ -397,7 +388,7 @@ export function Hero() {
                 style={{
                   display: "block",
                   fontFamily: "Space Grotesk, Inter, sans-serif",
-                  fontSize: "clamp(3.8rem, 8vw, 6.2rem)",
+                  fontSize: "clamp(2.28rem, 4.8vw, 3.72rem)",
                   fontWeight: 700,
                   color: "var(--by-accent)",
                   letterSpacing: "-0.07em",
@@ -413,7 +404,7 @@ export function Hero() {
                 fontFamily: "'Inter', system-ui, sans-serif",
                 fontSize: 16,
                 fontWeight: 400,
-                color: "var(--by-text-2)",
+                color: "var(--text-secondary)",
                 maxWidth: 620,
                 lineHeight: 1.72,
               }}
@@ -451,27 +442,28 @@ export function Hero() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 8,
-                  color: "var(--by-text-2)",
+                  color: "var(--text-secondary)",
                 }}
-                >
-                  <Icon size={15} stroke={1.5} />
-                  <span
-                    style={{
+              >
+                <Icon size={15} stroke={1.5} />
+                <span
+                  style={{
                       fontFamily: "'Inter', system-ui, sans-serif",
                       fontSize: 13,
                       fontWeight: 500,
                       whiteSpace: "nowrap",
-                    }}
-                  >
-                    {label}
-                  </span>
-                </div>
-              ))}
-            </div>
+                      color: "var(--text-secondary)",
+                  }}
+                >
+                  {label}
+                </span>
+              </div>
+            ))}
           </div>
+        </div>
 
-          <div>
-            <TerminalCard />
+        <div>
+          <TerminalCard />
           </div>
         </div>
       </div>

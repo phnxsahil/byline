@@ -75,9 +75,19 @@ export function AgentRail({
   const bottomRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
+  const prevStepsLength = useRef(0);
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [agentSteps, chatImages]);
+    if (agentSteps.length > prevStepsLength.current) {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+    prevStepsLength.current = agentSteps.length;
+  }, [agentSteps.length]);
+
+  useEffect(() => {
+    if (chatImages.length > 0) {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [chatImages.length]);
 
   useEffect(() => {
     if (agentSteps.length === 0) {
@@ -126,7 +136,8 @@ export function AgentRail({
         width: railWidth,
         flexShrink: 0,
         position: "relative",
-        transition: "width 220ms ease",
+        transition: "width 180ms var(--by-ease-out, cubic-bezier(0.16, 1, 0.3, 1))",
+        willChange: "width",
         overflow: "hidden",
       }}
     >

@@ -5,6 +5,10 @@ import {
   IconChessKnight,
   IconPencil,
   IconShieldCheck,
+  IconBrandLinkedin,
+  IconBrandX,
+  IconBrandReddit,
+  IconBrandThreads,
 } from "@tabler/icons-react";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -12,6 +16,7 @@ import {
 interface Platform {
   label: string;
   bg: string;
+  Icon: React.FC<{ size: number }>;
 }
 
 interface Step {
@@ -57,10 +62,10 @@ const STEPS: Step[] = [
     Icon: IconPencil,
     title: "Platform writers draft",
     platforms: [
-      { label: "in",  bg: "var(--by-accent)" },
-      { label: "𝕏",  bg: "var(--by-bg-3)" },
-      { label: "r/",  bg: "var(--by-red)" },
-      { label: "Th",  bg: "var(--by-bg-3)" },
+      { label: "linkedin", bg: "#0A66C2", Icon: IconBrandLinkedin },
+      { label: "x",        bg: "var(--by-bg-3)", Icon: IconBrandX },
+      { label: "reddit",   bg: "#FF4500", Icon: IconBrandReddit },
+      { label: "threads",  bg: "#101010", Icon: IconBrandThreads },
     ],
   },
   {
@@ -73,7 +78,7 @@ const STEPS: Step[] = [
 
 // ─── Step card ────────────────────────────────────────────────────────────────
 
-function StepCard({ step }: { step: Step }) {
+function StepCard({ step, index }: { step: Step; index: number }) {
   const { num, status, Icon, title, note, platforms } = step;
   const isRunning = status === "running";
   const isDone = status === "done";
@@ -95,11 +100,13 @@ function StepCard({ step }: { step: Step }) {
           : isDone
           ? "0 0 0 3px rgba(63,185,80,0.08)"
           : "none",
-        transition: "background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease",
+        transition: "border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s var(--by-ease)",
+        willChange: "transform",
       }}
     >
       {/* Step number */}
       <span
+        className="dispatch-hiw-step-num"
         style={{
           position: "absolute",
           top: 12,
@@ -110,6 +117,7 @@ function StepCard({ step }: { step: Step }) {
           opacity: 0.6,
           letterSpacing: "0.04em",
           lineHeight: 1,
+          animation: `dispatch-pulse-num 1.6s ease-out ${index * 0.6}s infinite`,
         }}
       >
         {String(num).padStart(2, "0")}
@@ -151,26 +159,22 @@ function StepCard({ step }: { step: Step }) {
 
       {/* Platform badges */}
       {platforms && (
-        <div style={{ display: "flex", gap: 5, flexWrap: "wrap", marginTop: 2 }}>
-          {platforms.map(({ label, bg }) => (
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 2 }}>
+          {platforms.map(({ label, bg, Icon }) => (
             <span
               key={label}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
-                padding: "2px 7px",
+                width: 30,
+                height: 30,
                 backgroundColor: bg,
-                borderRadius: 4,
-                fontFamily: "'Inter', system-ui, sans-serif",
-                fontSize: 10,
-                fontWeight: 600,
+                borderRadius: 6,
                 color: "var(--by-text)",
-                letterSpacing: "0.01em",
-                lineHeight: 1.4,
               }}
             >
-              {label}
+              <Icon size={18} />
             </span>
           ))}
         </div>
@@ -181,9 +185,14 @@ function StepCard({ step }: { step: Step }) {
 
 // ─── Connector (horizontal on desktop, vertical on mobile) ────────────────────
 
-function Connector() {
+function Connector({ index }: { index: number }) {
   return (
-    <div className="dispatch-hiw-conn">
+    <div
+      className="dispatch-hiw-conn"
+      style={{
+        animation: `dispatch-pulse-conn 1.6s ease-out ${0.8 + index * 0.6}s infinite`,
+      }}
+    >
       {/* Desktop: horizontal dashed line + chevron */}
       <div className="dispatch-hiw-conn-h">
         <div
@@ -241,7 +250,7 @@ function Connector() {
 
 export function HowItWorksSection() {
   return (
-    <section className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96, transition: "background-color 0.3s ease" }}>
+    <section id="how-it-works" className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96 }}>
       <style>{`
         .dispatch-hiw-inner {
           max-width: 1080px;
@@ -277,6 +286,33 @@ export function HowItWorksSection() {
         }
         .dispatch-hiw-conn-v {
           display: none;
+        }
+
+        /* ── Timeline pulse animations ────────────────────────────────── */
+        @keyframes dispatch-pulse-num {
+          0%, 100% {
+            opacity: 0.6;
+            color: var(--by-text-2);
+          }
+          15% {
+            opacity: 1;
+            color: var(--by-accent);
+          }
+          40% {
+            opacity: 1;
+            color: var(--by-accent);
+          }
+        }
+        @keyframes dispatch-pulse-conn {
+          0%, 100% {
+            opacity: 0.45;
+          }
+          15% {
+            opacity: 1;
+          }
+          40% {
+            opacity: 1;
+          }
         }
 
         /* ── Mobile overrides ─────────────────────────────────────────── */
@@ -320,7 +356,7 @@ export function HowItWorksSection() {
             fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 10,
             fontWeight: 400,
-            color: "var(--by-text-2)",
+            color: "var(--text-secondary)",
             opacity: 0.7,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
@@ -336,7 +372,7 @@ export function HowItWorksSection() {
             fontFamily: "Space Grotesk, system-ui, sans-serif",
             fontSize: 28,
             fontWeight: 500,
-            color: "var(--by-text)",
+            color: "var(--text-primary)",
             letterSpacing: "-0.02em",
             lineHeight: 1.2,
             margin: "0 0 12px",
@@ -353,7 +389,7 @@ export function HowItWorksSection() {
             fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 14,
             fontWeight: 400,
-            color: "var(--by-text-2)",
+            color: "var(--text-secondary)",
             lineHeight: 1.65,
             maxWidth: 480,
             margin: "0 0 40px",
@@ -368,8 +404,8 @@ export function HowItWorksSection() {
         <div className="dispatch-hiw-outer">
           {STEPS.map((step, i) => (
             <React.Fragment key={step.num}>
-              <StepCard step={step} />
-              {i < STEPS.length - 1 && <Connector />}
+              <StepCard step={step} index={i} />
+              {i < STEPS.length - 1 && <Connector index={i} />}
             </React.Fragment>
           ))}
         </div>
@@ -380,7 +416,7 @@ export function HowItWorksSection() {
             fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 12,
             fontWeight: 400,
-            color: "var(--by-text-2)",
+            color: "var(--text-secondary)",
             opacity: 0.8,
             lineHeight: 1.6,
             fontStyle: "italic",

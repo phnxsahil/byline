@@ -199,7 +199,7 @@ function TestimonialCard({ t }: { t: Testimonial }) {
 
 export function SocialProofSection() {
   return (
-    <section className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", transition: "background-color 0.3s ease" }}>
+    <section className="dispatch-reveal" style={{ backgroundColor: "var(--bg)" }}>
       <style>{`
         .dispatch-proof-inner {
           max-width: 1080px;
@@ -233,7 +233,7 @@ export function SocialProofSection() {
             fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 10,
             fontWeight: 400,
-            color: "#A8A49A",
+            color: "var(--text-secondary)",
             letterSpacing: "0.12em",
             textTransform: "uppercase",
             marginBottom: 20,

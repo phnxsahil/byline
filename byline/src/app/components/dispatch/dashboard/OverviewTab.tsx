@@ -93,68 +93,68 @@ export function OverviewTab({
               display: "inline-flex",
               alignItems: "center",
               gap: 8,
-              padding: "6px 10px",
+              padding: "5px 10px",
               borderRadius: 999,
               background: "rgba(232,94,44,0.08)",
               color: "var(--by-accent)",
-              fontFamily: "var(--by-font-mono), monospace",
+              fontFamily: "'IBM Plex Mono', monospace",
               fontSize: 11,
               alignSelf: "flex-start",
             }}
           >
-            <IconSparkles size={13} stroke={1.8} />
-            signal in
+            <IconSparkles size={12} stroke={1.8} />
+            Log a milestone
           </div>
 
           <div>
             <div
               style={{
                 fontFamily: "var(--by-font-display), sans-serif",
-                fontSize: isMobile ? 28 : 34,
-                lineHeight: 1,
-                letterSpacing: "-0.05em",
+                fontSize: isMobile ? 26 : 30,
+                lineHeight: 1.05,
+                letterSpacing: "-0.04em",
                 color: "var(--by-text)",
               }}
             >
-              Put the work in once.
+              Ship a milestone.
               <br />
-              Let the system find the angle.
+              <span style={{ color: "var(--by-accent)" }}>Byline</span> writes it everywhere.
             </div>
             <p
               style={{
-                margin: "12px 0 0",
+                margin: "10px 0 0",
                 color: "var(--by-text-2)",
                 fontFamily: "var(--by-font-body), sans-serif",
-                fontSize: 14,
-                lineHeight: 1.7,
-                maxWidth: 560,
+                fontSize: 13,
+                lineHeight: 1.65,
+                maxWidth: 480,
               }}
             >
-              This desk is strongest when the milestone is specific. The strategist can only choose a sharp
-              angle if the raw signal has enough texture to work with.
+              Describe what you built or learned. The 5-agent pipeline picks the angle, writes
+              platform-native drafts, and scores them — you just review and approve.
             </p>
           </div>
 
-          <div
-            style={{
-              borderRadius: 4,
-              border: "0.5px solid rgba(255,255,255,0.07)",
-              background: "rgba(10,10,12,0.3)",
-              padding: 14,
-            }}
-          >
             <div
               style={{
-                fontFamily: "var(--by-font-mono), monospace",
-                fontSize: 10,
-                color: "var(--by-text-3)",
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
-                marginBottom: 10,
+                borderRadius: 4,
+                border: "0.5px solid rgba(245,240,232,0.07)",
+                background: "rgba(10,10,10,0.4)",
+                padding: 14,
               }}
             >
-              new milestone
-            </div>
+              <div
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 10,
+                  color: "var(--by-text-3)",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  marginBottom: 10,
+                }}
+              >
+                What happened? (be specific)
+              </div>
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -174,44 +174,45 @@ export function OverviewTab({
                 boxSizing: "border-box",
               }}
             />
-            <div
-              style={{
-                marginTop: 12,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 12,
-                flexWrap: "wrap",
-              }}
-            >
-              <span style={{ color: "var(--by-text-3)", fontFamily: "var(--by-font-mono), monospace", fontSize: 11 }}>
-                better inputs {"->"} better platform decisions
-              </span>
-              <button
-                onClick={() => {
-                  if (input.trim()) {
-                    onPublish(input.trim());
-                  }
-                }}
+              <div
                 style={{
-                  fontFamily: "var(--by-font-mono), monospace",
-                  fontSize: 11,
-                  padding: "9px 14px",
-                  background: "var(--by-accent)",
-                  color: "#F5F2EC",
-                  border: "none",
-                  borderRadius: 4,
-                  cursor: "pointer",
-                  display: "inline-flex",
+                  marginTop: 12,
+                  display: "flex",
                   alignItems: "center",
-                  gap: 6,
+                  justifyContent: "space-between",
+                  gap: 12,
+                  flexWrap: "wrap",
                 }}
               >
-                <IconBolt size={12} stroke={2} />
-                run dispatch
-              </button>
+                <span style={{ color: "var(--by-text-3)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}>
+                  more texture → better angle selection
+                </span>
+                <button
+                  onClick={() => {
+                    if (input.trim()) {
+                      onPublish(input.trim());
+                    }
+                  }}
+                  style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 11,
+                    padding: "9px 14px",
+                    background: "var(--by-accent)",
+                    color: "#F5F2EC",
+                    border: "none",
+                    borderRadius: 4,
+                    cursor: "pointer",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
+                    transition: "opacity 120ms ease",
+                  }}
+                >
+                  <IconBolt size={12} stroke={2} />
+                  run pipeline
+                </button>
+              </div>
             </div>
-          </div>
         </div>
 
         <div
@@ -227,14 +228,14 @@ export function OverviewTab({
         >
           <div
             style={{
-              fontFamily: "var(--by-font-mono), monospace",
+              fontFamily: "'IBM Plex Mono', monospace",
               fontSize: 10,
               color: "var(--by-text-3)",
               textTransform: "uppercase",
               letterSpacing: "0.08em",
             }}
           >
-            watcher notes
+            What the system noticed
           </div>
           {WATCHER.map((note) => (
             <div
@@ -327,12 +328,12 @@ export function OverviewTab({
         </div>
 
         {dispatches.length === 0 ? (
-          <div style={{ padding: "40px 20px", textAlign: "center", color: "var(--by-text-3)" }}>
-            <div style={{ fontFamily: "var(--by-font-display), sans-serif", fontSize: 18, color: "var(--by-text-2)", marginBottom: 8 }}>
-              No dispatches yet
+          <div style={{ padding: "32px 20px", textAlign: "center", color: "var(--by-text-3)" }}>
+            <div style={{ fontFamily: "var(--by-font-display), sans-serif", fontSize: 16, color: "var(--by-text-2)", marginBottom: 8 }}>
+              No pipelines run yet
             </div>
-            <p style={{ fontSize: 13, marginBottom: 16 }}>
-              Run a sample pipeline to see the 5-agent wire service in action.
+            <p style={{ fontSize: 12, marginBottom: 16, lineHeight: 1.6, maxWidth: 360, margin: "0 auto 16px" }}>
+              Once you dispatch a milestone above, completed runs will appear here with their platform, status, and critic score.
             </p>
             <button
               onClick={() => onPublish("shipped pgvector content ranking and cut query response times in half")}

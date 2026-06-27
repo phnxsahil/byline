@@ -100,28 +100,28 @@ export function DocsSection() {
       case "overview":
         return (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--by-text)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
+            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
               Overview
             </h1>
-            <p style={{ fontSize: 14, color: "var(--by-text-2)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
               Byline is a personal wire service and publishing engine for developers who build in public. It maintains a persistent memory of your software projects, watches for things worth posting about, writes platform-native drafts for LinkedIn, X (Twitter), Reddit, and Threads using a multi-agent pipeline, and posts them via Composio.
             </p>
-            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--by-text)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
+            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
               Key Principles
             </h2>
-            <ul style={{ fontSize: 14, color: "var(--by-text-2)", lineHeight: 1.7, margin: 0, paddingLeft: 20, transition: "color 0.3s ease" }}>
+            <ul style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.7, margin: 0, paddingLeft: 20, transition: "color 0.3s ease" }}>
               <li><strong>Single-user, self-hosted:</strong> Designed for individual developers. No multi-tenancy, team features, or billing overhead. You run your own server and retain full ownership of your data.</li>
               <li><strong>Your voice:</strong> Extracts structured voice profiles from 10 past posts, matching your paragraphs, vocabulary, line breaks, and avoiding generic AI slop.</li>
               <li><strong>Platform native:</strong> Different formats for different audiences. Not a plain cross-poster. The LinkedIn specialist builds narrative stories, X compresses, Reddit reframes without promotional tone, and Threads stays casual.</li>
             </ul>
 
-            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--by-text)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
+            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
               Monorepo Architecture
             </h2>
-            <p style={{ fontSize: 14, color: "var(--by-text-2)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
               The Byline monorepo separates components clearly into distinct layers:
             </p>
-            <ul style={{ fontSize: 14, color: "var(--by-text-2)", lineHeight: 1.7, margin: 0, paddingLeft: 20, transition: "color 0.3s ease" }}>
+            <ul style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.7, margin: 0, paddingLeft: 20, transition: "color 0.3s ease" }}>
               <li><strong>apps/web:</strong> Next.js frontend built with custom styling tokens (no generic component libraries).</li>
               <li><strong>apps/api:</strong> FastAPI backend providing async database integrations and handling REST endpoints.</li>
               <li><strong>packages/agents:</strong> The core LangGraph agents pipeline (strategist, writers, critic nodes).</li>
@@ -133,33 +133,33 @@ export function DocsSection() {
       case "self-host":
         return (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--by-text)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
+            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
               Self-Hosting Guide
             </h1>
-            <p style={{ fontSize: 14, color: "var(--by-text-2)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
               Run Byline on your own infrastructure in minutes. Standard setup utilizes Docker Compose to configure the backend API, frontend web panel, and a preconfigured PostgreSQL database with the <code>pgvector</code> extension.
             </p>
 
-            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--by-text)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
+            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
               Quick Start
             </h2>
-            <p style={{ fontSize: 14, color: "var(--by-text-2)", lineHeight: 1.6, margin: 0, transition: "color 0.3s ease" }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.6, margin: 0, transition: "color 0.3s ease" }}>
               Clone the repository and spin up the services using Docker:
             </p>
             <CodeBlock code={`git clone https://github.com/sahil/byline.git\ncd byline\ndocker compose up -d`} />
 
-            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--by-text)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
+            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
               Environment Variables
             </h2>
-            <p style={{ fontSize: 14, color: "var(--by-text-2)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
               Copy <code>.env.example</code> to <code>.env</code> and fill in the required keys:
             </p>
             <CodeBlock code={`# Database Configuration\nDATABASE_URL=postgresql+asyncpg://byline:byline@localhost:5432/byline\n\n# LLM API Keys\nANTHROPIC_API_KEY=your-anthropic-key-for-agents-and-critic\nOPENAI_API_KEY=your-openai-key-for-embeddings-only\n\n# Optional: Composio Key for posting\nCOMPOSIO_API_KEY=your-composio-key`} />
 
-            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--by-text)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
+            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
               Database Setup
             </h2>
-            <p style={{ fontSize: 14, color: "var(--by-text-2)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
               The schema utilizes <code>pgvector</code> for storing semantic memories. On first startup, the database is initialized using <code>infra/postgres/init.sql</code>. All subsequent updates must be managed via Alembic migrations.
             </p>
           </div>
@@ -168,10 +168,10 @@ export function DocsSection() {
       case "agents":
         return (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--by-text)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
+            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
               Agent Architecture
             </h1>
-            <p style={{ fontSize: 14, color: "var(--by-text-2)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
               Byline runs a multi-agent state graph built on LangGraph. This architecture orchestrates multiple specialized nodes to turn a simple developer milestone into highly polished drafts:
             </p>
 
@@ -197,10 +197,10 @@ export function DocsSection() {
               </ol>
             </div>
 
-            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--by-text)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
+            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
               System Prompts
             </h2>
-            <p style={{ fontSize: 14, color: "var(--by-text-2)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
               All agent system prompts are isolated as external text files under <code>packages/agents/prompts/</code>. This makes tweaking agent behaviors and custom voice instructions easy without touching Python graph logic.
             </p>
           </div>
@@ -209,25 +209,25 @@ export function DocsSection() {
       case "composio":
         return (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--by-text)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
+            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
               Composio Integration
             </h1>
-            <p style={{ fontSize: 14, color: "var(--by-text-2)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
               Composio handles the complex OAuth configurations for LinkedIn, X (Twitter), and Reddit as managed connections, completely removing custom credential logic from the application.
             </p>
 
-            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--by-text)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
+            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
               Platform Connections
             </h2>
-            <p style={{ fontSize: 14, color: "var(--by-text-2)", lineHeight: 1.6, margin: 0, transition: "color 0.3s ease" }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.6, margin: 0, transition: "color 0.3s ease" }}>
               Connect your accounts once through Composio:
             </p>
             <CodeBlock code={`# Connect your accounts via Composio OAuth\ncomposio add linkedin\ncomposio add twitter\ncomposio add reddit`} />
 
-            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--by-text)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
+            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
               Publishing Service
             </h2>
-            <p style={{ fontSize: 14, color: "var(--by-text-2)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
               All posting calls are routed via <code>apps/api/services/publishing.py</code>:
             </p>
             <CodeBlock code={`from composio import ComposioToolSet, Action\n\ntoolset = ComposioToolSet(api_key=os.environ["COMPOSIO_API_KEY"])\n\n# Publishing is triggered only upon explicit human approval\nresponse = toolset.execute_action(\n    action=Action.LINKEDIN_CREATE_SHARE_POST,\n    params={"text": body},\n    entity_id=entity_id,\n)`} />
@@ -237,27 +237,27 @@ export function DocsSection() {
       case "changelog":
         return (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--by-text)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
+            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
               Changelog
             </h1>
-            <p style={{ fontSize: 14, color: "var(--by-text-2)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
               Recent updates and improvements to the Byline platform:
             </p>
             <div style={{ display: "flex", flexDirection: "column", gap: 20, marginTop: 12 }}>
               <div>
                 <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: "var(--by-accent)", fontWeight: 500 }}>v0.8.2 · June 2026</span>
-                <h3 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "var(--by-text)", margin: "4px 0", transition: "color 0.3s ease" }}>UI/UX Polishes & responsive improvements</h3>
-                <ul style={{ fontSize: 13, color: "var(--by-text-2)", lineHeight: 1.6, margin: "6px 0 0 0", paddingLeft: 18, transition: "color 0.3s ease" }}>
+                <h3 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "var(--text-primary)", margin: "4px 0", transition: "color 0.3s ease" }}>UI/UX Polishes & responsive improvements</h3>
+                <ul style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.6, margin: "6px 0 0 0", paddingLeft: 18, transition: "color 0.3s ease" }}>
                   <li>Fixed Navbar links hover unreadability in dark mode by introducing theme-sensitive color evaluations.</li>
                   <li>Replaced inline aspect-ratio overrides on terminal viewports to prevent layout squishing on mobile screens.</li>
                   <li>Added fully interactive side-navigation routing for documentation pages.</li>
                   <li>Integrated moon/sun icon with localStorage persistence for global dark mode.</li>
                 </ul>
               </div>
-              <div style={{ borderTop: "0.5px solid var(--by-border)", paddingTop: 16 }}>
-                <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: "var(--by-text-2)", opacity: 0.8 }}>v0.8.0 · May 2026</span>
-                <h3 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "var(--by-text)", margin: "4px 0", transition: "color 0.3s ease" }}>Multi-Agent LangGraph Pipeline</h3>
-                <ul style={{ fontSize: 13, color: "var(--by-text-2)", lineHeight: 1.6, margin: "6px 0 0 0", paddingLeft: 18, transition: "color 0.3s ease" }}>
+              <div style={{ borderTop: "0.5px solid var(--border)", paddingTop: 16 }}>
+                <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: "var(--text-secondary)", opacity: 0.8 }}>v0.8.0 · May 2026</span>
+                <h3 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 15, fontWeight: 500, color: "var(--text-primary)", margin: "4px 0", transition: "color 0.3s ease" }}>Multi-Agent LangGraph Pipeline</h3>
+                <ul style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.6, margin: "6px 0 0 0", paddingLeft: 18, transition: "color 0.3s ease" }}>
                   <li>Introduced concurrent writer agents specializing in LinkedIn, X, Reddit, and Threads.</li>
                   <li>Integrated the critic agent node evaluating anti-promotional and slop guidelines.</li>
                   <li>Set up pgvector DB support for semantic workspace search caching.</li>
@@ -294,14 +294,14 @@ export function DocsSection() {
           gap: 4px;
         }
         .dispatch-docs-group:not(:last-of-type) {
-          border-bottom: 0.5px solid var(--by-border);
+          border-bottom: 0.5px solid var(--border);
           padding-bottom: 16px;
         }
         .dispatch-docs-label {
           font-family: 'IBM Plex Mono', monospace;
           font-size: 10px;
           font-weight: 500;
-          color: var(--by-text-2);
+          color: var(--text-secondary);
           opacity: 0.7;
           text-transform: uppercase;
           letter-spacing: 0.08em;
@@ -311,7 +311,7 @@ export function DocsSection() {
         .dispatch-docs-btn {
           font-family: 'Inter', system-ui, sans-serif;
           font-size: 13px;
-          color: var(--by-text-2);
+          color: var(--text-secondary);
           background: none;
           border: none;
           text-align: left;
@@ -320,7 +320,7 @@ export function DocsSection() {
           transition: color 0.12s ease;
         }
         .dispatch-docs-btn:hover {
-          color: var(--by-text);
+          color: var(--text-primary);
         }
         .dispatch-docs-btn.active {
           color: var(--by-accent);
@@ -336,13 +336,13 @@ export function DocsSection() {
           gap: 6px;
           font-family: 'IBM Plex Mono', monospace;
           font-size: 11px;
-          color: var(--by-text-2);
+          color: var(--text-secondary);
           text-decoration: none;
           margin-bottom: 8px;
           transition: color 0.12s ease, transform 0.12s ease;
         }
         .dispatch-docs-back:hover {
-          color: var(--by-text);
+          color: var(--text-primary);
           transform: translateX(-3px);
         }
         @media (max-width: 767px) {
@@ -352,7 +352,7 @@ export function DocsSection() {
             padding: 0 20px !important;
           }
           .dispatch-docs-sidebar {
-            border-bottom: 0.5px solid var(--by-border);
+            border-bottom: 0.5px solid var(--border);
             padding-bottom: 16px;
           }
           .dispatch-docs-group:not(:last-of-type) {

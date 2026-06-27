@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { IconBook2, IconMenu2, IconX, IconSun, IconMoon } from "@tabler/icons-react";
+import { IconBook2, IconMenu2, IconX, IconSun, IconMoonStars } from "@tabler/icons-react";
 import { Logo } from "./Logo";
 
 const NAV_LINKS = [
-  { label: "demo", href: "#demo" },
+  { label: "how it works", href: "#how-it-works" },
   { label: "features", href: "#features" },
-  { label: "docs", href: "#docs" },
-  { label: "pricing", href: "#pricing" },
-  { label: "github", href: "https://github.com/sahil/byline" },
+  { label: "demo", href: "#demo" },
 ];
 
 function NavLink({ label, href }: { label: string; href: string }) {
@@ -19,12 +17,12 @@ function NavLink({ label, href }: { label: string; href: string }) {
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        fontFamily: "'IBM Plex Mono', monospace",
-        fontSize: 12,
-        fontWeight: 400,
-        color: hov ? "var(--by-text)" : "var(--by-text-2)",
+        fontFamily: "'DM Sans', system-ui, sans-serif",
+        fontSize: 13,
+        fontWeight: 500,
+        color: hov ? "var(--text-primary)" : "var(--text-secondary)",
         textDecoration: "none",
-        letterSpacing: "0.02em",
+        letterSpacing: "0.01em",
         whiteSpace: "nowrap",
         transition: "color 0.14s ease",
       }}
@@ -41,33 +39,60 @@ function ThemeToggle({
   theme: "light" | "dark";
   onChange: (t: "light" | "dark") => void;
 }) {
-  const [hov, setHov] = useState(false);
-  const isDarkTheme = theme === "dark";
+  const isDark = theme === "dark";
 
   return (
-    <button
-      onClick={() => onChange(isDarkTheme ? "light" : "dark")}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
+    <div
       style={{
         display: "inline-flex",
         alignItems: "center",
-        justifyContent: "center",
-        width: 38,
-        height: 38,
-        borderRadius: 10,
-        border: "0.5px solid var(--by-border)",
-        background: hov ? "rgba(255,255,255,0.08)" : "transparent",
-        cursor: "pointer",
-        transition: "all 0.14s ease",
-        color: "var(--by-text-2)",
+        height: 28,
+        borderRadius: 6,
+        border: "1px solid var(--rule)",
+        background: "transparent",
+        overflow: "hidden",
         flexShrink: 0,
       }}
-      title={isDarkTheme ? "Switch to light mode" : "Switch to dark mode"}
-      aria-label="Toggle theme"
+      role="radiogroup"
+      aria-label="Theme toggle"
     >
-      {isDarkTheme ? <IconSun size={17} stroke={1.7} /> : <IconMoon size={17} stroke={1.7} />}
-    </button>
+      <button
+        onClick={() => onChange("light")}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 28,
+          height: 28,
+          border: "none",
+          background: isDark ? "transparent" : "var(--ink)",
+          color: isDark ? "var(--mute)" : "var(--paper)",
+          cursor: "pointer",
+          transition: "all 0.14s ease",
+        }}
+        aria-label="Light mode"
+      >
+        <IconSun size={13} stroke={1.7} />
+      </button>
+      <button
+        onClick={() => onChange("dark")}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 28,
+          height: 28,
+          border: "none",
+          background: isDark ? "var(--ink)" : "transparent",
+          color: isDark ? "var(--paper)" : "var(--mute)",
+          cursor: "pointer",
+          transition: "all 0.14s ease",
+        }}
+        aria-label="Dark mode"
+      >
+        <IconMoonStars size={13} stroke={1.7} />
+      </button>
+    </div>
   );
 }
 
@@ -83,17 +108,17 @@ function DocsButton() {
         display: "inline-flex",
         alignItems: "center",
         gap: 8,
-        height: 38,
-        padding: "0 16px",
-        borderRadius: 10,
-        border: "0.5px solid var(--by-border)",
-        backgroundColor: hov ? "var(--by-bg-3)" : "var(--by-bg-2)",
-        color: "var(--by-text)",
+        height: 34,
+        padding: "0 12px",
+        borderRadius: 6,
+        border: "0.5px solid var(--border)",
+        backgroundColor: hov ? "var(--surface)" : "transparent",
+        color: "var(--text-primary)",
         textDecoration: "none",
-        fontFamily: "'IBM Plex Mono', monospace",
+        fontFamily: "'DM Sans', system-ui, sans-serif",
         fontSize: 12,
         fontWeight: 500,
-        letterSpacing: "0.02em",
+        letterSpacing: "0.01em",
         transition: "all 0.16s ease",
       }}
     >
@@ -105,88 +130,90 @@ function DocsButton() {
 
 function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: 74,
-        left: 16,
-        right: 16,
-        transform: open ? "translateY(0)" : "translateY(-10px)",
-        opacity: open ? 1 : 0,
-        pointerEvents: open ? "auto" : "none",
-        transition: "transform 0.18s ease, opacity 0.18s ease",
-        zIndex: 60,
-      }}
-    >
       <div
         style={{
-          borderRadius: 22,
-          border: "0.5px solid var(--by-border)",
-          background: "rgba(22, 21, 20, 0.95)",
-          boxShadow: "0 24px 54px rgba(0, 0, 0, 0.5)",
-          backdropFilter: "blur(18px)",
-          WebkitBackdropFilter: "blur(18px)",
-          padding: 16,
+          position: "fixed",
+          top: 74,
+          left: 16,
+          right: 16,
+          transform: open ? "translateY(0)" : "translateY(-12px)",
+          opacity: open ? 1 : 0,
+          pointerEvents: open ? "auto" : "none",
+          transition: "transform 0.16s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.16s ease",
+          willChange: "transform, opacity",
+          zIndex: 60,
         }}
       >
         <div
           style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: 11,
-            letterSpacing: "0.07em",
-            color: "var(--by-text-2)",
-            marginBottom: 12,
+            borderRadius: 14,
+            border: "0.5px solid var(--border)",
+            background: "var(--bg-nav)",
+            boxShadow: "0 16px 40px rgba(0, 0, 0, 0.15)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            padding: 16,
           }}
         >
-          editorial control room
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              onClick={onClose}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                padding: "14px 12px",
-                borderRadius: 14,
-                textDecoration: "none",
-                color: "var(--by-text)",
-                background: "rgba(255,255,255,0.03)",
-                fontFamily: "'Inter', system-ui, sans-serif",
-                fontSize: 15,
-                fontWeight: 500,
-              }}
-            >
-              <span>{link.label}</span>
-            </a>
-          ))}
-        </div>
-
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 14 }}>
-          <a
-            href="#dashboard"
-            onClick={onClose}
+          <div
             style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              height: 42,
-              borderRadius: 14,
-              textDecoration: "none",
-              border: "0.5px solid var(--by-border)",
-              color: "var(--by-text)",
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 12,
-              background: "rgba(255,255,255,0.03)",
+              fontFamily: "'DM Sans', system-ui, sans-serif",
+              fontSize: 11,
+              fontWeight: 500,
+              letterSpacing: "0.04em",
+              color: "var(--text-secondary)",
+              marginBottom: 12,
             }}
           >
-            open desk
-          </a>
-          <DocsButton />
+            byline.
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={onClose}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  padding: "12px 12px",
+                  borderRadius: 8,
+                  textDecoration: "none",
+                  color: "var(--text-primary)",
+                  background: "transparent",
+                  fontFamily: "'DM Sans', system-ui, sans-serif",
+                  fontSize: 15,
+                  fontWeight: 500,
+                }}
+              >
+                <span>{link.label}</span>
+              </a>
+            ))}
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 14 }}>
+            <a
+              href="#dashboard"
+              onClick={onClose}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                height: 38,
+                borderRadius: 6,
+                textDecoration: "none",
+                border: "0.5px solid var(--border)",
+                color: "var(--text-primary)",
+                fontFamily: "'DM Sans', system-ui, sans-serif",
+                fontSize: 12,
+                background: "transparent",
+              }}
+            >
+              open desk
+            </a>
+            <DocsButton />
         </div>
       </div>
     </div>
@@ -244,6 +271,12 @@ export function Navbar() {
           transform: translateX(-50%);
           width: min(1180px, calc(100% - 32px));
           z-index: 50;
+          transition: top 0.16s cubic-bezier(0.16, 1, 0.3, 1), width 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+          will-change: top, width;
+        }
+        .dispatch-nav-shell.scrolled {
+          top: 10px;
+          width: min(680px, calc(100% - 32px));
         }
         .dispatch-nav {
           height: 52px;
@@ -251,16 +284,19 @@ export function Navbar() {
           grid-template-columns: auto 1fr auto;
           align-items: center;
           border-radius: 18px;
-          border: 0.5px solid var(--by-border);
-          background: rgba(22, 21, 20, 0.82);
-          box-shadow: 0 14px 38px rgba(0, 0, 0, 0.35);
-          backdrop-filter: blur(18px);
-          -webkit-backdrop-filter: blur(18px);
-          transition: box-shadow 0.18s ease, transform 0.18s ease, background-color 0.18s ease;
+          border: 0.5px solid var(--border);
+          background: var(--bg-nav);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          transition: height 0.16s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.16s ease, border-radius 0.16s ease;
+          will-change: height;
         }
         .dispatch-nav.scrolled {
-          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-          background: rgba(12, 12, 10, 0.92);
+          height: 44px;
+          border-radius: 14px;
+          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.1);
+          background: var(--bg-nav);
         }
         .dispatch-nav-block {
           height: 100%;
@@ -269,7 +305,7 @@ export function Navbar() {
           padding: 0 16px;
         }
         .dispatch-nav-block + .dispatch-nav-block {
-          border-left: 0.5px solid var(--by-border);
+          border-left: 0.5px solid var(--border);
         }
         .dispatch-nav-links {
           justify-content: center;
@@ -283,40 +319,38 @@ export function Navbar() {
         .dispatch-nav-btn {
           display: inline-flex;
           align-items: center;
-          height: 38px;
-          padding: 0 14px;
-          border-radius: 10px;
-          border: 0.5px solid var(--by-border);
+          height: 34px;
+          padding: 0 12px;
+          border-radius: 6px;
+          border: 0.5px solid var(--border);
           text-decoration: none;
-          color: var(--by-text-2);
-          font-family: 'IBM Plex Mono', monospace;
+          color: var(--text-secondary);
+          font-family: 'DM Sans', system-ui, sans-serif;
           font-size: 12px;
-          background: rgba(255,255,255,0.03);
+          background: transparent;
           transition: all 0.14s ease;
         }
         .dispatch-nav-btn:hover {
-          color: var(--by-text);
-          background: rgba(255,255,255,0.08);
-          border-color: rgba(235, 230, 220, 0.15);
+          color: var(--text-primary);
+          background: var(--surface);
         }
         .dispatch-nav-mobile-trigger {
-          width: 38px;
-          height: 38px;
-          border-radius: 10px;
-          border: 0.5px solid var(--by-border);
-          background: rgba(255,255,255,0.03);
-          color: var(--by-text);
+          width: 34px;
+          height: 34px;
+          border-radius: 6px;
+          border: 0.5px solid var(--border);
+          background: transparent;
+          color: var(--text-primary);
           cursor: pointer;
           display: none;
           align-items: center;
           justify-content: center;
-          font-family: 'IBM Plex Mono', monospace;
+          font-family: 'DM Sans', system-ui, sans-serif;
           font-size: 14px;
           transition: all 0.14s ease;
         }
         .dispatch-nav-mobile-trigger:hover {
-          background: rgba(255,255,255,0.08);
-          border-color: rgba(235, 230, 220, 0.15);
+          background: var(--surface);
         }
         @media (max-width: 899px) {
           .dispatch-nav {
@@ -341,7 +375,7 @@ export function Navbar() {
         }
       `}</style>
 
-      <div className="dispatch-nav-shell">
+      <div className={`dispatch-nav-shell ${scrolled ? "scrolled" : ""}`}>
         <header
           className={`dispatch-nav ${scrolled ? "scrolled" : ""}`}
           style={
@@ -369,11 +403,11 @@ export function Navbar() {
                   display: "inline-flex",
                   alignItems: "center",
                   textDecoration: "none",
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 14,
-                  fontWeight: 500,
-                  color: "var(--by-text)",
-                  letterSpacing: "-0.03em",
+                  fontFamily: "'DM Sans', system-ui, sans-serif",
+                  fontSize: 15,
+                  fontWeight: 600,
+                  color: "var(--text-primary)",
+                  letterSpacing: "-0.02em",
                   flexShrink: 0,
                 }}
               >

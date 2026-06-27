@@ -111,7 +111,7 @@ function QuickStart() {
         alignItems: "center",
         justifyContent: "space-between",
         boxSizing: "border-box",
-        transition: "all 0.3s ease",
+        transition: "border-color 0.15s ease, box-shadow 0.15s ease",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
@@ -282,7 +282,7 @@ function CTAPrimary() {
         textDecoration: "none",
         border: "0.5px solid var(--border)",
         boxShadow: hov ? "0 10px 24px rgba(0,0,0,0.12)" : "none",
-        transition: "all 0.16s ease",
+        transition: "background-color 0.15s ease, box-shadow 0.15s ease",
       }}
     >
       <span
@@ -320,9 +320,9 @@ function CTAGhost() {
         border: "0.5px solid var(--border)",
         borderRadius: 8,
         textDecoration: "none",
-        backgroundColor: hov ? "var(--border)" : "transparent",
+        backgroundColor: hov ? "rgba(30, 25, 18, 0.04)" : "transparent",
         color: "var(--text-primary)",
-        transition: "all 0.16s ease",
+        transition: "background-color 0.15s ease",
       }}
     >
       <IconBrandGithub size={15} color="currentColor" stroke={1.7} />
@@ -350,7 +350,6 @@ export function CTASection() {
         backgroundColor: "var(--bg)",
         paddingTop: 96,
         paddingBottom: 96,
-        transition: "background-color 0.3s ease",
       }}
     >
       <style>{`
@@ -396,7 +395,7 @@ export function CTASection() {
             transition: "color 0.3s ease",
           }}
         >
-          Open source. Self-hostable. Built in public, for builders who build in public.
+          Open source. Self-hostable. Ship in public, ship on your terms.
         </p>
 
         {/* Prominent Hero CTA Buttons */}

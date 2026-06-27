@@ -19,7 +19,7 @@ function Tag({ label, dark }: { label: string; dark?: boolean }) {
         fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
         fontSize: 10,
         fontWeight: 400,
-        color: dark ? "var(--text-secondary)" : "var(--text-secondary)",
+        color: dark ? "var(--by-text-2)" : "var(--text-secondary)",
         opacity: dark ? 0.6 : 0.7,
         letterSpacing: "0.1em",
         textTransform: "uppercase",
@@ -46,7 +46,7 @@ function CardTitle({
         fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
         fontSize: size,
         fontWeight: 500,
-        color: "var(--text-primary)",
+        color: dark ? "var(--by-text)" : "var(--text-primary)",
         letterSpacing: "-0.015em",
         lineHeight: 1.25,
         marginBottom: 8,
@@ -127,7 +127,7 @@ function PlatformPreview({
         borderRadius: 8,
         border: "0.5px solid var(--border)",
         alignItems: "flex-start",
-        transition: "all 0.3s ease",
+        transition: "border-color 0.15s ease, box-shadow 0.15s ease",
       }}
     >
       <span
@@ -183,7 +183,8 @@ function CardThree({ "data-index": dataIndex }: { "data-index"?: number }) {
         display: "flex",
         flexDirection: "column",
         gap: 0,
-        transition: "all 0.3s ease",
+        transition: "border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s var(--by-ease)",
+        willChange: "transform",
       }}
     >
       <Tag label="Distribution" dark />
@@ -200,8 +201,8 @@ function CardThree({ "data-index": dataIndex }: { "data-index"?: number }) {
           fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
           fontSize: 11,
           fontWeight: 400,
-          color: "var(--text-secondary)",
-          opacity: 0.6,
+          color: "var(--by-text-2)",
+          opacity: 0.5,
           lineHeight: 1.55,
           fontStyle: "italic",
           margin: "14px 0 0",
@@ -228,7 +229,8 @@ function CardSix({ "data-index": dataIndex }: { "data-index"?: number }) {
         display: "flex",
         flexDirection: "column",
         gap: 0,
-        transition: "all 0.3s ease",
+        transition: "border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s var(--by-ease)",
+        willChange: "transform",
       }}
     >
       <Tag label="Ingestion" />
@@ -249,7 +251,7 @@ function CardSix({ "data-index": dataIndex }: { "data-index"?: number }) {
           borderRadius: 8,
           overflow: "hidden",
           border: "0.5px solid var(--border)",
-          transition: "all 0.3s ease",
+          transition: "border-color 0.15s ease, box-shadow 0.15s ease",
         }}
       >
         <div
@@ -331,7 +333,8 @@ function LightCard({ className, tag, Icon, title, body, "data-index": dataIndex 
         display: "flex",
         flexDirection: "column",
         gap: 0,
-        transition: "all 0.3s ease",
+        transition: "border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s var(--by-ease)",
+        willChange: "transform",
       }}
     >
       <Tag label={tag} />
@@ -348,7 +351,7 @@ function LightCard({ className, tag, Icon, title, body, "data-index": dataIndex 
 
 export function FeatureSection() {
   return (
-    <section id="features" className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96, transition: "background-color 0.3s ease" }}>
+    <section id="features" className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96 }}>
       <style>{`
         .dispatch-feat-inner {
           max-width: 1080px;

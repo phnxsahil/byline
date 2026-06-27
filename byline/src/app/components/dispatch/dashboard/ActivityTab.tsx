@@ -269,7 +269,7 @@ export function ActivityTab({ isMobile, dispatches, onNavigate }: ActivityTabPro
             letterSpacing: "0.08em",
           }}
         >
-          {selectedDispatch ? "DECISION TRACE" : "Activity Log"}
+          {selectedDispatch ? "Agent Trace" : "Pipeline History"}
         </div>
 
         {!selectedDispatch && (
@@ -568,14 +568,21 @@ export function ActivityTab({ isMobile, dispatches, onNavigate }: ActivityTabPro
           {filteredDispatches.length === 0 ? (
             <div
               style={{
-                padding: 24,
+                padding: "40px 20px",
                 textAlign: "center",
-                color: "var(--by-text-2)",
+                color: "var(--by-text-3)",
                 fontFamily: "'Inter', system-ui, sans-serif",
                 fontSize: 13,
               }}
             >
-              No runs match the current filter.
+              {activeFilter === "all" ? (
+                <>
+                  <div style={{ fontSize: 14, color: "var(--by-text-2)", marginBottom: 8 }}>No pipeline runs yet</div>
+                  <div style={{ fontSize: 12, lineHeight: 1.65, maxWidth: 360, margin: "0 auto", color: "var(--by-text-3)" }}>
+                    Every milestone you dispatch will appear here with its platform targets, critic scores, and the full agent decision trace.
+                  </div>
+                </>
+              ) : "No runs match this filter."}
             </div>
           ) : (
             filteredDispatches.map((dispatch, index) => {

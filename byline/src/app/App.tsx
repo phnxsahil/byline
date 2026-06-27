@@ -44,20 +44,11 @@ export default function App() {
     return () => window.removeEventListener("hashchange", handleHashChange);
   }, []);
 
-  // Force dark mode on dashboard, restore user theme on landing/docs
+  // Force dark mode on dashboard; Navbar owns theme for landing/docs views
   useEffect(() => {
     if (view === "dashboard") {
       document.documentElement.setAttribute("data-theme", "dark");
       document.documentElement.classList.add("dark");
-    } else {
-      const saved = localStorage.getItem("byline-theme");
-      const initialTheme = saved === "light" || saved === "dark" ? saved : "light";
-      document.documentElement.setAttribute("data-theme", initialTheme);
-      if (initialTheme === "dark") {
-        document.documentElement.classList.add("dark");
-      } else {
-        document.documentElement.classList.remove("dark");
-      }
     }
   }, [view]);
 
@@ -90,7 +81,6 @@ export default function App() {
         backgroundColor: "var(--bg)",
         minHeight: "100vh",
         fontFamily: "'Inter', system-ui, sans-serif",
-        transition: "background-color 0.3s ease",
       }}
     >
       <style>{`
@@ -108,11 +98,6 @@ export default function App() {
         h1, h2, h3 {
           font-family: 'Space Grotesk', system-ui, sans-serif;
           letter-spacing: -0.04em;
-        }
-
-        /* Sharper inputs/buttons — editorial, not SaaS-rounded */
-        input, textarea, button, select {
-          border-radius: 2px !important;
         }
 
         /* Monospace labels keep their stack */
@@ -158,11 +143,11 @@ export default function App() {
 
           {/* ── Final CTA ──────────────────────────────────────────────────────── */}
           <CTASection />
+
+          {/* ── Footer ─────────────────────────────────────────────────────────── */}
+          <Footer />
         </>
       )}
-
-      {/* ── Footer ─────────────────────────────────────────────────────────── */}
-      <Footer />
     </div>
   );
 }

@@ -613,10 +613,19 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
   }));
 
   return (
-    <section style={{ height: "100vh", display: "flex", flexDirection: "column", background: "var(--by-bg)", color: "var(--by-text)", overflow: "hidden" }}>
+    <section style={{ height: "100vh", display: "flex", flexDirection: "column", background: "var(--by-bg)", color: "var(--by-text)", overflow: "hidden", overscrollBehavior: "contain" }}>
       {apiConnected === false && (
-        <div style={{ background: "#eab308", color: "#000", padding: "4px 16px", fontSize: 12, fontWeight: 600, textAlign: "center" }}>
-          OFFLINE MODE: Running with simulated data.
+        <div style={{
+          background: "rgba(245,158,11,0.08)",
+          borderBottom: "0.5px solid rgba(245,158,11,0.2)",
+          color: "rgba(245,158,11,0.9)",
+          padding: "5px 16px",
+          fontSize: 11,
+          fontFamily: "'IBM Plex Mono', monospace",
+          textAlign: "center",
+          letterSpacing: "0.02em",
+        }}>
+          demo mode — simulated data. connect the backend to use live pipeline.
         </div>
       )}
       <TopBar
@@ -636,15 +645,14 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
         }}
       />
 
-      <article style={{ flex: 1, display: "flex", overflow: "hidden", position: "relative" }}>
+      <article style={{ flex: 1, display: "flex", overflow: "hidden", position: "relative", overscrollBehavior: "contain" }}>
+
         {isMobile && mobileMenuOpen && (
           <div
             style={{
               position: "fixed", inset: 0, zIndex: 60,
               display: "flex",
-              backgroundColor: "rgba(0,0,0,0.55)",
-              backdropFilter: "blur(4px)",
-              WebkitBackdropFilter: "blur(4px)",
+              backgroundColor: "rgba(0,0,0,0.6)",
             }}
           >
             <div
@@ -785,13 +793,13 @@ function LeftSidebarNavigation({
                 display: "flex", alignItems: "center", gap: 12,
                 width: "100%", height: 40, padding: "0 16px",
                 border: "none",
-                background: isActive ? "color-mix(in srgb, var(--by-accent) 8%, transparent)" : "transparent",
+                background: isActive ? "rgba(232,94,44,0.07)" : "transparent",
                 borderLeft: "2px solid " + (isActive ? "var(--by-accent)" : "transparent"),
                 cursor: "pointer", textAlign: "left",
                 color: isActive ? "var(--by-text)" : "var(--by-text-2)",
                 fontFamily: "'Inter', sans-serif", fontSize: 13,
                 fontWeight: isActive ? 500 : 400,
-                transition: "all 150ms ease",
+                transition: "color 120ms ease, background 120ms ease, border-color 120ms ease",
                 boxSizing: "border-box",
               }}
               onMouseEnter={(e) => {

@@ -45,15 +45,16 @@ export function DeskTab({
   if (!activeDispatch) {
     return (
       <div style={{ flex: 1, display: "grid", placeItems: "center", padding: 24, background: "var(--by-bg)" }}>
-        <div style={{ maxWidth: 520, width: "100%", padding: 24, borderRadius: 8, background: "var(--by-bg-2)", border: "0.5px solid var(--by-border)", textAlign: "center" }}>
-          <div style={{ fontFamily: "var(--by-font-mono), monospace", fontSize: 10, color: "var(--by-text-3)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
+        <div style={{ maxWidth: 480, width: "100%", textAlign: "center" }}>
+          <div style={{ fontSize: 32, marginBottom: 12, opacity: 0.15 }}>✦</div>
+          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--by-text-3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
             The Desk
           </div>
-          <div style={{ marginTop: 12, fontFamily: "var(--by-font-display), sans-serif", fontSize: 18, color: "var(--by-text)", fontWeight: 600 }}>
-            No drafts yet
+          <div style={{ fontSize: 16, color: "var(--by-text)", fontWeight: 500, marginBottom: 8 }}>
+            No drafts to review yet
           </div>
-          <p style={{ marginTop: 10, color: "var(--by-text-2)", fontSize: 13, lineHeight: 1.65 }}>
-            Run a pipeline from the Overview tab or search palette to evaluate a milestone and view the drafts here.
+          <p style={{ color: "var(--by-text-2)", fontSize: 13, lineHeight: 1.65, maxWidth: 360, margin: "0 auto" }}>
+            Run a pipeline from the <strong>Overview</strong> tab or hit <kbd style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, padding: "2px 5px", border: "0.5px solid var(--by-border)", borderRadius: 3 }}>⌘K</kbd> to dispatch a milestone. Your drafts will appear here.
           </p>
         </div>
       </div>
@@ -95,10 +96,52 @@ export function DeskTab({
         padding: isMobile ? "16px" : "24px",
         display: "flex",
         flexDirection: "column",
-        gap: 16,
+        gap: 14,
         background: "var(--by-bg)",
       }}
     >
+      {/* Dispatch context header */}
+      <div
+        style={{
+          padding: "12px 16px",
+          background: "var(--by-bg-2)",
+          border: "0.5px solid var(--by-border)",
+          borderRadius: 6,
+          display: "flex",
+          alignItems: "flex-start",
+          gap: 12,
+          flexWrap: "wrap",
+        }}
+      >
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--by-text-3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 5 }}>
+            Reviewing milestone
+          </div>
+          <div style={{ fontSize: 13, color: "var(--by-text)", lineHeight: 1.5, fontFamily: "'Inter', sans-serif" }}>
+            {activeDispatch.body}
+          </div>
+        </div>
+        <div style={{ display: "flex", gap: 5, flexWrap: "wrap", flexShrink: 0 }}>
+          {activeDispatch.stamps.map(stamp => (
+            <span
+              key={stamp.platform}
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 9,
+                padding: "3px 7px",
+                borderRadius: 999,
+                border: "0.5px solid var(--by-border)",
+                color: stamp.status === "ready" ? "var(--by-green)" : "var(--by-text-3)",
+                background: stamp.status === "ready" ? "rgba(63,185,80,0.08)" : "transparent",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+              }}
+            >
+              {stamp.platform}
+            </span>
+          ))}
+        </div>
+      </div>
       <div
         style={{
           display: "grid",

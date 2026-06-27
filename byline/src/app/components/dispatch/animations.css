@@ -19,20 +19,21 @@
 /* Base state: hidden. Applied to every .dispatch-term-line */
 .dispatch-term-line {
   opacity: 0;
-  animation: dispatch-fade-up 0.35s ease-out forwards;
+  animation: dispatch-fade-up 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
 }
 
-/* Stagger by line index — 250ms between each */
-.dispatch-term-line-0 { animation-delay: 0.50s; }
-.dispatch-term-line-1 { animation-delay: 0.75s; }
-.dispatch-term-line-2 { animation-delay: 1.00s; }
-.dispatch-term-line-3 { animation-delay: 1.25s; }
-.dispatch-term-line-4 { animation-delay: 1.50s; }
+/* Stagger by line index — 200ms between each */
+.dispatch-term-line-0 { animation-delay: 0.45s; }
+.dispatch-term-line-1 { animation-delay: 0.65s; }
+.dispatch-term-line-2 { animation-delay: 0.85s; }
+.dispatch-term-line-3 { animation-delay: 1.05s; }
+.dispatch-term-line-4 { animation-delay: 1.25s; }
 
 /* Cursor fade-in after last line */
 .dispatch-term-cursor {
   opacity: 0;
-  animation: dispatch-fade-up 0.2s ease-out 1.75s forwards;
+  animation: dispatch-fade-up 0.18s ease-out 1.5s forwards;
 }
 
 
@@ -40,10 +41,11 @@
 
 .dispatch-reveal {
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(10px);
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
+  contain: layout;
 }
 
 .dispatch-reveal.visible {
@@ -56,9 +58,9 @@
 
 .dispatch-bento-card {
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(8px);
+  transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
@@ -102,16 +104,17 @@
 /* ── 5. CTA button hover ─────────────────────────────────────────────────── */
 
 .dispatch-cta-btn {
-  transition: background-color 0.15s ease, transform 0.15s ease;
+  transition: background-color 0.12s ease, transform 0.12s ease;
+  will-change: transform;
 }
 
 .dispatch-cta-btn:hover {
   background-color: #D14E23 !important;
-  transform: scale(1.02);
+  transform: scale(1.015);
 }
 
 .dispatch-cta-btn:active {
-  transform: scale(0.99);
+  transform: scale(0.985);
 }
 
 

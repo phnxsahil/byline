@@ -57,8 +57,9 @@ function ProblemCard({
         minHeight: 180,
         border: `0.5px solid ${hov ? "var(--text-primary)" : "var(--border)"}`,
         transform: hov ? "translateY(-2px)" : "translateY(0)",
-        boxShadow: hov ? "0 8px 20px rgba(15,15,13,0.04)" : "none",
-        transition: "all 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+        boxShadow: hov ? "0 8px 20px rgba(15,15,13,0.05)" : "none",
+        transition: "transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.15s ease",
+        willChange: "transform",
       }}
     >
       <Icon size={18} color="#E85E2C" stroke={1.75} />
@@ -72,7 +73,7 @@ function ProblemCard({
             letterSpacing: "-0.01em",
             lineHeight: 1.3,
             marginBottom: 6,
-            transition: "color 0.2s ease",
+            transition: "color 0.15s ease",
           }}
         >
           {title}
@@ -84,7 +85,7 @@ function ProblemCard({
             fontWeight: 400,
             color: "var(--text-secondary)",
             lineHeight: 1.6,
-            transition: "color 0.2s ease",
+            transition: "color 0.15s ease",
           }}
         >
           {body}
@@ -98,7 +99,7 @@ function ProblemCard({
 
 export function ProblemSection() {
   return (
-    <section className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96, transition: "background-color 0.3s ease" }}>
+    <section className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96 }}>
       <style>{`
         .dispatch-problem-inner {
           max-width: 1080px;

@@ -847,22 +847,22 @@ export function DemoSection() {
   const [activeTab, setActiveTab] = useState<Platform>("LinkedIn");
   // "animKey" increments on tab change — React re-mounts DraftContent, triggering CSS in-animation
   const [animKey, setAnimKey] = useState(0);
-
+ 
   // Dispatch button: idle | loading | done
   const [dispatchState, setDispatchState] = useState<"idle" | "loading" | "done">("idle");
   const dispatchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
+ 
   // Approve & Post button: idle | posted
   const [approveState, setApproveState] = useState<"idle" | "posted">("idle");
   const approveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
+ 
   const [milestone, setMilestone] = useState(
     "Shipped semantic search on fltrd.tech using pgvector. Took 3 days. The tricky part was chunking strategy, not the embeddings."
   );
-
+ 
   const [drafts, setDrafts] = useState<Record<Platform, Draft>>(DRAFTS);
   const [loadingStep, setLoadingStep] = useState(0);
-
+ 
   const handleTabChange = (p: Platform) => {
     if (p === activeTab) return;
     setActiveTab(p);
@@ -870,37 +870,37 @@ export function DemoSection() {
     // Reset approve state when switching tabs
     setApproveState("idle");
   };
-
+ 
   const handleDispatch = () => {
     if (dispatchState !== "idle") return;
     setDispatchState("loading");
     setLoadingStep(0);
-
+ 
     const t1 = setTimeout(() => setLoadingStep(1), 400);
     const t2 = setTimeout(() => setLoadingStep(2), 850);
     const t3 = setTimeout(() => setLoadingStep(3), 1300);
-
+ 
     dispatchTimer.current = setTimeout(() => {
       const generated = generateDraftsForMilestone(milestone);
       setDrafts(generated);
       setDispatchState("done");
       setAnimKey((k) => k + 1);
       setApproveState("idle");
-
+ 
       dispatchTimer.current = setTimeout(() => setDispatchState("idle"), 1500);
     }, 1800);
   };
-
+ 
   const handleApprove = () => {
     if (approveState !== "idle") return;
     setApproveState("posted");
     approveTimer.current = setTimeout(() => setApproveState("idle"), 2000);
   };
-
+ 
   const dispatching = dispatchState === "loading";
   const draft = drafts[activeTab];
   return (
-    <section id="demo" className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96, transition: "background-color 0.3s ease" }}>
+    <section id="demo" className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96 }}>
       <style>{`
         .dispatch-demo-inner {
           max-width: 1080px;
@@ -1071,7 +1071,7 @@ export function DemoSection() {
             boxShadow:
               "0 2px 4px rgba(15,15,13,0.04), 0 16px 48px rgba(15,15,13,0.14), 0 48px 80px rgba(15,15,13,0.06)",
             border: "0.5px solid var(--border)",
-            transition: "background-color 0.3s ease, border-color 0.3s ease",
+            transition: "border-color 0.15s ease",
           }}
         >
           <TitleBar />

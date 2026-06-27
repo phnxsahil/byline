@@ -77,7 +77,8 @@ function SelfHostedCard() {
         flexDirection: "column",
         gap: 0,
         boxShadow: "0 0 0 4px rgba(232,94,44,0.06), 0 4px 24px rgba(15,15,13,0.04)",
-        transition: "all 0.3s ease",
+        transition: "border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s var(--by-ease)",
+        willChange: "transform",
       }}
     >
       {/* "MOST POPULAR" badge — top-right */}
@@ -226,8 +227,9 @@ function CloudCard() {
         padding: "28px 24px 24px",
         display: "flex",
         flexDirection: "column",
-        gap: 0,
-        transition: "all 0.3s ease",
+        boxShadow: "none",
+        transition: "border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s var(--by-ease)",
+        willChange: "transform",
       }}
     >
       {/* "COMING SOON" badge */}
@@ -335,7 +337,7 @@ function CloudCard() {
           border: "0.5px solid var(--by-border)",
           borderRadius: 8,
           textDecoration: "none",
-          transition: "all 0.12s ease",
+          transition: "background-color 0.12s ease",
           backgroundColor: hov ? "var(--by-bg-3)" : "transparent",
           boxSizing: "border-box",
         } as React.CSSProperties}
@@ -362,7 +364,7 @@ function CloudCard() {
 
 export function PricingSection() {
   return (
-    <section id="pricing" className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96, transition: "background-color 0.3s ease" }}>
+    <section id="pricing" className="dispatch-reveal" style={{ backgroundColor: "var(--bg)", paddingBottom: 96 }}>
       <style>{`
         .dispatch-pricing-inner {
           max-width: 1080px;
@@ -396,7 +398,7 @@ export function PricingSection() {
             fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 10,
             fontWeight: 400,
-            color: "var(--by-text-2)",
+            color: "var(--text-secondary)",
             opacity: 0.7,
             letterSpacing: "0.12em",
             textTransform: "uppercase",
@@ -413,7 +415,7 @@ export function PricingSection() {
             fontFamily: "Space Grotesk, system-ui, sans-serif",
             fontSize: 28,
             fontWeight: 500,
-            color: "var(--by-text)",
+            color: "var(--text-primary)",
             letterSpacing: "-0.02em",
             lineHeight: 1.2,
             margin: "0 0 40px",
@@ -437,7 +439,7 @@ export function PricingSection() {
             fontFamily: "'Inter', system-ui, sans-serif",
             fontSize: 12,
             fontWeight: 400,
-            color: "var(--by-text-2)",
+            color: "var(--text-secondary)",
             opacity: 0.7,
             lineHeight: 1.6,
             textAlign: "center",

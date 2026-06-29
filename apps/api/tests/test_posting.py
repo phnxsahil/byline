@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import pytest
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock
 from uuid import uuid4
 from fastapi.testclient import TestClient
 
 from apps.api.main import app
+from apps.api.db.session import get_session
 from apps.api.services.posting import reddit_guardrail
-from apps.api.db.models import Draft
+from apps.api.db.models import Draft, Outlet
 
 client = TestClient(app)
 
@@ -20,64 +21,76 @@ def test_reddit_guardrail():
 
 
 def test_posting_mock_linkedin():
-    # Test linkedin mock posting (when outlet is not connected)
-    # We patch the DB get and execute calls to simulate loading the draft and outlet
-    with patch("apps.api.services.posting.session.get") as mock_get, \
-         patch("apps.api.services.posting.session.execute") as mock_execute:
-        
-        # Mock Draft
-        mock_draft = Draft(
-            id=uuid4(),
-            platform="linkedin",
-            body="Test LinkedIn post content",
-            status="draft",
-        )
-        mock_get.return_value = mock_draft
+    # Setup mock objects
+    mock_draft = Draft(
+        id=uuid4(),
+        platform="linkedin",
+        body="Test LinkedIn post content",
+        status="draft",
+    )
+    
+    mock_outlet = Outlet(
+        platform="linkedin",
+        is_connected=False,
+    )
 
-        # Mock Outlet (not connected)
-        mock_outlet_result = AsyncMock()
-        mock_outlet_result.scalar_one_or_none.return_value = None
-        mock_execute.return_value = mock_outlet_result
+    # Setup mock session
+    mock_session = AsyncMock()
+    mock_session.get.return_value = mock_draft
+    
+    mock_result = AsyncMock()
+    mock_result.scalar_one_or_none.return_value = mock_outlet
+    mock_session.execute.return_value = mock_result
 
-        # Run patch route
-        with patch("apps.api.routers.drafts.patch_draft") as mock_patch_draft, \
-             patch("apps.api.services.posting.session.commit") as mock_commit, \
-             patch("apps.api.services.posting.session.refresh") as mock_refresh:
-            
-            mock_patch_draft.return_value = mock_draft
-            
-            # Request update to approved status
-            response = client.patch(f"/drafts/{mock_draft.id}", json={"status": "approved"})
-            assert response.status_code == 200
-            data = response.json()
-            assert data["status"] == "posted"
-            assert mock_draft.composio_post_id.startswith("mock-linkedin-post-")
+    async def override_get_session():
+        yield mock_session
+
+    # Apply dependency override
+    app.dependency_overrides[get_session] = override_get_session
+
+    try:
+        response = client.patch(f"/drafts/{mock_draft.id}", json={"status": "approved"})
+        assert response.status_code == 200
+        data = response.json()
+        assert data["status"] == "posted"
+        assert mock_draft.composio_post_id.startswith("mock-linkedin-post-")
+        mock_session.commit.assert_called()
+    finally:
+        app.dependency_overrides.clear()
 
 
 def test_posting_reddit_guardrail_blocking():
-    # Test reddit guardrail rejection in the endpoint update
-    with patch("apps.api.services.posting.session.get") as mock_get, \
-         patch("apps.api.services.posting.session.execute") as mock_execute:
-        
-        # Mock promotional Reddit Draft
-        mock_draft = Draft(
-            id=uuid4(),
-            platform="reddit",
-            body="Check out my new app called Byline, sign up here!",
-            reddit_title="Launched Byline",
-            status="draft",
-        )
-        mock_get.return_value = mock_draft
+    # Setup mock objects
+    mock_draft = Draft(
+        id=uuid4(),
+        platform="reddit",
+        body="Check out my new app called Byline, sign up here!",
+        reddit_title="Launched Byline",
+        status="draft",
+    )
+    
+    mock_outlet = Outlet(
+        platform="reddit",
+        is_connected=False,
+    )
 
-        # Mock Outlet (not connected)
-        mock_outlet_result = AsyncMock()
-        mock_outlet_result.scalar_one_or_none.return_value = None
-        mock_execute.return_value = mock_outlet_result
+    # Setup mock session
+    mock_session = AsyncMock()
+    mock_session.get.return_value = mock_draft
+    
+    mock_result = AsyncMock()
+    mock_result.scalar_one_or_none.return_value = mock_outlet
+    mock_session.execute.return_value = mock_result
 
-        with patch("apps.api.routers.drafts.patch_draft") as mock_patch_draft:
-            mock_patch_draft.return_value = mock_draft
-            
-            # Request update to approved status (should trigger 400 validation error)
-            response = client.patch(f"/drafts/{mock_draft.id}", json={"status": "approved"})
-            assert response.status_code == 400
-            assert "Reddit promotional guardrail triggered" in response.json()["detail"]
+    async def override_get_session():
+        yield mock_session
+
+    # Apply dependency override
+    app.dependency_overrides[get_session] = override_get_session
+
+    try:
+        response = client.patch(f"/drafts/{mock_draft.id}", json={"status": "approved"})
+        assert response.status_code == 400
+        assert "Reddit promotional guardrail triggered" in response.json()["detail"]
+    finally:
+        app.dependency_overrides.clear()

@@ -1,27 +1,43 @@
 from __future__ import annotations
 
 import pytest
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 from uuid import uuid4
 from fastapi.testclient import TestClient
 
 from apps.api.main import app
 from apps.api.config import get_settings
+from apps.api.db.session import get_session
 
 client = TestClient(app)
 
 
 def test_extract_voice_profile_fallback():
-    # Verify extraction route works and hits fallback if model fails
-    payload = {
-        "raw_posts": "shipped a new feature today.\nit was fun.",
-        "platform": "all"
-    }
-    response = client.post("/voice-profile/extract", json=payload)
-    assert response.status_code == 200
-    data = response.json()
-    assert data["platform"] == "all"
-    assert "Representative lines" in data["body"]
+    # Mock session to avoid real DB access
+    mock_session = AsyncMock()
+    # get_active_voice_profile returns None
+    mock_execute_result = AsyncMock()
+    mock_execute_result.scalar_one_or_none.return_value = None
+    mock_session.execute.return_value = mock_execute_result
+
+    async def override_get_session():
+        yield mock_session
+
+    app.dependency_overrides[get_session] = override_get_session
+
+    try:
+        payload = {
+            "raw_posts": "shipped a new feature today.\nit was fun.",
+            "platform": "all"
+        }
+        response = client.post("/voice-profile/extract", json=payload)
+        assert response.status_code == 200
+        data = response.json()
+        assert data["platform"] == "all"
+        assert "Representative lines" in data["body"]
+        mock_session.commit.assert_called()
+    finally:
+        app.dependency_overrides.clear()
 
 
 @patch("openai.resources.audio.transcriptions.AsyncTranscriptions.create", new_callable=AsyncMock)
@@ -37,14 +53,22 @@ def test_post_voice_note_mocked_whisper(mock_whisper_create):
     original_key = settings.openai_api_key
     settings.openai_api_key = "mocked_key"
 
+    # Setup mock session to avoid real DB access
+    mock_session = AsyncMock()
+    
+    # Mock create_dispatch to return a mock dispatch
+    mock_dispatch = MagicMock()
+    mock_dispatch.id = uuid4()
+
+    async def override_get_session():
+        yield mock_session
+
+    app.dependency_overrides[get_session] = override_get_session
+
     try:
-        # Create a dummy project UUID
         project_id = str(uuid4())
 
-        # Mock the create_dispatch function to avoid DB connection issues in simple unit test
-        with patch("apps.api.routers.voice.create_dispatch") as mock_create_dispatch:
-            mock_dispatch = AsyncMock()
-            mock_dispatch.id = uuid4()
+        with patch("apps.api.routers.voice.create_dispatch", new_callable=AsyncMock) as mock_create_dispatch:
             mock_create_dispatch.return_value = mock_dispatch
 
             files = {"file": ("test.mp3", b"dummy_audio_bytes", "audio/mpeg")}
@@ -57,3 +81,4 @@ def test_post_voice_note_mocked_whisper(mock_whisper_create):
             assert json_data["transcription"] == "this is a mocked transcription from whisper"
     finally:
         settings.openai_api_key = original_key
+        app.dependency_overrides.clear()

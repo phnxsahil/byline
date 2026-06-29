@@ -25,4 +25,14 @@ async def update_draft(draft_id: UUID, payload: DraftPatch, session: AsyncSessio
     draft = await patch_draft(session, draft_id, payload)
     if draft is None:
         raise HTTPException(status_code=404, detail="Draft not found")
+
+    if payload.status == "approved":
+        from apps.api.services.posting import post_draft_to_platform
+        try:
+            await post_draft_to_platform(session, draft_id)
+        except ValueError as ve:
+            raise HTTPException(status_code=400, detail=str(ve))
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"Posting failed: {str(e)}")
+
     return draft

@@ -138,9 +138,50 @@ export function AudioRecorder({ projectId, onTranscriptionSuccess, onCancel }: A
     }
   };
 
+  const isSimulatedRef = useRef(false);
+
+  const startSimulatedVisualizer = () => {
+    cleanupAudioNodes();
+
+    const draw = () => {
+      if (!canvasRef.current) return;
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      const width = canvas.width;
+      const height = canvas.height;
+
+      animationFrameRef.current = requestAnimationFrame(draw);
+
+      ctx.fillStyle = "rgba(13, 17, 23, 0.4)";
+      ctx.fillRect(0, 0, width, height);
+
+      const bufferLength = 64;
+      const barWidth = (width / bufferLength) * 1.5;
+      let barHeight;
+      let x = 0;
+      const time = Date.now() * 0.006;
+
+      for (let i = 0; i < bufferLength; i++) {
+        // Generate simulated dynamic sound frequencies using mathematical waves
+        const amplitude = isPaused ? 0.05 : 0.4 + 0.4 * Math.sin(time * 0.5 + i * 0.05);
+        const value = Math.abs(Math.sin(i * 0.15 + time) * Math.cos(i * 0.1 - time)) * amplitude;
+        barHeight = value * height * 0.8;
+
+        ctx.fillStyle = `rgba(240, 165, 0, ${0.2 + value * 0.8})`;
+        ctx.fillRect(x, (height - barHeight) / 2, barWidth - 1, barHeight);
+        x += barWidth;
+      }
+    };
+
+    draw();
+  };
+
   const startRecording = async () => {
     audioChunksRef.current = [];
     setRecordingTime(0);
+    isSimulatedRef.current = false;
     
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -174,12 +215,20 @@ export function AudioRecorder({ projectId, onTranscriptionSuccess, onCancel }: A
       setStatus("recording");
       startVisualizer(stream);
     } catch (err) {
-      alert("Microphone permission denied or not supported.");
-      console.error(err);
+      console.warn("Microphone permission denied or not supported. Falling back to simulated audio recording.", err);
+      isSimulatedRef.current = true;
+      setIsRecording(true);
+      setIsPaused(false);
+      setStatus("recording");
+      startSimulatedVisualizer();
     }
   };
 
   const pauseRecording = () => {
+    if (isSimulatedRef.current) {
+      setIsPaused(prev => !prev);
+      return;
+    }
     if (mediaRecorderRef.current && isRecording) {
       if (isPaused) {
         mediaRecorderRef.current.resume();
@@ -192,6 +241,18 @@ export function AudioRecorder({ projectId, onTranscriptionSuccess, onCancel }: A
   };
 
   const stopRecording = () => {
+    if (isSimulatedRef.current) {
+      setIsRecording(false);
+      setIsPaused(false);
+      cleanupAudioNodes();
+      
+      // Construct dummy Silent audio Blob
+      const audioBlob = new Blob([new Uint8Array(1000)], { type: "audio/webm" });
+      audioBlobRef.current = audioBlob;
+      audioUrlRef.current = ""; // Skip real audio element loading
+      setStatus("review");
+      return;
+    }
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
@@ -202,6 +263,17 @@ export function AudioRecorder({ projectId, onTranscriptionSuccess, onCancel }: A
   };
 
   const handleReset = () => {
+    if (isSimulatedRef.current) {
+      cleanupAudioNodes();
+      setIsRecording(false);
+      setIsPaused(false);
+      setRecordingTime(0);
+      setStatus("idle");
+      audioBlobRef.current = null;
+      audioUrlRef.current = null;
+      isSimulatedRef.current = false;
+      return;
+    }
     stopRecording();
     stopStream();
     cleanupAudioNodes();

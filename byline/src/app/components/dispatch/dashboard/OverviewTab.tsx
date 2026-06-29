@@ -7,11 +7,14 @@ import {
   IconGitBranch,
   IconSparkles,
   IconUsers,
+  IconMicrophone,
 } from "@tabler/icons-react";
 import { type DispatchRead, type Project } from "../../../api";
+import { AudioRecorder } from "./AudioRecorder";
 
 interface OverviewTabProps {
   onPublish: (text: string) => void;
+  onVoicePublish: (transcription: string, dispatchId: string) => void;
   isMobile: boolean;
   projects: Project[];
   activeProject: Project | null;
@@ -28,6 +31,7 @@ const WATCHER = [
 
 export function OverviewTab({
   onPublish,
+  onVoicePublish,
   isMobile,
   projects,
   activeProject,
@@ -38,6 +42,7 @@ export function OverviewTab({
   const [input, setInput] = React.useState(
     "shipped a cleaner landing page for byline and the real challenge was making the product feel obvious in five seconds"
   );
+  const [isRecordingMode, setIsRecordingMode] = React.useState(false);
 
   const stats = React.useMemo(() => {
     const totalDispatches = dispatches.length;
@@ -155,63 +160,97 @@ export function OverviewTab({
               >
                 What happened? (be specific)
               </div>
-            <textarea
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              rows={4}
-              style={{
-                width: "100%",
-                background: "rgba(255,255,255,0.025)",
-                border: "0.5px solid rgba(255,255,255,0.08)",
-                borderRadius: 4,
-                padding: "12px 14px",
-                color: "var(--by-text)",
-                fontFamily: "var(--by-font-body), sans-serif",
-                fontSize: 14,
-                resize: "vertical",
-                outline: "none",
-                lineHeight: 1.65,
-                boxSizing: "border-box",
-              }}
-            />
-              <div
-                style={{
-                  marginTop: 12,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: 12,
-                  flexWrap: "wrap",
+            {isRecordingMode ? (
+              <AudioRecorder
+                projectId={activeProject?.id || ""}
+                onTranscriptionSuccess={(transcription, dispatchId) => {
+                  onVoicePublish(transcription, dispatchId);
                 }}
-              >
-                <span style={{ color: "var(--by-text-3)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}>
-                  more texture → better angle selection
-                </span>
-                <button
-                  onClick={() => {
-                    if (input.trim()) {
-                      onPublish(input.trim());
-                    }
-                  }}
+                onCancel={() => setIsRecordingMode(false)}
+              />
+            ) : (
+              <>
+                <textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  rows={4}
                   style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontSize: 11,
-                    padding: "9px 14px",
-                    background: "var(--by-accent)",
-                    color: "#F5F2EC",
-                    border: "none",
+                    width: "100%",
+                    background: "rgba(255,255,255,0.025)",
+                    border: "0.5px solid rgba(255,255,255,0.08)",
                     borderRadius: 4,
-                    cursor: "pointer",
-                    display: "inline-flex",
+                    padding: "12px 14px",
+                    color: "var(--by-text)",
+                    fontFamily: "var(--by-font-body), sans-serif",
+                    fontSize: 14,
+                    resize: "vertical",
+                    outline: "none",
+                    lineHeight: 1.65,
+                    boxSizing: "border-box",
+                  }}
+                />
+                <div
+                  style={{
+                    marginTop: 12,
+                    display: "flex",
                     alignItems: "center",
-                    gap: 6,
-                    transition: "opacity 120ms ease",
+                    justifyContent: "space-between",
+                    gap: 12,
+                    flexWrap: "wrap",
                   }}
                 >
-                  <IconBolt size={12} stroke={2} />
-                  run pipeline
-                </button>
-              </div>
+                  <span style={{ color: "var(--by-text-3)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}>
+                    more texture → better angle selection
+                  </span>
+                  <div style={{ display: "flex", gap: 10 }}>
+                    <button
+                      onClick={() => setIsRecordingMode(true)}
+                      style={{
+                        fontFamily: "'IBM Plex Mono', monospace",
+                        fontSize: 11,
+                        padding: "9px 14px",
+                        background: "rgba(255, 255, 255, 0.03)",
+                        color: "var(--by-text-2)",
+                        border: "0.5px solid rgba(255,255,255,0.08)",
+                        borderRadius: 4,
+                        cursor: "pointer",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        transition: "background 120ms ease",
+                      }}
+                    >
+                      <IconMicrophone size={12} stroke={2} />
+                      record voice note
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (input.trim()) {
+                          onPublish(input.trim());
+                        }
+                      }}
+                      style={{
+                        fontFamily: "'IBM Plex Mono', monospace",
+                        fontSize: 11,
+                        padding: "9px 14px",
+                        background: "var(--by-accent)",
+                        color: "#F5F2EC",
+                        border: "none",
+                        borderRadius: 4,
+                        cursor: "pointer",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: 6,
+                        transition: "opacity 120ms ease",
+                      }}
+                    >
+                      <IconBolt size={12} stroke={2} />
+                      run pipeline
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
             </div>
         </div>
 

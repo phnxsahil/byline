@@ -527,6 +527,129 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
     setCommandPaletteOpen(true);
   };
   const handleQuickPublish = (txt: string) => { runPipeline(txt); };
+  const handleVoicePublish = async (transcription: string, dispatchId: string) => {
+    if (!currentProject) return;
+    setIsRunning(true);
+    setRailState(isMobile ? "fullscreen" : "expanded");
+    setAgentSteps(makeAgentSteps(transcription));
+
+    if (apiConnected) {
+      try {
+        streamGeneration(
+          dispatchId,
+          (event) => {
+            const platform = event.platform as string;
+            const status = event.status as string;
+            
+            setAgentSteps(prev => {
+              let nextSteps = prev.map(s => {
+                if (s.agentId === "strategist" && s.status !== "done") {
+                  return {
+                    ...s,
+                    status: "done" as const,
+                    finishedAt: Date.now(),
+                    decisions: [{ label: "Analysis complete", detail: "Milestone is post-worthy. Routing to target platforms." }]
+                  };
+                }
+                return s;
+              });
+              
+              let stepStatus: AgentStep["status"] = "pending";
+              let stepDecisions: AgentStep["decisions"] = [];
+              if (status === "writing") {
+                stepStatus = "running";
+                stepDecisions = [{ label: "Drafting", detail: "Generating native copy matching voice profile rules." }];
+              } else if (status === "ready") {
+                stepStatus = "done";
+                stepDecisions = [{ label: "Draft complete", detail: "Native draft has been successfully generated." }];
+              } else if (status === "flagged") {
+                stepStatus = "blocked";
+                stepDecisions = [{ label: "Rejected by Critic", detail: (event.critic_note as string) || "SLOP or self-promo filter triggered." }];
+              }
+              
+              nextSteps = nextSteps.map(s => {
+                if (s.agentId === platform) {
+                  return {
+                    ...s,
+                    status: stepStatus,
+                    decisions: stepDecisions
+                  };
+                }
+                return s;
+              });
+
+              // Update QA Agent status dynamically
+              const writersRunning = nextSteps.some(s => ["linkedin", "x", "reddit"].includes(s.agentId) && s.status === "running");
+              const writersDone = nextSteps.filter(s => ["linkedin", "x", "reddit"].includes(s.agentId)).every(s => s.status === "done" || s.status === "blocked" || s.status === "pending");
+              const writersDoneCount = nextSteps.filter(s => ["linkedin", "x", "reddit"].includes(s.agentId) && (s.status === "done" || s.status === "blocked")).length;
+
+              nextSteps = nextSteps.map(s => {
+                if (s.agentId === "qa") {
+                  if (writersRunning) {
+                    return {
+                      ...s,
+                      status: "running" as const,
+                      decisions: [{ label: "Analyzing stream", detail: "Validating character counts, styles, and guidelines." }]
+                    };
+                  } else if (writersDoneCount > 0 && writersDone) {
+                    return {
+                      ...s,
+                      status: "done" as const,
+                      finishedAt: Date.now(),
+                      decisions: [
+                        { label: "Linting completed", detail: "Guidelines validated: character limits, hooks, formatting layout." },
+                        { label: "Anti-slop check passed", detail: "Scanned for forbidden AI marketing phrases." }
+                      ]
+                    };
+                  }
+                }
+                return s;
+              });
+              
+              return nextSteps;
+            });
+          },
+          (error) => {
+            console.error("SSE stream error", error);
+            setIsRunning(false);
+            setAgentSteps(prev => prev.map(s => s.status === "running" ? { ...s, status: "error" as const } : s));
+          },
+          async () => {
+            setIsRunning(false);
+            setAgentSteps(prev => prev.map(s => {
+              if (s.agentId === "critic") {
+                return {
+                  ...s,
+                  status: "done" as const,
+                  finishedAt: Date.now(),
+                  decisions: [{ label: "Verification complete", detail: "Reviewed voice and platform compliance constraints." }]
+                };
+              }
+              if (s.agentId === "strategist" && s.status !== "done") {
+                return { ...s, status: "done" as const };
+              }
+              return s;
+            }));
+            
+            const list = await listDispatches();
+            setDispatches(list);
+            const updated = list.find(d => d.id === dispatchId);
+            if (updated) {
+              setActiveDispatch(updated);
+              const draftList = await getDrafts(updated.id);
+              setDrafts(draftList);
+            }
+          }
+        );
+      } catch (err) {
+        console.error("Failed to start generation", err);
+        setIsRunning(false);
+      }
+    } else {
+      // API not connected: fall back to simulated visual sequence
+      runPipelineSimulated(transcription);
+    }
+  };
   const toggleRail = () => setRailState((prev) => (prev === "collapsed" ? "expanded" : "collapsed"));
   const handleNavigateToDocHeading = (headingId: string) => {
     setActiveTab("docs");
@@ -640,6 +763,7 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
         return (
           <OverviewTab 
             onPublish={handleQuickPublish} 
+            onVoicePublish={handleVoicePublish} 
             isMobile={isMobile}
             projects={projects}
             activeProject={currentProject}

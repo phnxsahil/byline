@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
 from apps.api.config import get_settings
-from apps.api.routers import dispatches, drafts, outlets, projects, voice
+from apps.api.routers import dispatches, drafts, outlets, projects, voice, webhooks
 
 
 settings = get_settings()
@@ -24,6 +24,7 @@ app.include_router(dispatches.router)
 app.include_router(drafts.router)
 app.include_router(voice.router)
 app.include_router(outlets.router)
+app.include_router(webhooks.router)
 
 
 @app.get("/healthz")

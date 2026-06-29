@@ -23,6 +23,7 @@ app.include_router(projects.router)
 app.include_router(dispatches.router)
 app.include_router(drafts.router)
 app.include_router(voice.router)
+app.include_router(voice.voice_router)
 app.include_router(outlets.router)
 app.include_router(webhooks.router)
 

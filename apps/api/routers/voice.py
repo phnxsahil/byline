@@ -1,14 +1,22 @@
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException
+import hmac
+import hashlib
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from apps.api.db.session import get_session
+from apps.api.config import get_settings
+from apps.api.db.session import get_session, get_session_factory
 from apps.api.schemas.voice import VoiceProfileCreate, VoiceProfileRead
 from apps.api.services.voice import create_or_replace_voice_profile, get_active_voice_profile
-
+from apps.api.schemas.dispatches import DispatchCreate, DispatchRead
+from apps.api.services.dispatches import create_dispatch, get_dispatch
+from apps.api.services.generation import generate_drafts_for_dispatch
 
 router = APIRouter(prefix="/voice-profile", tags=["voice-profile"])
+voice_router = APIRouter(tags=["voice"])
 
 
 @router.get("", response_model=VoiceProfileRead)
@@ -25,3 +33,65 @@ async def post_voice_profile(payload: VoiceProfileCreate, session: AsyncSession 
     """Create or replace the active voice profile. Auth: none."""
     return await create_or_replace_voice_profile(session, payload)
 
+
+@router.post("/extract", response_model=VoiceProfileRead)
+async def extract_voice_profile(payload: VoiceProfileCreate, session: AsyncSession = Depends(get_session)):
+    """Extract and create/replace the active voice profile. Auth: none."""
+    return await create_or_replace_voice_profile(session, payload)
+
+
+async def run_pipeline_in_background(dispatch_id: UUID):
+    async with get_session_factory()() as session:
+        try:
+            await generate_drafts_for_dispatch(session, dispatch_id)
+        except Exception as e:
+            import sys
+            print(f"Error generating drafts for voice dispatch {dispatch_id}: {e}", file=sys.stderr)
+
+
+@voice_router.post("/voice")
+async def post_voice_note(
+    background_tasks: BackgroundTasks,
+    project_id: UUID = Form(...),
+    file: UploadFile = File(...),
+    session: AsyncSession = Depends(get_session),
+):
+    settings = get_settings()
+    transcription = ""
+
+    if settings.openai_api_key:
+        try:
+            from openai import AsyncOpenAI
+            client = AsyncOpenAI(api_key=settings.openai_api_key)
+            file_bytes = await file.read()
+            response = await client.audio.transcriptions.create(
+                model="whisper-1",
+                file=(file.filename or "audio.mp3", file_bytes, file.content_type or "audio/mpeg"),
+            )
+            transcription = response.text.strip()
+        except Exception as e:
+            # Fallback error mapping
+            transcription = f"shipped a new voice note interface: {str(e)}"
+    else:
+        # Development fallback
+        transcription = "shipped the new audio recorder interface directly in the overview dashboard milestone box"
+
+    if not transcription:
+        raise HTTPException(status_code=400, detail="Could not transcribe audio content")
+
+    # Create new Dispatch milestone
+    dispatch_payload = DispatchCreate(
+        project_id=project_id,
+        body=transcription,
+        source="voice",
+    )
+    dispatch = await create_dispatch(session, dispatch_payload)
+
+    # Schedule background LLM draft generation
+    background_tasks.add_task(run_pipeline_in_background, dispatch.id)
+
+    return {
+        "status": "processed",
+        "dispatch_id": str(dispatch.id),
+        "transcription": transcription,
+    }

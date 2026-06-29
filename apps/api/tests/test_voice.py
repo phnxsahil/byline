@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 from uuid import uuid4
+from datetime import datetime
 from fastapi.testclient import TestClient
 
 from apps.api.main import app
@@ -15,10 +16,18 @@ client = TestClient(app)
 def test_extract_voice_profile_fallback():
     # Mock session to avoid real DB access
     mock_session = AsyncMock()
-    # get_active_voice_profile returns None
-    mock_execute_result = AsyncMock()
+    # get_active_voice_profile returns None via MagicMock execute result
+    mock_execute_result = MagicMock()
     mock_execute_result.scalar_one_or_none.return_value = None
     mock_session.execute.return_value = mock_execute_result
+
+    # Custom mock refresh to populate database generated defaults
+    async def mock_refresh(instance):
+        instance.id = uuid4()
+        instance.generated_at = datetime.now()
+        instance.updated_at = datetime.now()
+
+    mock_session.refresh = mock_refresh
 
     async def override_get_session():
         yield mock_session

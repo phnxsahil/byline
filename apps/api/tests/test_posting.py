@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 from uuid import uuid4
+from datetime import datetime
 from fastapi.testclient import TestClient
 
 from apps.api.main import app
@@ -21,12 +22,15 @@ def test_reddit_guardrail():
 
 
 def test_posting_mock_linkedin():
-    # Setup mock objects
+    # Setup mock objects with all required schema fields
     mock_draft = Draft(
         id=uuid4(),
+        dispatch_id=uuid4(),
         platform="linkedin",
         body="Test LinkedIn post content",
         status="draft",
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
     )
     
     mock_outlet = Outlet(
@@ -38,9 +42,14 @@ def test_posting_mock_linkedin():
     mock_session = AsyncMock()
     mock_session.get.return_value = mock_draft
     
-    mock_result = AsyncMock()
+    mock_result = MagicMock()
     mock_result.scalar_one_or_none.return_value = mock_outlet
     mock_session.execute.return_value = mock_result
+
+    # Mock refresh to avoid leaving defaults unassigned
+    async def mock_refresh(instance):
+        pass
+    mock_session.refresh = mock_refresh
 
     async def override_get_session():
         yield mock_session
@@ -60,13 +69,17 @@ def test_posting_mock_linkedin():
 
 
 def test_posting_reddit_guardrail_blocking():
-    # Setup mock objects
+    # Setup mock objects with all required schema fields
     mock_draft = Draft(
         id=uuid4(),
+        dispatch_id=uuid4(),
         platform="reddit",
         body="Check out my new app called Byline, sign up here!",
         reddit_title="Launched Byline",
+        reddit_subreddit="SideProject",
         status="draft",
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
     )
     
     mock_outlet = Outlet(
@@ -78,7 +91,7 @@ def test_posting_reddit_guardrail_blocking():
     mock_session = AsyncMock()
     mock_session.get.return_value = mock_draft
     
-    mock_result = AsyncMock()
+    mock_result = MagicMock()
     mock_result.scalar_one_or_none.return_value = mock_outlet
     mock_session.execute.return_value = mock_result
 

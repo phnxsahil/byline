@@ -29,6 +29,7 @@ def test_posting_mock_linkedin():
         platform="linkedin",
         body="Test LinkedIn post content",
         status="draft",
+        generation=1,
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
@@ -42,6 +43,7 @@ def test_posting_mock_linkedin():
     mock_session = AsyncMock()
     mock_session.get.return_value = mock_draft
     
+    # Use MagicMock for synchronous query results returned by execute
     mock_result = MagicMock()
     mock_result.scalar_one_or_none.return_value = mock_outlet
     mock_session.execute.return_value = mock_result
@@ -78,6 +80,7 @@ def test_posting_reddit_guardrail_blocking():
         reddit_title="Launched Byline",
         reddit_subreddit="SideProject",
         status="draft",
+        generation=1,
         created_at=datetime.now(),
         updated_at=datetime.now(),
     )
@@ -91,6 +94,7 @@ def test_posting_reddit_guardrail_blocking():
     mock_session = AsyncMock()
     mock_session.get.return_value = mock_draft
     
+    # Use MagicMock for synchronous query results returned by execute
     mock_result = MagicMock()
     mock_result.scalar_one_or_none.return_value = mock_outlet
     mock_session.execute.return_value = mock_result

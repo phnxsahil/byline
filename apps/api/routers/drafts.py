@@ -31,8 +31,12 @@ async def update_draft(draft_id: UUID, payload: DraftPatch, session: AsyncSessio
         try:
             await post_draft_to_platform(session, draft_id)
         except ValueError as ve:
-            raise HTTPException(status_code=400, detail=str(ve))
+            import logging
+            logging.getLogger(__name__).error("Validation failed", exc_info=ve)
+            raise HTTPException(status_code=400, detail="Posting failed due to an integration error")
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Posting failed: {str(e)}")
+            import logging
+            logging.getLogger(__name__).error("Failed to post draft to platform", exc_info=e)
+            raise HTTPException(status_code=500, detail="Posting failed due to an integration error")
 
     return draft

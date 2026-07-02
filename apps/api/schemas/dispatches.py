@@ -13,6 +13,7 @@ class DispatchCreate(BaseModel):
     arc_id: UUID | None = None
     body: str
     source: str = "manual"
+    idempotency_key: str | None = None
 
 
 class StampState(BaseModel):

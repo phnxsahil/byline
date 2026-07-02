@@ -27,7 +27,8 @@ def normalize_repo_url(url: str | None) -> str:
     cleaned = url.strip().lower()
     cleaned = re.sub(r"^(https?://|git@)", "", cleaned)
     cleaned = re.sub(r"^github\.com[:/]", "", cleaned)
-    cleaned = re.sub(r"\.git$", "", cleaned)
+    cleaned = re.sub(r"\.git/?$", "", cleaned)
+    cleaned = cleaned.rstrip("/")
     return cleaned
 
 
@@ -54,7 +55,7 @@ async def verify_github_signature(
 ):
     settings = get_settings()
     if not settings.github_webhook_secret:
-        return
+        raise HTTPException(status_code=401, detail="Webhook secret is not configured")
     if not x_hub_signature_256:
         raise HTTPException(status_code=401, detail="X-Hub-Signature-256 header missing")
     body = await request.body()
@@ -123,10 +124,25 @@ async def github_webhook(
         first_line = commit_msg.splitlines()[0] if commit_msg else ""
         body = f"shipped: {first_line}" if not first_line.lower().startswith(("shipped", "feat")) else first_line
 
+        # Derive a stable idempotency key
+        commit_sha = commit.get("id", "")
+        delivery_id = request.headers.get("X-GitHub-Delivery", "")
+        idempotency_key = f"github-{commit_sha}" if commit_sha else f"github-delivery-{delivery_id}"
+
+        # Enforce uniqueness check
+        if idempotency_key:
+            stmt = select(Dispatch).where(Dispatch.idempotency_key == idempotency_key)
+            existing_result = await session.execute(stmt)
+            existing_dispatch = existing_result.scalar_one_or_none()
+            if existing_dispatch:
+                created_dispatches.append(str(existing_dispatch.id))
+                continue
+
         dispatch_payload = DispatchCreate(
             project_id=matched_project.id,
             body=body,
             source="github",
+            idempotency_key=idempotency_key,
         )
         dispatch = await create_dispatch(session, dispatch_payload)
         created_dispatches.append(str(dispatch.id))

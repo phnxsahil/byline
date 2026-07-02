@@ -17,6 +17,7 @@ async def create_dispatch(session: AsyncSession, payload: DispatchCreate) -> Dis
         arc_id=payload.arc_id,
         body=payload.body,
         source=payload.source,
+        idempotency_key=payload.idempotency_key,
         embedding=await embed_text(payload.body),
     )
     session.add(dispatch)

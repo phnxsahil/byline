@@ -54,6 +54,7 @@ class Dispatch(Base):
     arc_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), ForeignKey("narrative_arcs.id"))
     body: Mapped[str] = mapped_column(Text, nullable=False)
     source: Mapped[str] = mapped_column(Text, default="manual", nullable=False)
+    idempotency_key: Mapped[str | None] = mapped_column(Text, nullable=True, unique=True)
     is_post_worthy: Mapped[bool | None] = mapped_column(Boolean)
     hold_reason: Mapped[str | None] = mapped_column(Text)
     angle: Mapped[str | None] = mapped_column(Text)

@@ -28,6 +28,11 @@ async def post_draft_to_platform(session: AsyncSession, draft_id: UUID) -> str |
         logger.error(f"Draft {draft_id} not found.")
         return None
 
+    # Idempotency guard: if already posted, return the existing post ID
+    if draft.status == "posted":
+        logger.info(f"Draft {draft_id} is already posted. Returning existing post ID: {draft.composio_post_id}")
+        return draft.composio_post_id
+
     # Fetch corresponding outlet
     result = await session.execute(select(Outlet).where(Outlet.platform == draft.platform))
     outlet = result.scalar_one_or_none()
@@ -40,6 +45,9 @@ async def post_draft_to_platform(session: AsyncSession, draft_id: UUID) -> str |
         if draft.platform == "reddit":
             title = draft.reddit_title or "Shipped a new milestone"
             if not reddit_guardrail(draft.body, title):
+                draft.status = "draft"
+                await session.commit()
+                await session.refresh(draft)
                 raise ValueError("Reddit promotional guardrail triggered. Post blocked.")
 
         post_id = f"mock-{draft.platform}-post-{int(datetime.now().timestamp())}"
@@ -57,37 +65,45 @@ async def post_draft_to_platform(session: AsyncSession, draft_id: UUID) -> str |
         if draft.platform == "threads":
             # Threads Meta API directly
             # Threads access token can be saved in the outlet display_name or settings (as a fallback)
-            # In a real app, it is stored in settings or a credential table.
-            token = getattr(settings, "threads_access_token", None) or (outlet.composio_entity_id)
+            token = getattr(settings, "threads_access_token", None) or outlet.display_name
             if not token:
                 raise ValueError("Threads access token not configured.")
 
-            async with httpx.AsyncClient() as client:
-                # 1. Create container
-                container_url = f"https://graph.threads.net/v1.0/me/threads"
-                res = await client.post(
-                    container_url,
-                    params={
-                        "media_type": "TEXT",
-                        "text": draft.body,
-                        "access_token": token,
-                    }
-                )
-                res.raise_for_status()
-                container_data = res.json()
-                creation_id = container_data["id"]
+            try:
+                async with httpx.AsyncClient() as client:
+                    # 1. Create container
+                    container_url = "https://graph.threads.net/v1.0/me/threads"
+                    res = await client.post(
+                        container_url,
+                        params={
+                            "media_type": "TEXT",
+                            "text": draft.body,
+                            "access_token": token,
+                        }
+                    )
+                    res.raise_for_status()
+                    container_data = res.json()
+                    creation_id = container_data["id"]
 
-                # 2. Publish container
-                publish_url = f"https://graph.threads.net/v1.0/me/threads_publish"
-                res_publish = await client.post(
-                    publish_url,
-                    params={
-                        "creation_id": creation_id,
-                        "access_token": token,
-                    }
-                )
-                res_publish.raise_for_status()
-                post_id = res_publish.json()["id"]
+                    # 2. Publish container
+                    publish_url = "https://graph.threads.net/v1.0/me/threads_publish"
+                    res_publish = await client.post(
+                        publish_url,
+                        params={
+                            "creation_id": creation_id,
+                            "access_token": token,
+                        }
+                    )
+                    res_publish.raise_for_status()
+                    post_id = res_publish.json()["id"]
+            except httpx.HTTPStatusError as hse:
+                err_msg = str(hse).replace(token, "[REDACTED]")
+                logger.error(f"Threads API HTTP error: {err_msg}")
+                raise ValueError(f"Threads API error: HTTP status {hse.response.status_code}") from None
+            except httpx.RequestError as re_err:
+                err_msg = str(re_err).replace(token, "[REDACTED]")
+                logger.error(f"Threads API request error: {err_msg}")
+                raise ValueError("Threads API connection request failed.") from None
         else:
             # LinkedIn, X, and Reddit via Composio
             try:
@@ -106,19 +122,26 @@ async def post_draft_to_platform(session: AsyncSession, draft_id: UUID) -> str |
                     action="LINKEDIN_CREATE_LINKEDIN_POST",
                     params={"text": draft.body}
                 )
-                post_id = res.get("id") or res.get("post_id") or "linkedin-post-success"
+                post_id = res.get("id") or res.get("post_id")
+                if not post_id:
+                    raise ValueError(f"Composio did not return a post ID for LinkedIn. Response: {res}")
 
             elif draft.platform == "x":
                 res = toolset.execute_action(
                     action="TWITTER_CREATE_TWEET",
                     params={"text": draft.body}
                 )
-                post_id = res.get("id") or res.get("tweet_id") or "twitter-post-success"
+                post_id = res.get("id") or res.get("tweet_id")
+                if not post_id:
+                    raise ValueError(f"Composio did not return a tweet ID for X. Response: {res}")
 
             elif draft.platform == "reddit":
                 title = draft.reddit_title or "Shipped a new milestone"
                 subreddit = draft.reddit_subreddit or "SideProject"
                 if not reddit_guardrail(draft.body, title):
+                    draft.status = "draft"
+                    await session.commit()
+                    await session.refresh(draft)
                     raise ValueError("Reddit promotional guardrail triggered. Post blocked.")
 
                 res = toolset.execute_action(
@@ -129,7 +152,9 @@ async def post_draft_to_platform(session: AsyncSession, draft_id: UUID) -> str |
                         "subreddit": subreddit
                     }
                 )
-                post_id = res.get("id") or res.get("post_id") or "reddit-post-success"
+                post_id = res.get("id") or res.get("post_id")
+                if not post_id:
+                    raise ValueError(f"Composio did not return a post ID for Reddit. Response: {res}")
             else:
                 raise ValueError(f"Unknown platform '{draft.platform}'")
 
@@ -148,5 +173,9 @@ async def post_draft_to_platform(session: AsyncSession, draft_id: UUID) -> str |
 
     except Exception as e:
         logger.error(f"Failed to post draft {draft.id} to {draft.platform}: {e}")
+        # Reset draft status to 'draft'
+        draft.status = "draft"
+        await session.commit()
+        await session.refresh(draft)
         # Re-raise to let the router handle it
         raise e

@@ -16,6 +16,8 @@ class Settings(BaseSettings):
     gemini_api_key: str | None = Field(default=None, alias="GEMINI_API_KEY")
     github_webhook_secret: str | None = Field(default=None, alias="GITHUB_WEBHOOK_SECRET")
     byline_allowed_origins: str = Field(default="*", alias="BYLINE_ALLOWED_ORIGINS")
+    dev_mode: bool = Field(default=False, alias="DEV_MODE")
+    threads_access_token: str | None = Field(default=None, alias="THREADS_ACCESS_TOKEN")
 
     @property
     def allowed_origins(self) -> list[str]:

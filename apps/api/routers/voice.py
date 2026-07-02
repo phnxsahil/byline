@@ -59,6 +59,32 @@ async def post_voice_note(
     settings = get_settings()
     transcription = ""
 
+    # Validate file content type and size before reading into memory
+    MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
+    ALLOWED_CONTENT_TYPES = {
+        "audio/mpeg",
+        "audio/mp3",
+        "audio/wav",
+        "audio/x-wav",
+        "audio/ogg",
+        "audio/webm",
+        "audio/x-m4a",
+        "audio/m4a",
+        "audio/mp4",
+    }
+    content_type = file.content_type
+    if not content_type or (content_type not in ALLOWED_CONTENT_TYPES and not content_type.startswith("audio/")):
+        raise HTTPException(status_code=400, detail="Unsupported audio format")
+
+    file_size = getattr(file, "size", None)
+    if file_size is None:
+        await file.seek(0, 2)
+        file_size = await file.tell()
+        await file.seek(0)
+
+    if file_size > MAX_FILE_SIZE:
+        raise HTTPException(status_code=400, detail="Audio file too large (max 10MB)")
+
     if settings.openai_api_key:
         try:
             from openai import AsyncOpenAI
@@ -70,11 +96,17 @@ async def post_voice_note(
             )
             transcription = response.text.strip()
         except Exception as e:
-            # Fallback error mapping
-            transcription = f"shipped a new voice note interface: {str(e)}"
+            # Fallback error mapping only allowed in dev mode
+            if getattr(settings, "dev_mode", False):
+                transcription = f"shipped a new voice note interface: {str(e)}"
+            else:
+                raise HTTPException(status_code=500, detail=f"Whisper transcription failed: {str(e)}")
     else:
-        # Development fallback
-        transcription = "shipped the new audio recorder interface directly in the overview dashboard milestone box"
+        # Development fallback only allowed in dev mode
+        if getattr(settings, "dev_mode", False):
+            transcription = "shipped the new audio recorder interface directly in the overview dashboard milestone box"
+        else:
+            raise HTTPException(status_code=400, detail="OpenAI API key is missing, cannot transcribe audio")
 
     if not transcription:
         raise HTTPException(status_code=400, detail="Could not transcribe audio content")

@@ -77,7 +77,8 @@ def test_post_voice_note_mocked_whisper(mock_whisper_create):
     try:
         project_id = str(uuid4())
 
-        with patch("apps.api.routers.voice.create_dispatch", new_callable=AsyncMock) as mock_create_dispatch:
+        with patch("apps.api.routers.voice.create_dispatch", new_callable=AsyncMock) as mock_create_dispatch, \
+             patch("apps.api.routers.voice.run_pipeline_in_background", new_callable=AsyncMock) as mock_run_pipeline:
             mock_create_dispatch.return_value = mock_dispatch
 
             files = {"file": ("test.mp3", b"dummy_audio_bytes", "audio/mpeg")}

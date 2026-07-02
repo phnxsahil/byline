@@ -62,7 +62,7 @@ function ProblemCard({
         willChange: "transform",
       }}
     >
-      <Icon size={18} color="#E85E2C" stroke={1.75} />
+      <Icon size={18} color="#FF6600" stroke={1.75} />
       <div>
         <div
           style={{

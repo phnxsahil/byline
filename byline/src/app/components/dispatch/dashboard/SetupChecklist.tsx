@@ -116,7 +116,7 @@ export function SetupChecklist() {
           style={{
             height: "100%",
             width: `${progress}%`,
-            background: allDone ? "#3FB950" : "#E85E2C",
+            background: allDone ? "#3FB950" : "#FF6600",
             borderRadius: 2,
             transition: "width 400ms ease",
           }}
@@ -136,8 +136,8 @@ export function SetupChecklist() {
                 gap: 8,
                 padding: "7px 12px",
                 borderRadius: 6,
-                border: `0.5px solid ${done ? "rgba(232,94,44,0.3)" : "var(--by-border)"}`,
-                background: done ? "rgba(232,94,44,0.08)" : "transparent",
+                border: `0.5px solid ${done ? "rgba(255,102,0,0.3)" : "var(--by-border)"}`,
+                background: done ? "rgba(255,102,0,0.08)" : "transparent",
                 cursor: "pointer",
                 transition: "all 150ms",
               }}
@@ -146,7 +146,7 @@ export function SetupChecklist() {
               {done ? (
                 <IconCircleCheck
                   size={14}
-                  style={{ color: "#E85E2C", flexShrink: 0 }}
+                  style={{ color: "#FF6600", flexShrink: 0 }}
                   stroke={2}
                 />
               ) : (

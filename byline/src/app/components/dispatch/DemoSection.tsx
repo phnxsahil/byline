@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { IconChevronDown, IconArrowRight, IconLoader2, IconCheck, IconBrandLinkedin, IconBrandX, IconBrandReddit, IconBrandThreads } from "@tabler/icons-react";
 
 // ─── Types & data ─────────────────────────────────────────────────────────────
@@ -149,7 +149,7 @@ function TitleBar() {
     >
       {/* Traffic lights */}
       <div style={{ display: "flex", gap: 6 }}>
-        {(["#E85E2C", "#F5A623", "#22C55E"] as const).map((c) => (
+        {(["#FF6600", "#F5A623", "#22C55E"] as const).map((c) => (
           <div
             key={c}
             style={{
@@ -230,7 +230,7 @@ function LeftPanel({
             transition: "border-color 0.12s ease",
           }}
           onFocus={(e) =>
-            (e.currentTarget.style.borderColor = "rgba(232,94,44,0.45)")
+            (e.currentTarget.style.borderColor = "rgba(255,102,0,0.45)")
           }
           onBlur={(e) =>
             (e.currentTarget.style.borderColor = "rgba(255,255,255,0.1)")
@@ -264,8 +264,8 @@ function LeftPanel({
             dispatchState === "done"
               ? "#22C55E"
               : dispatchState === "loading"
-              ? "rgba(232,94,44,0.6)"
-              : "#E85E2C",
+              ? "rgba(255,102,0,0.6)"
+              : "#FF6600",
           border: "none",
           borderRadius: 8,
           cursor: dispatchState !== "idle" ? "default" : "pointer",
@@ -402,7 +402,7 @@ function DraftContent({
           style={{
             fontFamily: "JetBrains Mono, IBM Plex Mono, monospace",
             fontSize: 10,
-            color: "#E85E2C",
+            color: "#FF6600",
             letterSpacing: "0.04em",
             marginTop: 12,
             display: "flex",
@@ -434,7 +434,7 @@ function DraftContent({
             width: 32,
             height: 32,
             borderRadius: "50%",
-            backgroundColor: "#E85E2C",
+            backgroundColor: "#FF6600",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -625,7 +625,7 @@ function RightPanel({
                 background: "none",
                 border: "none",
                 borderBottom: active
-                  ? "1.5px solid #E85E2C"
+                  ? "1.5px solid #FF6600"
                   : "1.5px solid transparent",
                 padding: "8px 14px",
                 cursor: "pointer",
@@ -699,7 +699,7 @@ function RightPanel({
             disabled={approveState === "posted"}
             style={{
               padding: "6px 14px",
-              backgroundColor: approveState === "posted" ? "#22C55E" : "#E85E2C",
+              backgroundColor: approveState === "posted" ? "#22C55E" : "#FF6600",
               border: "none",
               borderRadius: 6,
               fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
@@ -855,6 +855,23 @@ export function DemoSection() {
   // Approve & Post button: idle | posted
   const [approveState, setApproveState] = useState<"idle" | "posted">("idle");
   const approveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Additional timer refs for sub-steps
+  const t1Timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const t2Timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const t3Timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const innerDispatchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (t1Timer.current) clearTimeout(t1Timer.current);
+      if (t2Timer.current) clearTimeout(t2Timer.current);
+      if (t3Timer.current) clearTimeout(t3Timer.current);
+      if (dispatchTimer.current) clearTimeout(dispatchTimer.current);
+      if (innerDispatchTimer.current) clearTimeout(innerDispatchTimer.current);
+      if (approveTimer.current) clearTimeout(approveTimer.current);
+    };
+  }, []);
  
   const [milestone, setMilestone] = useState(
     "Shipped semantic search on fltrd.tech using pgvector. Took 3 days. The tricky part was chunking strategy, not the embeddings."
@@ -876,9 +893,9 @@ export function DemoSection() {
     setDispatchState("loading");
     setLoadingStep(0);
  
-    const t1 = setTimeout(() => setLoadingStep(1), 400);
-    const t2 = setTimeout(() => setLoadingStep(2), 850);
-    const t3 = setTimeout(() => setLoadingStep(3), 1300);
+    t1Timer.current = setTimeout(() => setLoadingStep(1), 400);
+    t2Timer.current = setTimeout(() => setLoadingStep(2), 850);
+    t3Timer.current = setTimeout(() => setLoadingStep(3), 1300);
  
     dispatchTimer.current = setTimeout(() => {
       const generated = generateDraftsForMilestone(milestone);
@@ -887,7 +904,7 @@ export function DemoSection() {
       setAnimKey((k) => k + 1);
       setApproveState("idle");
  
-      dispatchTimer.current = setTimeout(() => setDispatchState("idle"), 1500);
+      innerDispatchTimer.current = setTimeout(() => setDispatchState("idle"), 1500);
     }, 1800);
   };
  

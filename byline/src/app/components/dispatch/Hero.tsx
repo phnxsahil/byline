@@ -88,7 +88,7 @@ function CTAPrimary() {
 
   return (
     <a
-      href="#docs"
+      href="#dashboard"
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
@@ -97,13 +97,14 @@ function CTAPrimary() {
         justifyContent: "center",
         minWidth: 176,
         padding: "14px 20px",
-        backgroundColor: hov ? "rgba(22,22,22,0.9)" : "var(--text-primary)",
+        backgroundColor: "var(--text-primary)",
         color: "var(--bg)",
+        opacity: hov ? 0.85 : 1,
         borderRadius: 8,
         textDecoration: "none",
         border: "0.5px solid transparent",
         boxShadow: hov ? "0 12px 28px rgba(49,48,45,0.18)" : "0 6px 16px rgba(49,48,45,0.08)",
-        transition: "background-color 0.14s ease, box-shadow 0.14s ease",
+        transition: "opacity 0.14s ease, box-shadow 0.14s ease",
       }}
     >
       <span
@@ -115,49 +116,34 @@ function CTAPrimary() {
           whiteSpace: "nowrap",
         }}
       >
-        Read the Docs
+        Try it now
       </span>
     </a>
   );
 }
 
 function CTAGhost() {
-  const [hov, setHov] = useState(false);
-
   return (
     <a
       href="https://github.com/sahil/byline"
       target="_blank"
       rel="noopener noreferrer"
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 8,
-        minWidth: 176,
-        padding: "14px 20px",
-        border: "0.5px solid var(--border)",
-        borderRadius: 8,
-        textDecoration: "none",
-        backgroundColor: hov ? "var(--surface)" : "transparent",
-        boxShadow: hov ? "0 8px 20px rgba(0,0,0,0.05)" : "none",
-        transition: "background-color 0.14s ease, box-shadow 0.14s ease",
-      }}
+      className="hero-github-shutter-btn"
     >
-      <IconBrandGithub size={15} color="var(--by-text)" stroke={1.7} />
-      <span
-        style={{
-          fontFamily: "'Inter', system-ui, sans-serif",
-          fontSize: 14,
-          fontWeight: 500,
-          color: "var(--by-text)",
-          letterSpacing: "-0.02em",
-          whiteSpace: "nowrap",
-        }}
-      >
-        Star on GitHub
+      <span style={{ position: "relative", zIndex: 1, display: "inline-flex", alignItems: "center", gap: 8 }}>
+        <IconBrandGithub size={15} color="var(--text-primary)" stroke={1.7} />
+        <span
+          style={{
+            fontFamily: "'Inter', system-ui, sans-serif",
+            fontSize: 14,
+            fontWeight: 500,
+            color: "var(--text-primary)",
+            letterSpacing: "-0.02em",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Star on GitHub
+        </span>
       </span>
     </a>
   );
@@ -327,6 +313,23 @@ export function Hero() {
             aspect-ratio: auto !important;
             min-height: 320px;
           }
+        }
+        .hero-github-shutter-btn {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          min-width: 176px;
+          height: 48px;
+          border: 0.5px solid var(--border);
+          border-radius: 8px;
+          text-decoration: none;
+          background: transparent;
+          transition: border-color 0.16s ease;
+        }
+        .hero-github-shutter-btn:hover {
+          border-color: var(--text-primary);
         }
       `}</style>
 

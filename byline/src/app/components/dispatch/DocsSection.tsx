@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { IconTerminal2, IconCopy, IconCheck, IconArrowLeft } from "@tabler/icons-react";
+import { IconCopy, IconCheck, IconArrowLeft, IconChevronRight, IconInfoCircle } from "@tabler/icons-react";
 
 interface DocPage {
   id: string;
@@ -8,14 +8,17 @@ interface DocPage {
 }
 
 const DOC_PAGES: DocPage[] = [
-  { id: "overview", title: "Overview", category: "Getting Started" },
-  { id: "self-host", title: "Self-Hosting (Docker)", category: "Getting Started" },
-  { id: "agents", title: "Agent Architecture", category: "Core Concepts" },
-  { id: "composio", title: "Composio Integration", category: "Publishing" },
-  { id: "changelog", title: "Changelog", category: "Publishing" },
+  { id: "overview", title: "Understanding Byline", category: "Getting Started" },
+  { id: "self-host", title: "Self-hosting with Docker", category: "Getting Started" },
+  { id: "cli", title: "Milestone capturing via CLI", category: "Getting Started" },
+  { id: "agents", title: "Designing the agent pipeline", category: "Core Concepts" },
+  { id: "voice", title: "Profiling and matching your voice", category: "Core Concepts" },
+  { id: "webhooks", title: "Listening to GitHub webhooks", category: "Integrations & Publishing" },
+  { id: "composio", title: "Publishing drafts with Composio", category: "Integrations & Publishing" },
+  { id: "changelog", title: "Changelog", category: "Integrations & Publishing" },
 ];
 
-function CodeBlock({ code }: { code: string }) {
+function CodeBlock({ filename, code }: { filename?: string; code: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -25,47 +28,80 @@ function CodeBlock({ code }: { code: string }) {
   };
 
   return (
-    <div
-      style={{
-        position: "relative",
-        backgroundColor: "var(--bg-terminal)",
-        borderRadius: 6,
-        border: "0.5px solid var(--by-border)",
+    <div style={{
+      margin: "16px 0",
+      borderRadius: 6,
+      border: "0.5px solid var(--by-border)",
+      overflow: "hidden",
+      backgroundColor: "var(--bg-terminal)",
+    }}>
+      {/* VSCode Tab Header */}
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "8px 16px",
+        background: "rgba(255, 255, 255, 0.02)",
+        borderBottom: "0.5px solid var(--by-border)",
+      }}>
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 6,
+          fontFamily: "'JetBrains Mono', monospace",
+          fontSize: 11,
+          color: "var(--text-secondary)",
+        }}>
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--accent)" }} />
+          {filename || "bash"}
+        </div>
+        <button
+          onClick={handleCopy}
+          style={{
+            background: "transparent",
+            border: "none",
+            color: copied ? "var(--by-green, #3FB950)" : "var(--text-secondary)",
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 10,
+            cursor: "pointer",
+            transition: "color 0.15s ease",
+          }}
+        >
+          {copied ? "copied" : "copy"}
+        </button>
+      </div>
+
+      {/* Code Container */}
+      <div style={{
         padding: "14px 18px",
-        margin: "16px 0",
         fontFamily: "'IBM Plex Mono', monospace",
         fontSize: 12,
         color: "rgba(255, 255, 255, 0.85)",
         lineHeight: 1.6,
         overflowX: "auto",
-        transition: "all 0.3s ease",
-      }}
-    >
-      <pre style={{ margin: 0, whiteSpace: "pre-wrap", wordBreak: "break-all" }}>{code}</pre>
-      <button
-        onClick={handleCopy}
-        style={{
-          position: "absolute",
-          top: 10,
-          right: 10,
-          background: "rgba(255, 255, 255, 0.05)",
-          border: "0.5px solid rgba(255, 255, 255, 0.1)",
-          borderRadius: 4,
-          padding: 5,
-          cursor: "pointer",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          transition: "all 0.12s ease",
-        }}
-        title="Copy code"
-      >
-        {copied ? (
-          <IconCheck size={12} color="var(--by-green)" stroke={2.5} />
-        ) : (
-          <IconCopy size={12} color="rgba(255, 255, 255, 0.4)" stroke={1.75} />
-        )}
-      </button>
+      }}>
+        <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>{code}</pre>
+      </div>
+    </div>
+  );
+}
+
+function InfoAlert({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{
+      background: "rgba(255, 102, 0, 0.04)",
+      borderLeft: "3px solid var(--accent)",
+      borderRadius: "0 6px 6px 0",
+      padding: "12px 16px",
+      margin: "18px 0",
+      display: "flex",
+      gap: 12,
+      alignItems: "flex-start",
+    }}>
+      <IconInfoCircle size={18} color="var(--accent)" style={{ flexShrink: 0, marginTop: 1 }} />
+      <div style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.65 }}>
+        {children}
+      </div>
     </div>
   );
 }
@@ -95,37 +131,32 @@ export function DocsSection() {
     return () => window.removeEventListener("hashchange", handleHash);
   }, []);
 
+  const activeDoc = DOC_PAGES.find(p => p.id === activePage) || DOC_PAGES[0];
+
   const renderContent = () => {
     switch (activePage) {
       case "overview":
         return (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
-              Overview
-            </h1>
             <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
-              Byline is a personal wire service and publishing engine for developers who build in public. It maintains a persistent memory of your software projects, watches for things worth posting about, writes platform-native drafts for LinkedIn, X (Twitter), Reddit, and Threads using a multi-agent pipeline, and posts them via Composio.
+              Byline is an open-source wire service and publishing engine designed for developer-founders who build in public. The application monitors your development signals (such as GitHub commits, terminal logs, or voice notes), identifies key milestones, and drafts tailored updates for LinkedIn, X (Twitter), Reddit, and Threads.
             </p>
-            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
-              Key Principles
-            </h2>
-            <ul style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.7, margin: 0, paddingLeft: 20, transition: "color 0.3s ease" }}>
-              <li><strong>Single-user, self-hosted:</strong> Designed for individual developers. No multi-tenancy, team features, or billing overhead. You run your own server and retain full ownership of your data.</li>
-              <li><strong>Your voice:</strong> Extracts structured voice profiles from 10 past posts, matching your paragraphs, vocabulary, line breaks, and avoiding generic AI slop.</li>
-              <li><strong>Platform native:</strong> Different formats for different audiences. Not a plain cross-poster. The LinkedIn specialist builds narrative stories, X compresses, Reddit reframes without promotional tone, and Threads stays casual.</li>
-            </ul>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+              Unlike standard automated posting utilities that cross-post identical text, Byline uses a five-agent LangGraph pipeline to reframe each message specifically for individual platform audiences. The Strategist determines the post angle, specialized writers draft content according to platform-native conventions, and the Critic reviews the outputs to eliminate AI slop and ensure voice compliance.
+            </p>
+
+            <InfoAlert>
+              To fully automate Byline, connect your repository webhooks. Once configured, pushing a commit with keywords like <code>shipped</code>, <code>feat</code>, or <code>fix</code> will trigger draft generations in the background.
+            </InfoAlert>
 
             <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
-              Monorepo Architecture
+              Core Workflow
             </h2>
-            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
-              The Byline monorepo separates components clearly into distinct layers:
-            </p>
             <ul style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.7, margin: 0, paddingLeft: 20, transition: "color 0.3s ease" }}>
-              <li><strong>apps/web:</strong> Next.js frontend built with custom styling tokens (no generic component libraries).</li>
-              <li><strong>apps/api:</strong> FastAPI backend providing async database integrations and handling REST endpoints.</li>
-              <li><strong>packages/agents:</strong> The core LangGraph agents pipeline (strategist, writers, critic nodes).</li>
-              <li><strong>infra:</strong> Orchestrated Docker infrastructure and SQL databases.</li>
+              <li><strong>Ingesting Milestones:</strong> Capture a milestone manually, upload a voice note, or push a commit to a tracked GitHub repository.</li>
+              <li><strong>Refining Content:</strong> The multi-agent pipeline triggers in the background. The agents retrieve similar past posts using vector embeddings to maintain context.</li>
+              <li><strong>Reviewing on The Desk:</strong> Review and edit the generated platform-native drafts inside the Desk panel. Approve each post individually.</li>
+              <li><strong>Publishing:</strong> Approved posts are published to your social feeds via Composio OAuth connections.</li>
             </ul>
           </div>
         );
@@ -133,34 +164,47 @@ export function DocsSection() {
       case "self-host":
         return (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
-              Self-Hosting Guide
-            </h1>
             <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
-              Run Byline on your own infrastructure in minutes. Standard setup utilizes Docker Compose to configure the backend API, frontend web panel, and a preconfigured PostgreSQL database with the <code>pgvector</code> extension.
+              You can deploy Byline on your own infrastructure using Docker Compose. The environment includes the FastAPI backend, the Next.js web dashboard, and a PostgreSQL database preconfigured with the pgvector extension.
             </p>
 
             <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
-              Quick Start
+              Initializing the container
             </h2>
             <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.6, margin: 0, transition: "color 0.3s ease" }}>
-              Clone the repository and spin up the services using Docker:
+              Clone the repository and run Docker Compose to spin up all services:
             </p>
-            <CodeBlock code={`git clone https://github.com/sahil/byline.git\ncd byline\ndocker compose up -d`} />
+            <CodeBlock filename="docker-compose.yml" code={`git clone https://github.com/sahil/byline.git\ncd byline\ndocker compose up -d`} />
 
             <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
-              Environment Variables
+              Configuring environment variables
             </h2>
             <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
-              Copy <code>.env.example</code> to <code>.env</code> and fill in the required keys:
+              Copy <code>.env.example</code> to <code>.env</code> and fill in the required LLM provider credentials:
             </p>
-            <CodeBlock code={`# Database Configuration\nDATABASE_URL=postgresql+asyncpg://byline:byline@localhost:5432/byline\n\n# LLM API Keys\nANTHROPIC_API_KEY=your-anthropic-key-for-agents-and-critic\nOPENAI_API_KEY=your-openai-key-for-embeddings-only\n\n# Optional: Composio Key for posting\nCOMPOSIO_API_KEY=your-composio-key`} />
+            <CodeBlock filename=".env" code={`# Database Configuration\nDATABASE_URL=postgresql+asyncpg://byline:byline@localhost:5432/byline\n\n# LLM API Keys\nANTHROPIC_API_KEY=your-anthropic-key-for-agents\nOPENAI_API_KEY=your-openai-key-for-embeddings\n\n# Optional: Composio Key for posting\nCOMPOSIO_API_KEY=your-composio-key`} />
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+              The database schema is initialized using <code>infra/postgres/init.sql</code> on the first run. Subsequent changes should be applied via migration scripts.
+            </p>
+          </div>
+        );
+
+      case "cli":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+              For developers who build in public from the terminal, the <code>byline</code> CLI allows capturing milestones directly after shipping code or debugging.
+            </p>
 
             <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
-              Database Setup
+              Posting milestones
             </h2>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.6, margin: 0, transition: "color 0.3s ease" }}>
+              Call the CLI utility and pass the milestone message:
+            </p>
+            <CodeBlock filename="cli.py" code={`python cli.py log "shipped semantic search on fltrd.tech using pgvector"`} />
             <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
-              The schema utilizes <code>pgvector</code> for storing semantic memories. On first startup, the database is initialized using <code>infra/postgres/init.sql</code>. All subsequent updates must be managed via Alembic migrations.
+              The tool submits the input text to the <code>/dispatch</code> endpoint, tracks the background LangGraph pipeline, and prints the generated drafts for each configured platform to your terminal.
             </p>
           </div>
         );
@@ -168,11 +212,8 @@ export function DocsSection() {
       case "agents":
         return (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
-              Agent Architecture
-            </h1>
             <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
-              Byline runs a multi-agent state graph built on LangGraph. This architecture orchestrates multiple specialized nodes to turn a simple developer milestone into highly polished drafts:
+              Byline orchestrates the post generation using a multi-agent state graph built on LangGraph. This architecture ensures specialized nodes handle distinct stages of the publishing workflow:
             </p>
 
             <div
@@ -188,7 +229,7 @@ export function DocsSection() {
               <h3 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 16, fontWeight: 500, color: "var(--by-text)", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
                 Pipeline Node Flow
               </h3>
-              <ol style={{ fontSize: 13, color: "var(--by-text-2)", lineHeight: 1.7, margin: 0, paddingLeft: 20, transition: "color 0.3s ease" }}>
+              <ol style={{ fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.7, margin: 0, paddingLeft: 20, transition: "color 0.3s ease" }}>
                 <li><strong>Ingestion:</strong> Milestones enter from the dashboard, Cmd+K, or GitHub webhook.</li>
                 <li><strong>Memory Retrieval:</strong> <code>pgvector</code> retrieves the 5 most similar past bylines to ground context.</li>
                 <li><strong>Strategist:</strong> Analyzes milestone relevance, selects the story angle, and flags appropriate target platforms.</li>
@@ -196,12 +237,51 @@ export function DocsSection() {
                 <li><strong>Critic:</strong> Evaluates every draft 1-10 on voice alignment, length constraints, and anti-promo checks (especially Reddit).</li>
               </ol>
             </div>
+          </div>
+        );
+
+      case "voice":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+              To write posts that sound natural and authentic, Byline extracts writing heuristics from your past publications to build a voice profile.
+            </p>
 
             <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
-              System Prompts
+              Avoiding corporate filler
             </h2>
             <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
-              All agent system prompts are isolated as external text files under <code>packages/agents/prompts/</code>. This makes tweaking agent behaviors and custom voice instructions easy without touching Python graph logic.
+              The voice model scans drafts to delete forbidden terms, such as 'excited to announce', 'game-changer', and 'synergy'.
+            </p>
+
+            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
+              Formatting parameters
+            </h2>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+              The engine controls post lengths (e.g., 180–280 words for LinkedIn, under 280 characters for X) and opener patterns (e.g., 'I spent X days on Y and Z was the hard part') to match casual, low-overhead writing habits.
+            </p>
+          </div>
+        );
+
+      case "webhooks":
+        return (
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+              Byline automates milestone detection by listening to GitHub commit push webhooks.
+            </p>
+
+            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
+              Configuring repository webhooks
+            </h2>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.6, margin: 0, transition: "color 0.3s ease" }}>
+              Add the <code>/api/webhooks/github</code> payload URL in your GitHub repository settings. Set the content type to <code>application/json</code> and enter your webhook secret.
+            </p>
+
+            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
+              Processing commit messages
+            </h2>
+            <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
+              When you push commits to the repository, Byline parses the commit messages. Commit summaries starting with keywords like 'feat', 'fix', or 'shipped' automatically trigger the LangGraph pipeline to generate drafts.
             </p>
           </div>
         );
@@ -209,37 +289,26 @@ export function DocsSection() {
       case "composio":
         return (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
-              Composio Integration
-            </h1>
             <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
-              Composio handles the complex OAuth configurations for LinkedIn, X (Twitter), and Reddit as managed connections, completely removing custom credential logic from the application.
+              Byline integrates with Composio to handle OAuth connections and post publishing to LinkedIn, X (Twitter), and Reddit without storing user credentials.
             </p>
 
             <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
-              Platform Connections
+              Authorizing channels
             </h2>
             <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.6, margin: 0, transition: "color 0.3s ease" }}>
-              Connect your accounts once through Composio:
+              Connect your channels using the Composio command line:
             </p>
-            <CodeBlock code={`# Connect your accounts via Composio OAuth\ncomposio add linkedin\ncomposio add twitter\ncomposio add reddit`} />
-
-            <h2 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 20, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.02em", margin: "24px 0 8px 0", transition: "color 0.3s ease" }}>
-              Publishing Service
-            </h2>
+            <CodeBlock filename="terminal" code={`# Connect your accounts via Composio OAuth\ncomposio add linkedin\ncomposio add twitter\ncomposio add reddit`} />
             <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
-              All posting calls are routed via <code>apps/api/services/publishing.py</code>:
+              The backend API routes posting actions to the Composio toolset. Posts are only published after you review, edit, and click the 'Approve' button on the dashboard.
             </p>
-            <CodeBlock code={`from composio import ComposioToolSet, Action\n\ntoolset = ComposioToolSet(api_key=os.environ["COMPOSIO_API_KEY"])\n\n# Publishing is triggered only upon explicit human approval\nresponse = toolset.execute_action(\n    action=Action.LINKEDIN_CREATE_SHARE_POST,\n    params={"text": body},\n    entity_id=entity_id,\n)`} />
           </div>
         );
 
       case "changelog":
         return (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <h1 style={{ fontFamily: "Space Grotesk, system-ui, sans-serif", fontSize: 32, fontWeight: 500, color: "var(--text-primary)", letterSpacing: "-0.03em", margin: "0 0 8px 0", transition: "color 0.3s ease" }}>
-              Changelog
-            </h1>
             <p style={{ fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.65, margin: 0, transition: "color 0.3s ease" }}>
               Recent updates and improvements to the Byline platform:
             </p>
@@ -273,7 +342,7 @@ export function DocsSection() {
   };
 
   return (
-    <section style={{ backgroundColor: "var(--bg)", minHeight: "calc(100vh - 56px)", paddingTop: 80, paddingBottom: 64, transition: "background-color 0.3s ease" }}>
+    <section style={{ backgroundColor: "var(--bg)", minHeight: "calc(100vh - 56px)", paddingTop: 130, paddingBottom: 64, transition: "background-color 0.3s ease" }}>
       <style>{`
         .dispatch-docs-grid {
           display: grid;
@@ -397,8 +466,8 @@ export function DocsSection() {
           </div>
 
           <div className="dispatch-docs-group">
-            <span className="dispatch-docs-label">Publishing</span>
-            {DOC_PAGES.filter((p) => p.category === "Publishing").map((p) => (
+            <span className="dispatch-docs-label">Integrations & Publishing</span>
+            {DOC_PAGES.filter((p) => p.category === "Integrations & Publishing").map((p) => (
               <button
                 key={p.id}
                 onClick={() => { window.location.hash = `#docs/${p.id}`; }}
@@ -411,7 +480,40 @@ export function DocsSection() {
         </aside>
 
         {/* Content body */}
-        <article className="dispatch-docs-body">{renderContent()}</article>
+        <article className="dispatch-docs-body">
+          {/* Stripe-style Breadcrumbs */}
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 10,
+            color: "var(--text-secondary)",
+            opacity: 0.7,
+            marginBottom: 16
+          }}>
+            <span>Docs</span>
+            <IconChevronRight size={10} stroke={2} />
+            <span>{activeDoc.category}</span>
+            <IconChevronRight size={10} stroke={2} />
+            <span style={{ color: "var(--accent)" }}>{activeDoc.title}</span>
+          </div>
+
+          <div style={{ borderBottom: "0.5px solid var(--border)", paddingBottom: 12, marginBottom: 24 }}>
+            <h1 style={{
+              fontFamily: "'Space Grotesk', system-ui, sans-serif",
+              fontSize: 32,
+              fontWeight: 500,
+              color: "var(--text-primary)",
+              margin: 0,
+              letterSpacing: "-0.03em"
+            }}>
+              {activeDoc.title}
+            </h1>
+          </div>
+
+          {renderContent()}
+        </article>
       </div>
     </section>
   );

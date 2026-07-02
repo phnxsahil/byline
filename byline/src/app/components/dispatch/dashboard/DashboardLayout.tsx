@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { TopBar, DashTab } from "./TopBar";
 import { StatusBar } from "./StatusBar";
 import {
@@ -107,6 +107,8 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const [commandPaletteMode, setCommandPaletteMode] = useState<"default" | "dispatch">("default");
   const [docsScrollTarget, setDocsScrollTarget] = useState<string | null>(null);
+  const [noProjectsBanner, setNoProjectsBanner] = useState(false);
+  const noProjTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [apiConnected, setApiConnected] = useState<boolean | null>(null);
   const [projects, setProjects] = useState<ApiProject[]>([]);
@@ -360,26 +362,16 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
 
             // Update QA Agent status dynamically
             const writersRunning = nextSteps.some(s => ["linkedin", "x", "reddit"].includes(s.agentId) && s.status === "running");
-            const writersDone = nextSteps.filter(s => ["linkedin", "x", "reddit"].includes(s.agentId)).every(s => s.status === "done" || s.status === "blocked" || s.status === "pending");
-            const writersDoneCount = nextSteps.filter(s => ["linkedin", "x", "reddit"].includes(s.agentId) && (s.status === "done" || s.status === "blocked")).length;
+            const activeWriters = nextSteps.filter(s => ["linkedin", "x", "reddit"].includes(s.agentId) && s.status !== "pending");
+            const writersDone = activeWriters.length > 0 && activeWriters.every(s => s.status === "done" || s.status === "blocked");
 
             nextSteps = nextSteps.map(s => {
               if (s.agentId === "qa") {
-                if (writersRunning) {
+                if (writersRunning || !writersDone) {
                   return {
                     ...s,
                     status: "running" as const,
                     decisions: [{ label: "Analyzing stream", detail: "Validating character counts, styles, and guidelines." }]
-                  };
-                } else if (writersDoneCount > 0 && writersDone) {
-                  return {
-                    ...s,
-                    status: "done" as const,
-                    finishedAt: Date.now(),
-                    decisions: [
-                      { label: "Linting completed", detail: "Guidelines validated: character limits, hooks, formatting layout." },
-                      { label: "Anti-slop check passed", detail: "Scanned for forbidden AI marketing phrases." }
-                    ]
                   };
                 }
               }
@@ -403,6 +395,17 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
                 status: "done" as const,
                 finishedAt: Date.now(),
                 decisions: [{ label: "Verification complete", detail: "Reviewed voice and platform compliance constraints." }]
+              };
+            }
+            if (s.agentId === "qa") {
+              return {
+                ...s,
+                status: "done" as const,
+                finishedAt: Date.now(),
+                decisions: [
+                  { label: "Linting completed", detail: "Guidelines validated: character limits, hooks, formatting layout." },
+                  { label: "Anti-slop check passed", detail: "Scanned for forbidden AI marketing phrases." }
+                ]
               };
             }
             if (s.agentId === "strategist" && s.status !== "done") {
@@ -514,6 +517,13 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
 
   const runPipeline = (query?: string) => {
     if (isRunning) return;
+    if (!currentProject) {
+      // Show the no-projects banner
+      setNoProjectsBanner(true);
+      if (noProjTimerRef.current) clearTimeout(noProjTimerRef.current);
+      noProjTimerRef.current = setTimeout(() => setNoProjectsBanner(false), 4000);
+      return;
+    }
     const milestone = query?.trim() || "shipped semantic search on fltrd.tech using pgvector";
     if (apiConnected) {
       runRealPipeline(milestone);
@@ -580,26 +590,16 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
 
               // Update QA Agent status dynamically
               const writersRunning = nextSteps.some(s => ["linkedin", "x", "reddit"].includes(s.agentId) && s.status === "running");
-              const writersDone = nextSteps.filter(s => ["linkedin", "x", "reddit"].includes(s.agentId)).every(s => s.status === "done" || s.status === "blocked" || s.status === "pending");
-              const writersDoneCount = nextSteps.filter(s => ["linkedin", "x", "reddit"].includes(s.agentId) && (s.status === "done" || s.status === "blocked")).length;
+              const activeWriters = nextSteps.filter(s => ["linkedin", "x", "reddit"].includes(s.agentId) && s.status !== "pending");
+              const writersDone = activeWriters.length > 0 && activeWriters.every(s => s.status === "done" || s.status === "blocked");
 
               nextSteps = nextSteps.map(s => {
                 if (s.agentId === "qa") {
-                  if (writersRunning) {
+                  if (writersRunning || !writersDone) {
                     return {
                       ...s,
                       status: "running" as const,
                       decisions: [{ label: "Analyzing stream", detail: "Validating character counts, styles, and guidelines." }]
-                    };
-                  } else if (writersDoneCount > 0 && writersDone) {
-                    return {
-                      ...s,
-                      status: "done" as const,
-                      finishedAt: Date.now(),
-                      decisions: [
-                        { label: "Linting completed", detail: "Guidelines validated: character limits, hooks, formatting layout." },
-                        { label: "Anti-slop check passed", detail: "Scanned for forbidden AI marketing phrases." }
-                      ]
                     };
                   }
                 }
@@ -623,6 +623,17 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
                   status: "done" as const,
                   finishedAt: Date.now(),
                   decisions: [{ label: "Verification complete", detail: "Reviewed voice and platform compliance constraints." }]
+                };
+              }
+              if (s.agentId === "qa") {
+                return {
+                  ...s,
+                  status: "done" as const,
+                  finishedAt: Date.now(),
+                  decisions: [
+                    { label: "Linting completed", detail: "Guidelines validated: character limits, hooks, formatting layout." },
+                    { label: "Anti-slop check passed", detail: "Scanned for forbidden AI marketing phrases." }
+                  ]
                 };
               }
               if (s.agentId === "strategist" && s.status !== "done") {
@@ -778,9 +789,11 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
             isMobile={isMobile} 
             activeDispatch={activeDispatch}
             drafts={drafts}
+            allDispatches={dispatches}
             onUpdateDraft={handleUpdateDraft}
             onSendBack={handleSendBack}
             onRegenerate={handleRegenerate}
+            onSelectDispatch={handleSelectDispatch}
           />
         );
       case "signal":   
@@ -798,9 +811,10 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
             isMobile={isMobile} 
             dispatches={projectDispatches}
             onNavigate={setActiveTab}
+            onSelectDispatch={handleSelectDispatch}
           />
         );
-      case "settings": return <SettingsTab isMobile={isMobile} />;
+      case "settings": return <SettingsTab isMobile={isMobile} projects={projects} drafts={drafts} />;
       case "docs":     return (
         <DocsTab
           isMobile={isMobile}
@@ -831,6 +845,34 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
           letterSpacing: "0.02em",
         }}>
           demo mode — simulated data. connect the backend to use live pipeline.
+        </div>
+      )}
+      {noProjectsBanner && (
+        <div style={{
+          background: "rgba(248,81,73,0.08)",
+          borderBottom: "0.5px solid rgba(248,81,73,0.25)",
+          color: "var(--by-red)",
+          padding: "6px 16px",
+          fontSize: 11,
+          fontFamily: "'IBM Plex Mono', monospace",
+          textAlign: "center",
+          letterSpacing: "0.02em",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 12,
+        }}>
+          <span>no project loaded — add one first</span>
+          <button
+            onClick={() => { setActiveTab("settings"); setNoProjectsBanner(false); }}
+            style={{
+              background: "none", border: "0.5px solid rgba(248,81,73,0.4)",
+              color: "var(--by-red)", fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 10, padding: "2px 8px", borderRadius: 3, cursor: "pointer",
+            }}
+          >
+            go to settings →
+          </button>
         </div>
       )}
       <TopBar
@@ -901,17 +943,53 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
       </article>
 
       {railState === "fullscreen" && (
-        <div style={{ position: "fixed", inset: 44, zIndex: 45 }}>
-          <AgentRail
-            railState={railState}
-            onRailStateChange={setRailState}
-            agentSteps={agentSteps}
-            isRunning={isRunning}
-            onRunMilestone={(txt, images) => {
-              handleQuickPublish(txt + (images && images.length > 0 ? ` (${images.length} image(s) attached)` : ""));
+        <div
+          style={{
+            position: "fixed", inset: 0, zIndex: 45,
+            display: "flex", flexDirection: "column",
+          }}
+        >
+          {/* Translucent backdrop — click to collapse */}
+          <div
+            style={{
+              position: "absolute", inset: 0,
+              background: "rgba(0,0,0,0.55)",
+              backdropFilter: "blur(2px)",
             }}
-            onNavigate={(tab) => setActiveTab(tab as DashTab)}
+            onClick={() => setRailState("collapsed")}
           />
+          {/* Rail card floating above backdrop */}
+          <div style={{
+            position: "relative",
+            margin: isMobile ? "12px" : "44px",
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            borderRadius: 8,
+            overflow: "hidden",
+            zIndex: 1,
+          }}>
+            <AgentRail
+              railState={railState}
+              onRailStateChange={setRailState}
+              agentSteps={agentSteps}
+              isRunning={isRunning}
+              onRunMilestone={(txt, images) => {
+                handleQuickPublish(txt + (images && images.length > 0 ? ` (${images.length} image(s) attached)` : ""));
+              }}
+              onNavigate={(tab) => setActiveTab(tab as DashTab)}
+            />
+          </div>
+          {/* StatusBar stays visible inside the overlay on mobile */}
+          {isMobile && (
+            <div style={{ position: "relative", zIndex: 1, flexShrink: 0 }}>
+              <StatusBar
+                isRunning={isRunning}
+                onOpenChat={() => setRailState("collapsed")}
+                chatOpen={true}
+              />
+            </div>
+          )}
         </div>
       )}
 
@@ -998,7 +1076,7 @@ function LeftSidebarNavigation({
                 display: "flex", alignItems: "center", gap: 12,
                 width: "100%", height: 40, padding: "0 16px",
                 border: "none",
-                background: isActive ? "rgba(232,94,44,0.07)" : "transparent",
+                background: isActive ? "rgba(255,102,0,0.07)" : "transparent",
                 borderLeft: "2px solid " + (isActive ? "var(--by-accent)" : "transparent"),
                 cursor: "pointer", textAlign: "left",
                 color: isActive ? "var(--by-text)" : "var(--by-text-2)",

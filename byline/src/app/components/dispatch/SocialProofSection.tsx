@@ -71,7 +71,7 @@ function TestimonialCard({ t }: { t: Testimonial }) {
         style={{
           width: 32,
           height: 2,
-          backgroundColor: "#E85E2C",
+          backgroundColor: "#FF6600",
           borderRadius: 1,
           marginBottom: 16,
           flexShrink: 0,

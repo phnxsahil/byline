@@ -8,10 +8,15 @@ import {
   IconRefresh,
   IconShieldX,
   IconSparkles,
+  IconAlertCircle,
 } from "@tabler/icons-react";
+
+import { getVoiceProfile, type Project as ApiProject, type DraftRead } from "../../../api";
 
 interface SettingsTabProps {
   isMobile: boolean;
+  projects?: ApiProject[];
+  drafts?: DraftRead[];
 }
 
 type SettingsSection = {
@@ -115,16 +120,271 @@ function TokenRow({ label, value, meta }: { label: string; value: string; meta: 
   );
 }
 
-export function SettingsTab({ isMobile }: SettingsTabProps) {
+function SettingsPreviewPanel({ activeSection, approvalMode, overrides, realVoiceProfile }: {
+  activeSection: string;
+  approvalMode: string;
+  overrides: Record<string, string>;
+  realVoiceProfile: any;
+}) {
+  return (
+    <div style={{
+      background: "var(--by-bg-2)",
+      border: "0.5px solid var(--by-border)",
+      borderRadius: 8,
+      padding: 16,
+      display: "flex",
+      flexDirection: "column",
+      gap: 16,
+      alignSelf: "stretch",
+    }}>
+      {activeSection === "connect" && (
+        <>
+          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: "var(--text-secondary)", opacity: 0.6, textTransform: "uppercase" }}>
+              Stack Connections
+            </span>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-primary)" }}>Status Monitor</div>
+          </div>
+          
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, background: "rgba(255,255,255,0.01)", padding: 12, borderRadius: 6, border: "0.5px solid var(--by-border)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: 11, color: "var(--by-text-2)" }}>Anthropic (LLM)</span>
+              <span style={{ fontSize: 10, padding: "2px 6px", background: "rgba(63,185,80,0.1)", color: "var(--by-green)", borderRadius: 4 }}>Connected</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "0.5px solid var(--by-border)", paddingTop: 8 }}>
+              <span style={{ fontSize: 11, color: "var(--by-text-2)" }}>OpenAI (Whisper)</span>
+              <span style={{ fontSize: 10, padding: "2px 6px", background: "rgba(63,185,80,0.1)", color: "var(--by-green)", borderRadius: 4 }}>Connected</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "0.5px solid var(--by-border)", paddingTop: 8 }}>
+              <span style={{ fontSize: 11, color: "var(--by-text-2)" }}>GitHub Webhooks</span>
+              <span style={{ fontSize: 10, padding: "2px 6px", background: "rgba(245,158,11,0.1)", color: "var(--by-amber)", borderRadius: 4 }}>Listening</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "0.5px solid var(--by-border)", paddingTop: 8 }}>
+              <span style={{ fontSize: 11, color: "var(--by-text-2)" }}>Composio OAuth</span>
+              <span style={{ fontSize: 10, padding: "2px 6px", background: "rgba(63,185,80,0.1)", color: "var(--by-green)", borderRadius: 4 }}>Connected</span>
+            </div>
+          </div>
+          
+          <div style={{ fontSize: 11, color: "var(--by-text-3)", lineHeight: 1.5 }}>
+            GitHub commits are automatically monitored. If a pushed commit matches the target project repository, Byline immediately schedules a draft generation pipeline run.
+          </div>
+        </>
+      )}
+
+      {activeSection === "voice" && (
+        <>
+          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: "var(--text-secondary)", opacity: 0.6, textTransform: "uppercase" }}>
+              Brand & Voice Profile
+            </span>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-primary)" }}>Active Heuristics</div>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 10, background: "rgba(255,255,255,0.01)", padding: 12, borderRadius: 6, border: "0.5px solid var(--by-border)" }}>
+            <div>
+              <div style={{ fontSize: 11, color: "var(--by-text-2)" }}>Target Length</div>
+              <div style={{ fontSize: 12, fontWeight: 600, color: "var(--by-accent)", marginTop: 2 }}>
+                {realVoiceProfile?.avg_post_length || 220} words avg
+              </div>
+            </div>
+            <div style={{ borderTop: "0.5px solid var(--by-border)", paddingTop: 8 }}>
+              <div style={{ fontSize: 11, color: "var(--by-text-3)", marginBottom: 4 }}>Scrubbed Phrases</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
+                {(realVoiceProfile?.banned_phrases || ["excited to announce", "humbled", "game-changer"]).map((phrase: string) => (
+                  <span
+                    key={phrase}
+                    style={{
+                      padding: "2px 6px",
+                      borderRadius: 4,
+                      background: "rgba(248,113,113,0.08)",
+                      color: "var(--by-red)",
+                      fontSize: 10,
+                    }}
+                  >
+                    {phrase}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ fontSize: 11, color: "var(--by-text-3)", lineHeight: 1.5 }}>
+            Byline automatically strips corporate filler during drafting. The Critic agent rejects any posts that fail the anti-slop guidelines.
+          </div>
+        </>
+      )}
+
+      {activeSection === "behavior" && (
+        <>
+          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: "var(--text-secondary)", opacity: 0.6, textTransform: "uppercase" }}>
+              Pipeline Routing
+            </span>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-primary)" }}>Active Flow Mode</div>
+          </div>
+
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            background: "rgba(255,255,255,0.01)",
+            padding: 14,
+            borderRadius: 6,
+            border: "0.5px solid var(--by-border)",
+            fontSize: 11,
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ padding: "4px 8px", background: "var(--by-accent)", color: "#fff", borderRadius: 4, fontSize: 9, fontWeight: "bold" }}>INGEST</div>
+              <span style={{ color: "var(--by-text-3)" }}>→</span>
+              <div style={{ padding: "4px 8px", background: "var(--by-bg-3)", color: "var(--by-text)", borderRadius: 4, fontSize: 9 }}>GRAPH</div>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 6, paddingLeft: 20 }}>
+              <span style={{ color: "var(--by-text-3)" }}>↳</span>
+              <div style={{
+                padding: "6px 10px",
+                background: "rgba(245,158,11,0.08)",
+                color: "var(--by-amber)",
+                border: "0.5px solid var(--by-amber)",
+                borderRadius: 4,
+                fontSize: 10,
+                fontWeight: 600,
+                textTransform: "uppercase",
+              }}>
+                {approvalMode}
+              </div>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 6, paddingLeft: 40 }}>
+              <span style={{ color: "var(--by-text-3)" }}>→</span>
+              <div style={{ padding: "4px 8px", background: "#3FB950", color: "#fff", borderRadius: 4, fontSize: 9, fontWeight: "bold" }}>PUBLISH</div>
+            </div>
+          </div>
+
+          <div style={{ fontSize: 11, color: "var(--by-text-3)", lineHeight: 1.5 }}>
+            Approval mode controls whether drafts require explicit human review on The Desk before posting or bypass it.
+          </div>
+        </>
+      )}
+
+      {activeSection === "developer" && (
+        <>
+          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: "var(--text-secondary)", opacity: 0.6, textTransform: "uppercase" }}>
+              API Test Suite
+            </span>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-primary)" }}>Quick Test cURL</div>
+          </div>
+
+          <div style={{
+            background: "#0A0A0A",
+            border: "0.5px solid var(--by-border)",
+            borderRadius: 6,
+            padding: 10,
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: 9,
+            color: "rgba(255,255,255,0.8)",
+            lineHeight: 1.5,
+            overflowX: "auto"
+          }}>
+            curl -X POST http://localhost:8000/api/voice \<br />
+            &nbsp;&nbsp;-F "project_id=PROJECT_ID" \<br />
+            &nbsp;&nbsp;-F "file=@voice.webm"
+          </div>
+
+          <div style={{ fontSize: 11, color: "var(--by-text-3)", lineHeight: 1.5 }}>
+            Use the `/api/dispatch` and `/api/voice` endpoints to integrate Byline into your customized shell scripts.
+          </div>
+        </>
+      )}
+
+      {activeSection === "danger" && (
+        <>
+          <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, color: "var(--text-secondary)", opacity: 0.6, textTransform: "uppercase" }}>
+              Danger Zone
+            </span>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--by-red)" }}>System Warning</div>
+          </div>
+
+          <div style={{
+            background: "rgba(248,81,73,0.05)",
+            border: "0.5px solid rgba(248,81,73,0.2)",
+            borderRadius: 6,
+            padding: 12,
+            display: "flex",
+            flexDirection: "column",
+            gap: 10
+          }}>
+            <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+              <IconAlertCircle size={16} color="var(--by-red)" style={{ flexShrink: 0 }} />
+              <div style={{ fontSize: 11, color: "var(--by-text)", lineHeight: 1.4 }}>
+                Resetting the database clears all vector indexes, voice version profiles, and platform drafts.
+              </div>
+            </div>
+          </div>
+
+          <div style={{ fontSize: 11, color: "var(--by-text-3)", lineHeight: 1.5 }}>
+            Ensure you export your projects and drafts before initiating a reset. Data recovery is not possible.
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+export function SettingsTab({ isMobile, projects = [], drafts = [] }: SettingsTabProps) {
   const [activeSection, setActiveSection] = React.useState<SettingsSection["id"]>("behavior");
-  const [approvalMode, setApprovalMode] = React.useState<(typeof APPROVAL_MODES)[number]["id"]>("review required");
-  const [overrides, setOverrides] = React.useState<Record<string, typeof APPROVAL_MODES[number]["id"]>>({
-    LinkedIn: "auto-post",
-    X: "review required",
-    Reddit: "drafts only",
-    Threads: "review required",
+  const [approvalMode, setApprovalMode] = React.useState<(typeof APPROVAL_MODES)[number]["id"]>(() => {
+    try {
+      const saved = localStorage.getItem("byline.settings.approvalMode");
+      if (saved && APPROVAL_MODES.some(m => m.id === saved)) {
+        return saved as any;
+      }
+    } catch {}
+    return "review required";
+  });
+  const [overrides, setOverrides] = React.useState<Record<string, typeof APPROVAL_MODES[number]["id"]>>(() => {
+    const defaultOverrides = { LinkedIn: "auto-post", X: "review required", Reddit: "drafts only", Threads: "review required" } as const;
+    try {
+      const saved = localStorage.getItem("byline.settings.overrides");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        const validated: any = {};
+        for (const platform of APPROVAL_ROWS) {
+          const val = parsed[platform];
+          if (val && APPROVAL_MODES.some(m => m.id === val)) {
+            validated[platform] = val;
+          } else {
+            validated[platform] = defaultOverrides[platform as keyof typeof defaultOverrides] || "review required";
+          }
+        }
+        return validated;
+      }
+    } catch {}
+    return { ...defaultOverrides };
   });
   const [confirmReset, setConfirmReset] = React.useState(false);
+  const [realVoiceProfile, setRealVoiceProfile] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    getVoiceProfile()
+      .then(profile => setRealVoiceProfile(profile))
+      .catch(err => console.warn("Failed to load voice profile for export", err));
+  }, []);
+
+  // Persist on change
+  React.useEffect(() => {
+    try {
+      localStorage.setItem("byline.settings.approvalMode", approvalMode);
+    } catch {}
+  }, [approvalMode]);
+
+  React.useEffect(() => {
+    try {
+      localStorage.setItem("byline.settings.overrides", JSON.stringify(overrides));
+    } catch {}
+  }, [overrides]);
 
   const handleToggleOverride = (platform: string) => {
     const currentMode = overrides[platform];
@@ -139,12 +399,13 @@ export function SettingsTab({ isMobile }: SettingsTabProps) {
 
   const handleExport = () => {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
-      projects: ["fltrd-tech", "miryn", "stash", "chaipanni", "byline"],
-      voiceProfile: {
+      projects: projects,
+      voiceProfile: realVoiceProfile || {
         avg_post_length: 220,
         opener_patterns: ["I spent X days on Y and Z was the hard part", "Here's what nobody tells you about..."],
         banned_phrases: ["excited to announce", "humbled", "thrilled to share", "game-changer"],
       },
+      drafts: drafts,
       approvalMode,
       overrides,
     }, null, 2));
@@ -168,7 +429,7 @@ export function SettingsTab({ isMobile }: SettingsTabProps) {
         overflowY: "auto",
         padding: isMobile ? "16px" : "24px",
         display: "grid",
-        gridTemplateColumns: isMobile ? "1fr" : "240px minmax(0, 1fr)",
+        gridTemplateColumns: isMobile ? "1fr" : "240px minmax(0, 1fr) 300px",
         gap: 18,
         alignItems: "start",
       }}
@@ -325,7 +586,7 @@ export function SettingsTab({ isMobile }: SettingsTabProps) {
                 </div>
                 {APPROVAL_ROWS.map((row, index) => {
                   const mode = overrides[row];
-                  const token = APPROVAL_MODES.find((entry) => entry.id === mode)!;
+                  const token = APPROVAL_MODES.find((entry) => entry.id === mode) || APPROVAL_MODES.find(m => m.id === "review required")!;
                   return (
                     <div
                       key={row}
@@ -465,6 +726,15 @@ export function SettingsTab({ isMobile }: SettingsTabProps) {
           </SectionShell>
         )}
       </div>
+
+      {!isMobile && (
+        <SettingsPreviewPanel
+          activeSection={activeSection}
+          approvalMode={approvalMode}
+          overrides={overrides}
+          realVoiceProfile={realVoiceProfile}
+        />
+      )}
     </div>
   );
 }

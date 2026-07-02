@@ -12,9 +12,9 @@ const variants: Record<string, React.CSSProperties> = {
     border: "0.5px solid rgba(15,15,13,0.12)",
   },
   accent: {
-    backgroundColor: "rgba(232,94,44,0.07)",
-    color: "#E85E2C",
-    border: "0.5px solid rgba(232,94,44,0.22)",
+    backgroundColor: "rgba(255,102,0,0.07)",
+    color: "#FF6600",
+    border: "0.5px solid rgba(255,102,0,0.22)",
   },
   success: {
     backgroundColor: "rgba(34,197,94,0.07)",

@@ -53,14 +53,14 @@
 :root {
   --radius: 0.25rem;
 
-  /* Paper & Ink — warm off-white light mode */
-  --paper:   #FAF8F5;           /* warm off-white page background */
-  --surface: #EDE9E1;           /* warm cream card surface */
-  --ink:     #0F0F0D;           /* near-black, warm */
-  --mute:    rgba(15, 15, 13, 0.55);
-  --rule:    rgba(30, 25, 18, 0.1); /* warm brown hairline */
+  /* Paper & Ink — Rich Vintage YC light mode */
+  --paper:   #F2EADF;           /* rich warm paper cream */
+  --surface: #E5DCCF;           /* deeper card surface */
+  --ink:     #1A1917;           /* warm charcoal ink */
+  --mute:    rgba(26, 25, 23, 0.58);
+  --rule:    rgba(26, 25, 23, 0.12); /* warm hairline border */
 
-  --stamp:   #E85E2C;   /* running / accent */
+  --stamp:   #FF6600;   /* YC Brand Orange */
   --posted:  #3FB950;   /* done */
   --amber:   #F59E0B;   /* flagged */
   --blocked: #DC2626;   /* blocked */
@@ -169,18 +169,17 @@
 }
 
 @layer base {
-  * { border-color: var(--rule); }
+  * { border-color: var(--border); }
   html {
-    background-color: var(--paper);
-    color-scheme: light;
+    background-color: var(--background);
     scroll-behavior: smooth;
   }
   .dark, [data-theme="dark"] {
     color-scheme: dark;
   }
   body {
-    background-color: var(--paper);
-    color: var(--ink);
+    background-color: var(--background);
+    color: var(--foreground);
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

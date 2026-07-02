@@ -23,9 +23,9 @@ interface PlatformNode {
 
 const NODES: PlatformNode[] = [
   { id: "linkedin", x:  20, y:  42, w: 84, h: 40, label: "LinkedIn", badge: "in", badgeBg: "#0A66C2", cx: 62,  cy: 62  },
-  { id: "x",       x: 436, y:  42, w: 84, h: 40, label: "X",        badge: "X",  badgeBg: "#0F0F0D", cx: 478, cy: 62  },
+  { id: "x",       x: 436, y:  42, w: 84, h: 40, label: "X",        badge: "X",  badgeBg: "var(--text-primary)", cx: 478, cy: 62  },
   { id: "reddit",  x:  20, y: 198, w: 84, h: 40, label: "Reddit",   badge: "r/", badgeBg: "#FF4500", cx: 62,  cy: 218 },
-  { id: "threads", x: 436, y: 198, w: 84, h: 40, label: "Threads",  badge: "Th", badgeBg: "#1C1C1E", cx: 478, cy: 218 },
+  { id: "threads", x: 436, y: 198, w: 84, h: 40, label: "Threads",  badge: "Th", badgeBg: "var(--text-primary)", cx: 478, cy: 218 },
 ];
 
 function spokeEndpoints(nodeCx: number, nodeCy: number) {
@@ -110,7 +110,7 @@ function HubDiagram() {
             key={n.id + "-spoke"}
             x1={x1} y1={y1}
             x2={x2} y2={y2}
-            stroke="rgba(232,94,44,0.3)"
+            stroke="rgba(255,102,0,0.3)"
             strokeWidth="1.2"
             strokeDasharray="5 5"
             className="dispatch-flow-line"
@@ -123,12 +123,12 @@ function HubDiagram() {
         const { x1, y1, x2, y2 } = spokeEndpoints(n.cx, n.cy);
         return (
           <g key={n.id + "-pulses"}>
-            <circle r="3" fill="#E85E2C" opacity="0">
+            <circle r="3" fill="#FF6600" opacity="0">
               <animate attributeName="cx" from={x1} to={x2} dur="2.4s" begin="0s" repeatCount="indefinite" />
               <animate attributeName="cy" from={y1} to={y2} dur="2.4s" begin="0s" repeatCount="indefinite" />
               <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="2.4s" begin="0s" repeatCount="indefinite" />
             </circle>
-            <circle r="3" fill="#E85E2C" opacity="0">
+            <circle r="3" fill="#FF6600" opacity="0">
               <animate attributeName="cx" from={x1} to={x2} dur="2.4s" begin="1.2s" repeatCount="indefinite" />
               <animate attributeName="cy" from={y1} to={y2} dur="2.4s" begin="1.2s" repeatCount="indefinite" />
               <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="2.4s" begin="1.2s" repeatCount="indefinite" />
@@ -160,7 +160,7 @@ function HubDiagram() {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "white"
+              color: n.id === "x" || n.id === "threads" ? "var(--bg)" : "white"
             }}>
               {n.id === "linkedin" && <IconBrandLinkedin size={12} stroke={2} />}
               {n.id === "x" && <IconBrandX size={10} stroke={2.5} />}
@@ -189,8 +189,8 @@ function HubDiagram() {
           x={189} y={108}
           width={162} height={64}
           rx={32}
-          fill="rgba(232,94,44,0.06)"
-          stroke="rgba(232,94,44,0.18)"
+          fill="rgba(255,102,0,0.06)"
+          stroke="rgba(255,102,0,0.18)"
           strokeWidth="6"
           className="dispatch-mcp-glow-ring"
         />
@@ -200,7 +200,7 @@ function HubDiagram() {
           width={156} height={58}
           rx={29}
           fill="var(--surface)"
-          stroke="#E85E2C"
+          stroke="#FF6600"
           strokeWidth="1"
           style={{ transition: "fill 0.2s ease, stroke 0.2s ease" }}
         />
@@ -210,7 +210,7 @@ function HubDiagram() {
           textAnchor="middle"
           fontSize={12}
           fontWeight="500"
-          fill="#E85E2C"
+          fill="#FF6600"
           fontFamily="'Inter', system-ui, sans-serif"
           letterSpacing="-0.01em"
         >
@@ -221,7 +221,7 @@ function HubDiagram() {
           x={270} y={151}
           textAnchor="middle"
           fontSize={9}
-          fill="rgba(232,94,44,0.5)"
+          fill="rgba(255,102,0,0.5)"
           fontFamily="JetBrains Mono, DM Mono, monospace"
           letterSpacing="0.1em"
         >

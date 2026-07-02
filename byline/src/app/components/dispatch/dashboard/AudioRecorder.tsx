@@ -292,6 +292,16 @@ export function AudioRecorder({ projectId, onTranscriptionSuccess, onCancel }: A
     if (!audioBlobRef.current) return;
     setStatus("uploading");
 
+    if (isSimulatedRef.current) {
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      setStatus("done");
+      onTranscriptionSuccess(
+        "shipped the new audio recorder interface directly in the overview dashboard milestone box",
+        `mock-disp-${Date.now()}`
+      );
+      return;
+    }
+
     const formData = new FormData();
     formData.append("project_id", projectId);
     formData.append("file", audioBlobRef.current, "voice_note.webm");

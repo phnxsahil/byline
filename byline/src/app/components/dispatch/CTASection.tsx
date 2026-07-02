@@ -26,7 +26,7 @@ function CTAStamp() {
         >
           <circle
             cx="36" cy="36" r={R_RING}
-            stroke="#E85E2C"
+            stroke="#FF6600"
             strokeWidth="2"
             strokeDasharray="4 2.8"
           />
@@ -46,7 +46,7 @@ function CTAStamp() {
             <path id="cta-stamp-arc" d={textPath} />
           </defs>
           <text
-            fill="#E85E2C"
+            fill="#FF6600"
             fontSize="6.5"
             fontFamily="'IBM Plex Sans', system-ui, sans-serif"
             fontWeight="600"

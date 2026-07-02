@@ -28,7 +28,7 @@ export function Stamp({ size = 64 }: StampProps) {
           cx="32"
           cy="32"
           r="30"
-          stroke="#E85E2C"
+          stroke="#FF6600"
           strokeWidth="1"
           strokeDasharray="3 2.2"
         />
@@ -38,14 +38,14 @@ export function Stamp({ size = 64 }: StampProps) {
           cx="32"
           cy="32"
           r="26.5"
-          stroke="#E85E2C"
+          stroke="#FF6600"
           strokeWidth="0.4"
           strokeOpacity="0.35"
         />
 
         {/* Text around the rim */}
         <text
-          fill="#E85E2C"
+          fill="#FF6600"
           fontSize="6.5"
           fontFamily="'Inter', system-ui, sans-serif"
           fontWeight="600"

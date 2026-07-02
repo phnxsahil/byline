@@ -35,9 +35,9 @@ export function Button({
   const variantStyle: React.CSSProperties =
     variant === "primary"
       ? {
-          backgroundColor: "#E85E2C",
+          backgroundColor: "#FF6600",
           color: "#F5F2EC",
-          border: "0.5px solid #E85E2C",
+          border: "0.5px solid #FF6600",
         }
       : dark
       ? {
@@ -69,7 +69,7 @@ export function Button({
         e.currentTarget.style.borderColor = dark
           ? "rgba(255,255,255,0.15)"
           : variant === "primary"
-          ? "#E85E2C"
+          ? "#FF6600"
           : "rgba(15,15,13,0.22)";
       }}
     >

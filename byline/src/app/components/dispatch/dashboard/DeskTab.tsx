@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { IconCheck, IconEdit, IconSend, IconSparkles, IconRefresh } from "@tabler/icons-react";
+import React, { useState, useEffect, useRef } from "react";
+import { IconCheck, IconEdit, IconSparkles, IconRefresh, IconClock, IconArrowRight } from "@tabler/icons-react";
 import { type DispatchRead, type DraftRead } from "../../../api";
+import { Stamp } from "../Stamp";
 
 interface DeskTabProps {
   isMobile: boolean;
   activeDispatch: DispatchRead | null;
   drafts: DraftRead[];
+  allDispatches?: DispatchRead[];
   onUpdateDraft: (draftId: string, updatedBody: string, newStatus: string) => Promise<void>;
   onSendBack?: () => Promise<void>;
   onRegenerate?: (platform: string) => Promise<void>;
+  onSelectDispatch?: (dispatch: DispatchRead) => void;
 }
 
 const PLATFORMS = [
@@ -22,14 +25,20 @@ export function DeskTab({
   isMobile,
   activeDispatch,
   drafts,
+  allDispatches = [],
   onUpdateDraft,
   onSendBack,
   onRegenerate,
+  onSelectDispatch,
 }: DeskTabProps) {
   const [activeTab, setActiveTab] = useState<"linkedin" | "x" | "reddit" | "threads">("linkedin");
   const [editedBody, setEditedBody] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [approvedAnim, setApprovedAnim] = useState(false);
+  const [approvedPlatform, setApprovedPlatform] = useState("");
+  const [stampText, setStampText] = useState("");
+  const stampRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const activeDraft = drafts.find((d) => d.platform === activeTab);
 
@@ -44,22 +53,81 @@ export function DeskTab({
 
   if (!activeDispatch) {
     return (
-      <div style={{ flex: 1, display: "grid", placeItems: "center", padding: 24, background: "var(--by-bg)" }}>
-        <div style={{ maxWidth: 480, width: "100%", textAlign: "center" }}>
-          <div style={{ fontSize: 32, marginBottom: 12, opacity: 0.15 }}>✦</div>
-          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--by-text-3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
-            The Desk
+      <div style={{ flex: 1, display: "flex", overflow: "hidden", background: "var(--by-bg)" }}>
+        {/* Dispatch picker when no active dispatch */}
+        <div style={{
+          width: isMobile ? "100%" : 280, flexShrink: 0,
+          borderRight: isMobile ? "none" : "0.5px solid var(--by-border)",
+          display: "flex", flexDirection: "column",
+          overflowY: "auto",
+        }}>
+          <div style={{ padding: "16px 16px 10px", borderBottom: "0.5px solid var(--by-border)" }}>
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--by-text-3)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>Pick a dispatch</div>
+            <div style={{ fontSize: 12, color: "var(--by-text-2)" }}>Select a milestone to review its drafts</div>
           </div>
-          <div style={{ fontSize: 16, color: "var(--by-text)", fontWeight: 500, marginBottom: 8 }}>
-            No drafts to review yet
-          </div>
-          <p style={{ color: "var(--by-text-2)", fontSize: 13, lineHeight: 1.65, maxWidth: 360, margin: "0 auto" }}>
-            Run a pipeline from the <strong>Overview</strong> tab or hit <kbd style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, padding: "2px 5px", border: "0.5px solid var(--by-border)", borderRadius: 3 }}>⌘K</kbd> to dispatch a milestone. Your drafts will appear here.
-          </p>
+          {allDispatches.length === 0 ? (
+            <div style={{ padding: "32px 16px", textAlign: "center", color: "var(--by-text-3)", fontSize: 12, fontFamily: "'IBM Plex Mono', monospace" }}>
+              No dispatches yet.
+            </div>
+          ) : (
+            allDispatches.map((d, i) => {
+              const hasReadyDrafts = d.stamps.some(s => s.status === "ready");
+              const timeStr = new Date(d.created_at).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+              return (
+                <button
+                  key={d.id}
+                  onClick={() => onSelectDispatch?.(d)}
+                  style={{
+                    width: "100%",
+                    background: "transparent",
+                    border: "none",
+                    borderBottom: i < allDispatches.length - 1 ? "0.5px solid var(--by-border)" : "none",
+                    padding: "12px 16px",
+                    textAlign: "left",
+                    cursor: "pointer",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 4,
+                    transition: "background 120ms ease",
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.02)"}
+                  onMouseLeave={e => e.currentTarget.style.background = "transparent"}
+                >
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                    <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--by-text-3)" }}>{timeStr}</span>
+                    <span style={{
+                      fontFamily: "'IBM Plex Mono', monospace", fontSize: 9,
+                      padding: "2px 6px", borderRadius: 3,
+                      background: hasReadyDrafts ? "rgba(63,185,80,0.1)" : "rgba(255,102,0,0.1)",
+                      color: hasReadyDrafts ? "var(--by-green)" : "var(--by-accent)",
+                    }}>
+                      {hasReadyDrafts ? "ready" : "pending"}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: 12, color: "var(--by-text-2)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {d.body}
+                  </div>
+                </button>
+              );
+            })
+          )}
         </div>
+        {!isMobile && (
+          <div style={{ flex: 1, display: "grid", placeItems: "center", padding: 24 }}>
+            <div style={{ textAlign: "center", color: "var(--by-text-3)" }}>
+              <div style={{ fontSize: 32, marginBottom: 12, opacity: 0.1 }}>✦</div>
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>The Desk</div>
+              <div style={{ fontSize: 14, color: "var(--by-text-2)", marginBottom: 6 }}>Select a dispatch to review</div>
+              <p style={{ fontSize: 12, lineHeight: 1.65, maxWidth: 320, margin: "0 auto" }}>
+                Pick a milestone from the left, or run a new pipeline from the <strong>Overview</strong> tab.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
+
 
   const handleSave = async () => {
     if (!activeDraft) return;
@@ -79,6 +147,18 @@ export function DeskTab({
     setSaving(true);
     try {
       await onUpdateDraft(activeDraft.id, activeDraft.body, "approved");
+      // Play byline stamp animation
+      setApprovedPlatform(activeTab);
+      setApprovedAnim(true);
+      setStampText("");
+      const byline = "By Sahil — ";
+      byline.split("").forEach((char, i) => {
+        window.setTimeout(() => setStampText(prev => prev + char), 600 + i * 80);
+      });
+      window.setTimeout(() => {
+        setApprovedAnim(false);
+        setStampText("");
+      }, 2400);
     } catch (err) {
       alert("Failed to approve draft");
     } finally {
@@ -98,8 +178,40 @@ export function DeskTab({
         flexDirection: "column",
         gap: 14,
         background: "var(--by-bg)",
+        position: "relative",
       }}
     >
+      {/* ── Byline stamp approval animation ────────────────────── */}
+      {approvedAnim && (
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 50,
+          background: "rgba(13,17,23,0.92)",
+          display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center",
+          gap: 20, backdropFilter: "blur(4px)",
+        }}>
+          <Stamp size={72} />
+          <div style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: 22,
+            color: "var(--by-accent)",
+            letterSpacing: "0.02em",
+            minHeight: 32,
+          }}>
+            {stampText}
+            <span style={{ opacity: 0.4 }}>|</span>
+          </div>
+          <div style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: 11,
+            color: "var(--by-text-3)",
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+          }}>
+            {approvedPlatform} draft approved
+          </div>
+        </div>
+      )}
       {/* Dispatch context header */}
       <div
         style={{

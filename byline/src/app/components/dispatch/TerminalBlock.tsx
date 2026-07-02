@@ -31,7 +31,7 @@ export function TerminalBlock({ label, children }: TerminalBlockProps) {
               width: 7,
               height: 7,
               borderRadius: "50%",
-              backgroundColor: "#E85E2C",
+              backgroundColor: "#FF6600",
               opacity: 0.75,
             }}
           />

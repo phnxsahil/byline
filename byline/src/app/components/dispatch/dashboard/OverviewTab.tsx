@@ -11,6 +11,7 @@ import {
 } from "@tabler/icons-react";
 import { type DispatchRead, type Project } from "../../../api";
 import { AudioRecorder } from "./AudioRecorder";
+import { SetupChecklist } from "./SetupChecklist";
 
 interface OverviewTabProps {
   onPublish: (text: string) => void;
@@ -23,11 +24,48 @@ interface OverviewTabProps {
   onNavigate: (tab: string) => void;
 }
 
-const WATCHER = [
-  "github watcher picked up 3 meaningful commits in the last 24h",
-  "reddit is still blocked until the lesson has enough technical depth",
-  "linkedin voice profile is drifting longer than your current average",
-];
+function deriveWatcherNotes(dispatches: DispatchRead[], projects: Project[]): string[] {
+  const notes: string[] = [];
+
+  if (dispatches.length === 0) {
+    notes.push("no dispatches yet — run your first pipeline to see signals here");
+    notes.push("voice profile loaded with opener patterns and banned phrase list");
+    notes.push("github watcher ready — connect a repo in settings to enable auto-detection");
+    return notes;
+  }
+
+  const pendingReview = dispatches.filter(d => d.stamps.some(s => s.status === "ready") && d.stamps.every(s => s.status !== "approved")).length;
+  if (pendingReview > 0) {
+    notes.push(`${pendingReview} dispatch${pendingReview > 1 ? "es" : ""} ready for review in The Desk`);
+  }
+
+  const platforms = dispatches.flatMap(d => d.suggested_platforms || []);
+  const platformCounts: Record<string, number> = {};
+  platforms.forEach(p => { platformCounts[p] = (platformCounts[p] || 0) + 1; });
+  const topPlatform = Object.entries(platformCounts).sort((a, b) => b[1] - a[1])[0];
+  if (topPlatform) {
+    notes.push(`${topPlatform[0]} is your most-used platform (${topPlatform[1]} dispatch${topPlatform[1] > 1 ? "es" : ""})`);
+  }
+
+  const blockedCount = dispatches.filter(d => d.is_post_worthy === false).length;
+  if (blockedCount > 0) {
+    notes.push(`${blockedCount} milestone${blockedCount > 1 ? "s" : ""} held by Strategist — check Activity for reasoning`);
+  } else if (dispatches.length > 2) {
+    notes.push("all recent milestones cleared the post-worthiness threshold");
+  }
+
+  const redditUsed = dispatches.some(d => d.suggested_platforms?.includes("reddit"));
+  if (!redditUsed && dispatches.length >= 3) {
+    notes.push("reddit is still blocked — dispatches haven't had enough technical depth yet");
+  }
+
+  const totalProjects = projects.length;
+  if (totalProjects > 1) {
+    notes.push(`${totalProjects} projects being tracked — ${totalProjects > 3 ? "consider cross-project synthesis" : "all active"}`);
+  }
+
+  return notes.slice(0, 3);
+}
 
 export function OverviewTab({
   onPublish,
@@ -72,7 +110,7 @@ export function OverviewTab({
         flexDirection: "column",
         gap: 18,
         background:
-          "radial-gradient(circle at top right, rgba(232,94,44,0.06), transparent 28%), var(--by-bg)",
+          "radial-gradient(circle at top right, rgba(255,102,0,0.06), transparent 28%), var(--by-bg)",
       }}
     >
       <div
@@ -100,7 +138,7 @@ export function OverviewTab({
               gap: 8,
               padding: "5px 10px",
               borderRadius: 999,
-              background: "rgba(232,94,44,0.08)",
+              background: "rgba(255,102,0,0.08)",
               color: "var(--by-accent)",
               fontFamily: "'IBM Plex Mono', monospace",
               fontSize: 11,
@@ -160,11 +198,14 @@ export function OverviewTab({
               >
                 What happened? (be specific)
               </div>
-            {isRecordingMode ? (
+            {isRecordingMode && activeProject?.id ? (
               <AudioRecorder
-                projectId={activeProject?.id || ""}
+                projectId={activeProject.id}
                 onTranscriptionSuccess={(transcription, dispatchId) => {
-                  onVoicePublish(transcription, dispatchId);
+                  if (activeProject?.id) {
+                    onVoicePublish(transcription, dispatchId);
+                    setIsRecordingMode(false);
+                  }
                 }}
                 onCancel={() => setIsRecordingMode(false)}
               />
@@ -204,7 +245,13 @@ export function OverviewTab({
                   </span>
                   <div style={{ display: "flex", gap: 10 }}>
                     <button
-                      onClick={() => setIsRecordingMode(true)}
+                      onClick={() => {
+                        if (activeProject?.id) {
+                          setIsRecordingMode(true);
+                        } else {
+                          alert("Please select a project first.");
+                        }
+                      }}
                       style={{
                         fontFamily: "'IBM Plex Mono', monospace",
                         fontSize: 11,
@@ -276,7 +323,7 @@ export function OverviewTab({
           >
             What the system noticed
           </div>
-          {WATCHER.map((note) => (
+          {deriveWatcherNotes(dispatches, projects).map((note) => (
             <div
               key={note}
               style={{
@@ -326,6 +373,7 @@ export function OverviewTab({
         ))}
       </div>
 
+      {dispatches.length === 0 && <SetupChecklist />}
       <div
         style={{
           background: "rgba(255,255,255,0.03)",
@@ -429,7 +477,7 @@ export function OverviewTab({
                       borderRadius: 4,
                       fontSize: 10,
                       fontFamily: "var(--by-font-mono), monospace",
-                      background: statusLabel === "ready" ? "rgba(63,185,80,0.12)" : statusLabel === "skip" ? "rgba(248,113,113,0.1)" : "rgba(232,94,44,0.1)",
+                      background: statusLabel === "ready" ? "rgba(63,185,80,0.12)" : statusLabel === "skip" ? "rgba(248,113,113,0.1)" : "rgba(255,102,0,0.1)",
                       color: statusLabel === "ready" ? "var(--by-green)" : statusLabel === "skip" ? "var(--by-red)" : "var(--by-accent)",
                     }}
                   >

@@ -56,7 +56,7 @@ export function Logo({ size = 14 }: LogoProps) {
             display: "inline-block",
             width: size * 0.38,
             height: size * 0.12,
-            backgroundColor: hovered ? "#E85E2C" : "rgba(232,94,44,0.75)",
+            backgroundColor: hovered ? "#FF6600" : "rgba(255,102,0,0.75)",
             marginLeft: 2,
             transition: "background-color 0.2s ease",
           }}
@@ -73,7 +73,7 @@ export function Logo({ size = 14 }: LogoProps) {
             right: 0,
             top: 2,
             height: 1,
-            backgroundColor: "rgba(232,94,44,0.8)",
+            backgroundColor: "rgba(255,102,0,0.8)",
             transition: "opacity 0.2s ease",
             opacity: hovered ? 0 : 1,
           }}

@@ -123,9 +123,9 @@ function PlatformPreview({
         display: "flex",
         gap: 10,
         padding: "10px 12px",
-        backgroundColor: "var(--surface)",
+        backgroundColor: "rgba(255, 255, 255, 0.04)",
         borderRadius: 8,
-        border: "0.5px solid var(--border)",
+        border: "0.5px solid rgba(255, 255, 255, 0.08)",
         alignItems: "flex-start",
         transition: "border-color 0.15s ease, box-shadow 0.15s ease",
       }}
@@ -151,7 +151,7 @@ function PlatformPreview({
           fontFamily: "'IBM Plex Sans', system-ui, sans-serif",
           fontSize: 11,
           fontWeight: 400,
-          color: "var(--text-secondary)",
+          color: "rgba(255, 255, 255, 0.72)",
           lineHeight: 1.55,
           margin: 0,
           transition: "color 0.3s ease",
@@ -264,7 +264,7 @@ function CardSix({ "data-index": dataIndex }: { "data-index"?: number }) {
             transition: "border-color 0.3s ease",
           }}
         >
-          {(["#E85E2C", "#F5A623", "#22C55E"] as const).map((c) => (
+          {(["#FF6600", "#F5A623", "#22C55E"] as const).map((c) => (
             <div
               key={c}
               style={{

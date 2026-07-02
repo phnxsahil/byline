@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { IconBook2, IconMenu2, IconX, IconSun, IconMoonStars } from "@tabler/icons-react";
+import { IconMenu2, IconX, IconSun, IconMoonStars, IconBrandGithub } from "@tabler/icons-react";
 import { Logo } from "./Logo";
 
 const NAV_LINKS = [
   { label: "how it works", href: "#how-it-works" },
   { label: "features", href: "#features" },
   { label: "demo", href: "#demo" },
+  { label: "docs", href: "#docs" },
 ];
+
+const APPLE_FONT_STACK = "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 
 function NavLink({ label, href }: { label: string; href: string }) {
   const [hov, setHov] = useState(false);
@@ -17,12 +20,12 @@ function NavLink({ label, href }: { label: string; href: string }) {
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        fontFamily: "'DM Sans', system-ui, sans-serif",
-        fontSize: 13,
+        fontFamily: APPLE_FONT_STACK,
+        fontSize: 13.5,
         fontWeight: 500,
         color: hov ? "var(--text-primary)" : "var(--text-secondary)",
         textDecoration: "none",
-        letterSpacing: "0.01em",
+        letterSpacing: "-0.01em",
         whiteSpace: "nowrap",
         transition: "color 0.14s ease",
       }}
@@ -96,124 +99,115 @@ function ThemeToggle({
   );
 }
 
-function DocsButton() {
-  const [hov, setHov] = useState(false);
-
+function GitHubButton() {
   return (
     <a
-      href="#docs"
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 8,
-        height: 34,
-        padding: "0 12px",
-        borderRadius: 6,
-        border: "0.5px solid var(--border)",
-        backgroundColor: hov ? "var(--surface)" : "transparent",
-        color: "var(--text-primary)",
-        textDecoration: "none",
-        fontFamily: "'DM Sans', system-ui, sans-serif",
-        fontSize: 12,
-        fontWeight: 500,
-        letterSpacing: "0.01em",
-        transition: "all 0.16s ease",
-      }}
+      href="https://github.com/sahil/byline"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="github-shutter-btn"
     >
-      <IconBook2 size={15} stroke={1.6} />
-      <span>Read Docs</span>
+      <span style={{ position: "relative", zIndex: 1, display: "inline-flex", alignItems: "center", gap: 6 }}>
+        <IconBrandGithub size={14} stroke={1.6} />
+        <span>Star on GitHub</span>
+      </span>
     </a>
   );
 }
 
 function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
   return (
+    <div
+      style={{
+        position: "fixed",
+        top: 74,
+        left: 16,
+        right: 16,
+        transform: open ? "translateY(0)" : "translateY(-12px)",
+        opacity: open ? 1 : 0,
+        pointerEvents: open ? "auto" : "none",
+        transition: "transform 0.16s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.16s ease",
+        willChange: "transform, opacity",
+        zIndex: 60,
+      }}
+    >
       <div
         style={{
-          position: "fixed",
-          top: 74,
-          left: 16,
-          right: 16,
-          transform: open ? "translateY(0)" : "translateY(-12px)",
-          opacity: open ? 1 : 0,
-          pointerEvents: open ? "auto" : "none",
-          transition: "transform 0.16s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.16s ease",
-          willChange: "transform, opacity",
-          zIndex: 60,
+          borderRadius: 14,
+          border: "0.5px solid var(--border)",
+          background: "var(--bg-nav)",
+          boxShadow: "0 16px 40px rgba(0, 0, 0, 0.15)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+          padding: 16,
         }}
       >
         <div
           style={{
-            borderRadius: 14,
-            border: "0.5px solid var(--border)",
-            background: "var(--bg-nav)",
-            boxShadow: "0 16px 40px rgba(0, 0, 0, 0.15)",
-            backdropFilter: "blur(16px)",
-            WebkitBackdropFilter: "blur(16px)",
-            padding: 16,
+            fontFamily: APPLE_FONT_STACK,
+            fontSize: 12,
+            fontWeight: 600,
+            letterSpacing: "-0.02em",
+            color: "var(--text-primary)",
+            marginBottom: 12,
           }}
         >
-          <div
-            style={{
-              fontFamily: "'DM Sans', system-ui, sans-serif",
-              fontSize: 11,
-              fontWeight: 500,
-              letterSpacing: "0.04em",
-              color: "var(--text-secondary)",
-              marginBottom: 12,
-            }}
-          >
-            byline.
-          </div>
+          byline.
+        </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={onClose}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "12px 12px",
-                  borderRadius: 8,
-                  textDecoration: "none",
-                  color: "var(--text-primary)",
-                  background: "transparent",
-                  fontFamily: "'DM Sans', system-ui, sans-serif",
-                  fontSize: 15,
-                  fontWeight: 500,
-                }}
-              >
-                <span>{link.label}</span>
-              </a>
-            ))}
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginTop: 14 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          {NAV_LINKS.map((link) => (
             <a
-              href="#dashboard"
+              key={link.label}
+              href={link.href}
               onClick={onClose}
               style={{
-                display: "inline-flex",
+                display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                height: 38,
-                borderRadius: 6,
+                justifyContent: "space-between",
+                padding: "10px 12px",
+                borderRadius: 8,
                 textDecoration: "none",
-                border: "0.5px solid var(--border)",
                 color: "var(--text-primary)",
-                fontFamily: "'DM Sans', system-ui, sans-serif",
-                fontSize: 12,
                 background: "transparent",
+                fontFamily: APPLE_FONT_STACK,
+                fontSize: 14,
+                fontWeight: 500,
               }}
             >
-              open desk
+              <span>{link.label}</span>
             </a>
-            <DocsButton />
+          ))}
+        </div>
+
+        <div style={{ marginTop: 14 }}>
+          <a
+            href="https://github.com/sahil/byline"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClose}
+            className="github-shutter-btn"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              width: "100%",
+              height: 38,
+              borderRadius: 6,
+              textDecoration: "none",
+            }}
+          >
+            <div className="github-shutter-blades">
+              <div className="github-shutter-blade" />
+              <div className="github-shutter-blade" />
+              <div className="github-shutter-blade" />
+            </div>
+            <span style={{ position: "relative", zIndex: 1, display: "inline-flex", alignItems: "center", gap: 8 }}>
+              <IconBrandGithub size={14} stroke={1.6} />
+              <span>Star on GitHub</span>
+            </span>
+          </a>
         </div>
       </div>
     </div>
@@ -223,18 +217,23 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isCompact, setIsCompact] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.innerWidth < 900;
-  });
+
+  // Read theme from document attributes (global theme)
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("byline-theme");
-      if (saved === "light" || saved === "dark") return saved;
-      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      const stored = localStorage.getItem("theme");
+      if (stored === "light" || stored === "dark") return stored;
     }
-    return "light";
+    return "dark";
   });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -243,35 +242,23 @@ export function Navbar() {
     } else {
       document.documentElement.classList.remove("dark");
     }
-    localStorage.setItem("byline-theme", theme);
+    localStorage.setItem("theme", theme);
   }, [theme]);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    const onResize = () => {
-      setIsCompact(window.innerWidth < 900);
-      if (window.innerWidth >= 900) setMenuOpen(false);
-    };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
+  const isCompact = false; // Set fallback structure
 
   return (
     <>
       <style>{`
         .dispatch-nav-shell {
           position: fixed;
-          top: 22px;
+          top: 14px;
           left: 50%;
           transform: translateX(-50%);
-          width: min(1180px, calc(100% - 32px));
+          width: calc(100% - 32px);
+          max-width: 1000px;
           z-index: 50;
-          transition: top 0.16s cubic-bezier(0.16, 1, 0.3, 1), width 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
           will-change: top, width;
         }
         .dispatch-nav-shell.scrolled {
@@ -279,16 +266,16 @@ export function Navbar() {
           width: min(680px, calc(100% - 32px));
         }
         .dispatch-nav {
-          height: 52px;
           display: grid;
           grid-template-columns: auto 1fr auto;
           align-items: center;
+          height: 52px;
           border-radius: 18px;
           border: 0.5px solid var(--border);
           background: var(--bg-nav);
           box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
           backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
+          WebkitBackdropFilter: blur(16px);
           transition: height 0.16s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.16s ease, border-radius 0.16s ease;
           will-change: height;
         }
@@ -296,7 +283,6 @@ export function Navbar() {
           height: 44px;
           border-radius: 14px;
           box-shadow: 0 18px 40px rgba(0, 0, 0, 0.1);
-          background: var(--bg-nav);
         }
         .dispatch-nav-block {
           height: 100%;
@@ -307,26 +293,32 @@ export function Navbar() {
         .dispatch-nav-block + .dispatch-nav-block {
           border-left: 0.5px solid var(--border);
         }
+        .dispatch-nav-brand {
+          font-family: ${APPLE_FONT_STACK};
+          font-size: 15px;
+          font-weight: 600;
+          color: var(--text-primary);
+          letter-spacing: -0.02em;
+        }
         .dispatch-nav-links {
           justify-content: center;
-          gap: 22px;
-          min-width: 0;
+          gap: 24px;
         }
         .dispatch-nav-right {
-          gap: 10px;
           justify-content: flex-end;
+          gap: 12px;
         }
         .dispatch-nav-btn {
           display: inline-flex;
           align-items: center;
-          height: 34px;
+          height: 32px;
           padding: 0 12px;
           border-radius: 6px;
           border: 0.5px solid var(--border);
           text-decoration: none;
           color: var(--text-secondary);
-          font-family: 'DM Sans', system-ui, sans-serif;
-          font-size: 12px;
+          font-family: ${APPLE_FONT_STACK};
+          font-size: 12.5px;
           background: transparent;
           transition: all 0.14s ease;
         }
@@ -335,8 +327,8 @@ export function Navbar() {
           background: var(--surface);
         }
         .dispatch-nav-mobile-trigger {
-          width: 34px;
-          height: 34px;
+          width: 32px;
+          height: 32px;
           border-radius: 6px;
           border: 0.5px solid var(--border);
           background: transparent;
@@ -345,21 +337,37 @@ export function Navbar() {
           display: none;
           align-items: center;
           justify-content: center;
-          font-family: 'DM Sans', system-ui, sans-serif;
-          font-size: 14px;
           transition: all 0.14s ease;
         }
         .dispatch-nav-mobile-trigger:hover {
           background: var(--surface);
         }
+        .github-shutter-btn {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          height: 32px;
+          padding: 0 12px;
+          border-radius: 6px;
+          border: 0.5px solid var(--border);
+          background: transparent;
+          color: var(--text-primary);
+          text-decoration: none;
+          font-family: ${APPLE_FONT_STACK};
+          font-size: 12.5px;
+          font-weight: 500;
+          letter-spacing: -0.015em;
+          transition: border-color 0.16s ease, color 0.16s ease;
+        }
+        .github-shutter-btn:hover {
+          border-color: var(--text-primary);
+          color: var(--text-primary);
+        }
         @media (max-width: 899px) {
           .dispatch-nav {
             grid-template-columns: auto 1fr auto;
-            height: 50px;
-          }
-          .dispatch-nav-brand {
-            gap: 8px;
-            min-width: 0;
+            height: 48px;
           }
           .dispatch-nav-links,
           .dispatch-nav-desktop-only {
@@ -376,91 +384,32 @@ export function Navbar() {
       `}</style>
 
       <div className={`dispatch-nav-shell ${scrolled ? "scrolled" : ""}`}>
-        <header
-          className={`dispatch-nav ${scrolled ? "scrolled" : ""}`}
-          style={
-            isCompact
-              ? {
-                  position: "relative",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  paddingLeft: 12,
-                  paddingRight: 12,
-                  gap: 12,
-                }
-              : undefined
-          }
-        >
-          {isCompact ? (
-            <>
-              <a
-                href="#"
-                style={{
-                  position: "absolute",
-                  left: 14,
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  textDecoration: "none",
-                  fontFamily: "'DM Sans', system-ui, sans-serif",
-                  fontSize: 15,
-                  fontWeight: 600,
-                  color: "var(--text-primary)",
-                  letterSpacing: "-0.02em",
-                  flexShrink: 0,
-                }}
-              >
-                byline.
-              </a>
+        <header className={`dispatch-nav ${scrolled ? "scrolled" : ""}`}>
+          <div className="dispatch-nav-block dispatch-nav-brand" style={{ gap: 10 }}>
+            <a href="#" style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }}>
+              <Logo size={14} dark={false} />
+            </a>
+          </div>
 
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginLeft: "auto", flexShrink: 0 }}>
-                <ThemeToggle theme={theme} onChange={setTheme} />
-                <button
-                  onClick={() => setMenuOpen((value) => !value)}
-                  aria-label={menuOpen ? "Close menu" : "Open menu"}
-                  className="dispatch-nav-mobile-trigger"
-                  style={{ display: "inline-flex" }}
-                >
-                  {menuOpen ? <IconX size={18} /> : <IconMenu2 size={18} />}
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="dispatch-nav-block dispatch-nav-brand" style={{ gap: 10 }}>
-                <a href="#" style={{ display: "inline-flex", alignItems: "center", textDecoration: "none" }}>
-                  <Logo size={15} dark={false} />
-                </a>
-              </div>
+          <nav className="dispatch-nav-block dispatch-nav-links">
+            {NAV_LINKS.map((link) => (
+              <NavLink key={link.label} {...link} />
+            ))}
+          </nav>
 
-              <nav className="dispatch-nav-block dispatch-nav-links">
-                {NAV_LINKS.map((link) => (
-                  <NavLink key={link.label} {...link} />
-                ))}
-              </nav>
-
-              <div className="dispatch-nav-block dispatch-nav-right">
-                <a
-                  href="#dashboard"
-                  className="dispatch-nav-btn dispatch-nav-desktop-only"
-                >
-                  desk
-                </a>
-                <div className="dispatch-nav-desktop-only">
-                  <DocsButton />
-                </div>
-                <ThemeToggle theme={theme} onChange={setTheme} />
-                <button
-                  className="dispatch-nav-mobile-trigger"
-                  onClick={() => setMenuOpen((value) => !value)}
-                  aria-label={menuOpen ? "Close menu" : "Open menu"}
-                >
-                  {menuOpen ? <IconX size={18} /> : <IconMenu2 size={18} />}
-                </button>
-              </div>
-            </>
-          )}
+          <div className="dispatch-nav-block dispatch-nav-right">
+            <div className="dispatch-nav-desktop-only">
+              <GitHubButton />
+            </div>
+            <ThemeToggle theme={theme} onChange={setTheme} />
+            <button
+              className="dispatch-nav-mobile-trigger"
+              onClick={() => setMenuOpen((value) => !value)}
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+            >
+              {menuOpen ? <IconX size={16} /> : <IconMenu2 size={16} />}
+            </button>
+          </div>
         </header>
       </div>
 

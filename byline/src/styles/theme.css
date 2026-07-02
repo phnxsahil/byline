@@ -2,7 +2,6 @@
 
 :root {
   --bg: var(--paper);
-  --surface: var(--surface);
   --surface-secondary: var(--surface);
   --text-primary: var(--ink);
   --text-secondary: var(--mute);

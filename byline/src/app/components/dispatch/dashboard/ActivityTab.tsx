@@ -15,6 +15,7 @@ interface ActivityTabProps {
   isMobile: boolean;
   dispatches: DispatchRead[];
   onNavigate: (tab: string) => void;
+  onSelectDispatch?: (dispatch: DispatchRead) => void;
 }
 
 type ActivityFilter =
@@ -239,7 +240,7 @@ function reconstructSteps(dispatch: DispatchRead, drafts: DraftRead[]): AgentSte
   return steps;
 }
 
-export function ActivityTab({ isMobile, dispatches, onNavigate }: ActivityTabProps) {
+export function ActivityTab({ isMobile, dispatches, onNavigate, onSelectDispatch }: ActivityTabProps) {
   const [selectedDispatch, setSelectedDispatch] = useState<DispatchRead | null>(null);
   const [drafts, setDrafts] = useState<DraftRead[]>([]);
   const [loadingDrafts, setLoadingDrafts] = useState(false);
@@ -360,25 +361,49 @@ export function ActivityTab({ isMobile, dispatches, onNavigate }: ActivityTabPro
             gap: 16,
           }}
         >
-          <button
-            onClick={() => setSelectedDispatch(null)}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              alignSelf: "flex-start",
-              background: "transparent",
-              border: "none",
-              color: "var(--by-text-2)",
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 11,
-              cursor: "pointer",
-              padding: 0,
-            }}
-          >
-            <IconArrowLeft size={12} stroke={2} />
-            Back to Activity
-          </button>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+            <button
+              onClick={() => setSelectedDispatch(null)}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                background: "transparent",
+                border: "none",
+                color: "var(--by-text-2)",
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 11,
+                cursor: "pointer",
+                padding: 0,
+              }}
+            >
+              <IconArrowLeft size={12} stroke={2} />
+              Back to Activity
+            </button>
+            {selectedDispatch.is_post_worthy !== false && (
+              <button
+                onClick={() => {
+                  if (onSelectDispatch) onSelectDispatch(selectedDispatch);
+                  onNavigate("desk");
+                }}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  background: "var(--by-accent)",
+                  border: "none",
+                  color: "#fff",
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontSize: 11,
+                  cursor: "pointer",
+                  padding: "7px 12px",
+                  borderRadius: 4,
+                }}
+              >
+                Review in Desk →
+              </button>
+            )}
+          </div>
 
           <div
             style={{
@@ -653,14 +678,21 @@ export function ActivityTab({ isMobile, dispatches, onNavigate }: ActivityTabPro
                   const hasDrafts = dispatch.stamps.some(s => s.draft_id !== null);
                   statusLabel = hasDrafts ? "ready" : "running";
                   statusColor = hasDrafts ? "var(--by-green)" : "var(--by-accent)";
-                  statusBg = hasDrafts ? "rgba(63,185,80,0.08)" : "rgba(232,94,44,0.08)";
+                  statusBg = hasDrafts ? "rgba(63,185,80,0.08)" : "rgba(255,102,0,0.08)";
                 }
               }
 
               return (
                 <button
                   key={dispatch.id}
-                  onClick={() => setSelectedDispatch(dispatch)}
+                  onClick={() => {
+                    setSelectedDispatch(dispatch);
+                  }}
+                  onDoubleClick={() => {
+                    // Double-click opens Desk with this dispatch selected
+                    if (onSelectDispatch) onSelectDispatch(dispatch);
+                    onNavigate("desk");
+                  }}
                   style={{
                     width: "100%",
                     border: "none",

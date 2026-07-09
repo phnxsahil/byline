@@ -25,21 +25,6 @@ function ShutterTransition({ active }: { active: boolean }) {
       flexDirection: "column",
       pointerEvents: "none",
     }}>
-      <style>{`
-        @keyframes shutterSlideIn {
-          0% { transform: translateY(-100%); }
-          40%, 60% { transform: translateY(0%); }
-          100% { transform: translateY(100%); }
-        }
-        .shutter-blade {
-          flex: 1;
-          background: #0F0F0E;
-          border-bottom: 0.5px solid var(--border);
-          transform: translateY(-100%);
-          animation: shutterSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-          will-change: transform;
-        }
-      `}</style>
       <div className="shutter-blade" style={{ animationDelay: "0s" }} />
       <div className="shutter-blade" style={{ animationDelay: "0.06s" }} />
       <div className="shutter-blade" style={{ animationDelay: "0.12s" }} />
@@ -55,6 +40,19 @@ export default function App() {
   );
   const [shutterActive, setShutterActive] = useState(false);
   const [shutterKey, setShutterKey] = useState(0);
+
+  // Theme state
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const handleToggleTheme = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -157,6 +155,7 @@ export default function App() {
           background: var(--bg);
           color: var(--text-primary);
           transition: background-color 0.3s ease, color 0.3s ease;
+          margin: 0;
         }
 
         /* Display headings use Space Grotesk */
@@ -170,13 +169,149 @@ export default function App() {
           font-family: 'IBM Plex Mono', monospace;
         }
 
+        /* ── TesterArmy Global Grid System ────────────────────────────── */
+        .ta-grid-wrapper {
+          width: 100%;
+          border-bottom: 1px dashed var(--border);
+          position: relative;
+          background: var(--bg);
+        }
+        
+        .ta-grid {
+          display: grid;
+          grid-template-columns: 2fr 1fr 1fr 1fr;
+          max-width: 1440px;
+          margin: 0 auto;
+          border-left: 1px dashed var(--border);
+          border-right: 1px dashed var(--border);
+          position: relative;
+        }
+        
+        .ta-col {
+          border-right: 1px dashed var(--border);
+          position: relative;
+          display: flex;
+          flex-direction: column;
+        }
+        .ta-col:last-child {
+          border-right: none;
+        }
+
+        /* Common Cross element for the grid */
+        .ta-cross {
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          color: var(--text-secondary);
+          font-family: var(--byline-font-mono), monospace;
+          font-size: 10px;
+          line-height: 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          pointer-events: none;
+          z-index: 10;
+          opacity: 0.5;
+        }
+        .ta-cross::after {
+          content: "+";
+        }
+
+        /* Common section headers */
+        .ta-hero-content {
+          padding: 80px 48px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          min-height: 100%;
+        }
+        .ta-badge {
+          display: inline-flex;
+          align-items: center;
+          font-family: var(--byline-font-mono), monospace;
+          font-size: 11px;
+          font-weight: 600;
+          color: var(--text-secondary);
+          letter-spacing: 0.08em;
+          margin-bottom: 24px;
+        }
+        .ta-hero-title {
+          font-family: "Space Grotesk", system-ui, sans-serif;
+          font-size: clamp(2.5rem, 5vw, 4rem);
+          font-weight: 600;
+          line-height: 1;
+          letter-spacing: -0.04em;
+          color: var(--text-primary);
+          margin: 0 0 24px;
+        }
+        .ta-hero-desc {
+          font-family: "Inter", system-ui, sans-serif;
+          font-size: 16px;
+          line-height: 1.6;
+          color: var(--text-secondary);
+          max-width: 480px;
+          margin: 0;
+        }
+
+        /* Global button pixel style */
+        .ta-btn-pixel {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background-color: var(--accent);
+          color: #000;
+          font-family: var(--byline-font-mono), monospace;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          text-decoration: none;
+          transition: transform 0.1s ease, background-color 0.2s ease;
+        }
+        .ta-btn-pixel:hover {
+          opacity: 0.9;
+          transform: translateY(-1px);
+        }
+        .ta-btn-pixel::before {
+          content: "";
+          position: absolute;
+          top: 0; left: 0; right: 0; bottom: 0;
+          border: 2px solid #000;
+          pointer-events: none;
+        }
+        .ta-btn-pixel::after {
+          content: "";
+          position: absolute;
+          bottom: -4px; right: -4px;
+          width: 100%; height: 100%;
+          background: #000;
+          z-index: -1;
+          transition: transform 0.1s ease;
+        }
+        .ta-btn-pixel:active::after {
+          transform: translate(-2px, -2px);
+        }
+
+        @media (max-width: 1024px) {
+          .ta-grid {
+            grid-template-columns: 1fr;
+          }
+          .ta-col {
+            border-right: none;
+            border-bottom: 1px dashed var(--border);
+          }
+          .ta-col:last-child {
+            border-bottom: none;
+          }
+        }
+
         @media (max-width: 767px) {
           .dispatch-main { padding-left: 20px !important; padding-right: 20px !important; }
         }
       `}</style>
 
       {/* ── Navbar ─────────────────────────────────────────────────────────── */}
-      {view !== "dashboard" && <Navbar />}
+      {view !== "dashboard" && <Navbar theme={theme} onToggleTheme={handleToggleTheme} />}
 
       <main id="main-content">
         {view === "docs" ? (

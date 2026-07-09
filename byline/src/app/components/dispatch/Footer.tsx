@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { IconArrowUpRight, IconBrandGithub, IconBrandX, IconArrowUp } from "@tabler/icons-react";
-import { Logo } from "./Logo";
 
 const PRODUCT_LINKS = [
-  { label: "AI Agents", href: "#" },
-  { label: "Content Pipeline", href: "#" },
+  { label: "AI Agents", href: "#how-it-works" },
+  { label: "Content Pipeline", href: "#features" },
   { label: "The Desk", href: "#dashboard" },
   { label: "Pricing", href: "#pricing" },
 ];
@@ -73,7 +72,7 @@ function LinkColumn({ title, links }: { title: string; links: { label: string; h
           gap: 8,
         }}
       >
-        <span style={{ color: "var(--byline-accent, #F0A500)" }}>/</span>
+        <span style={{ color: "var(--accent)" }}>/</span>
         {title}
       </div>
       <div style={{ display: "flex", flexDirection: "column" }}>
@@ -90,7 +89,7 @@ export function Footer() {
     <footer
       style={{
         background: "var(--bg-footer)",
-        borderTop: "1px solid var(--border)",
+        borderTop: "1px dashed var(--border)",
         position: "relative",
         overflow: "hidden",
       }}
@@ -172,7 +171,7 @@ export function Footer() {
         .f-brand-col:hover .f-watermark {
           transform: rotate(-8deg) scale(1.05);
           opacity: 0.12;
-          filter: grayscale(0%); /* Brings back amber color on hover */
+          filter: grayscale(0%); /* Brings back color on hover */
         }
 
         .f-bottom-bar {
@@ -229,7 +228,7 @@ export function Footer() {
           right: 48px;
           width: 56px;
           height: 40px;
-          background: var(--surface-secondary, #262524);
+          background: var(--surface);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -242,8 +241,8 @@ export function Footer() {
           z-index: 10;
         }
         .f-pixel-block:hover {
-          background: var(--byline-accent, #F0A500);
-          color: var(--bg);
+          background: var(--accent);
+          color: #000;
         }
 
         @media (max-width: 1024px) {
@@ -290,8 +289,15 @@ export function Footer() {
           <div className="f-watermark">🦉</div>
 
           <div style={{ position: "relative", zIndex: 2 }}>
-            <div style={{ marginBottom: 32 }}>
-              <Logo size={22} />
+            <div style={{
+              fontFamily: "var(--byline-font-mono), monospace",
+              fontSize: 20,
+              fontWeight: 600,
+              color: "var(--text-primary)",
+              marginBottom: 32,
+              letterSpacing: "-0.01em"
+            }}>
+              <span style={{ color: "var(--accent)" }}>[</span>b<span style={{ color: "var(--accent)" }}>]</span> byline
             </div>
             <p
               style={{
@@ -348,7 +354,7 @@ export function Footer() {
       {/* Bottom Status & Socials */}
       <div className="f-bottom-bar">
         <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--byline-font-mono)", fontSize: 11, color: "var(--text-secondary)" }}>
-          <div style={{ width: 6, height: 6, background: "var(--byline-success, #3FB950)", boxShadow: "0 0 8px var(--byline-success, #3FB950)" }} />
+          <div style={{ width: 6, height: 6, background: "#3FB950", boxShadow: "0 0 8px #3FB950" }} />
           SYSTEMS ONLINE
         </div>
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from .common import ORMModel
 
@@ -11,9 +11,9 @@ from .common import ORMModel
 class DispatchCreate(BaseModel):
     project_id: UUID
     arc_id: UUID | None = None
-    body: str
-    source: str = "manual"
-    idempotency_key: str | None = None
+    body: str = Field(min_length=1, max_length=20000)
+    source: str = Field(default="manual", pattern=r"^(manual|github|voice)$")
+    idempotency_key: str | None = Field(default=None, max_length=128)
 
 
 class StampState(BaseModel):
@@ -49,4 +49,3 @@ class StampEvent(BaseModel):
     draft_id: UUID | None = None
     critic_score: int | None = None
     critic_note: str | None = None
-

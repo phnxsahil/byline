@@ -38,6 +38,7 @@ export function DeskTab({
   const [approvedAnim, setApprovedAnim] = useState(false);
   const [approvedPlatform, setApprovedPlatform] = useState("");
   const [stampText, setStampText] = useState("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const stampRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const activeDraft = drafts.find((d) => d.platform === activeTab);
@@ -132,11 +133,12 @@ export function DeskTab({
   const handleSave = async () => {
     if (!activeDraft) return;
     setSaving(true);
+    setErrorMessage(null);
     try {
       await onUpdateDraft(activeDraft.id, editedBody, activeDraft.status);
       setIsEditing(false);
     } catch (err) {
-      alert("Failed to save draft edit");
+      setErrorMessage("Failed to save draft edit.");
     } finally {
       setSaving(false);
     }
@@ -145,6 +147,7 @@ export function DeskTab({
   const handleApprove = async () => {
     if (!activeDraft) return;
     setSaving(true);
+    setErrorMessage(null);
     try {
       await onUpdateDraft(activeDraft.id, activeDraft.body, "approved");
       // Play byline stamp animation
@@ -160,7 +163,7 @@ export function DeskTab({
         setStampText("");
       }, 2400);
     } catch (err) {
-      alert("Failed to approve draft");
+      setErrorMessage("Failed to approve draft.");
     } finally {
       setSaving(false);
     }
@@ -233,6 +236,22 @@ export function DeskTab({
             {activeDispatch.body}
           </div>
         </div>
+        {errorMessage && (
+          <div
+            role="alert"
+            style={{
+              padding: "10px 12px",
+              borderRadius: 4,
+              border: "0.5px solid rgba(248,81,73,0.28)",
+              background: "rgba(248,81,73,0.08)",
+              color: "var(--by-red)",
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 11,
+            }}
+          >
+            {errorMessage}
+          </div>
+        )}
         <div style={{ display: "flex", gap: 5, flexWrap: "wrap", flexShrink: 0 }}>
           {activeDispatch.stamps.map(stamp => (
             <span

@@ -81,6 +81,7 @@ export function OverviewTab({
     "shipped a cleaner landing page for byline and the real challenge was making the product feel obvious in five seconds"
   );
   const [isRecordingMode, setIsRecordingMode] = React.useState(false);
+  const hasActiveProject = Boolean(activeProject?.id);
 
   const stats = React.useMemo(() => {
     const totalDispatches = dispatches.length;
@@ -212,6 +213,7 @@ export function OverviewTab({
             ) : (
               <>
                 <textarea
+                  aria-label="Describe the milestone to run through the pipeline demo"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   rows={4}
@@ -246,25 +248,26 @@ export function OverviewTab({
                   <div style={{ display: "flex", gap: 10 }}>
                     <button
                       onClick={() => {
-                        if (activeProject?.id) {
+                        if (hasActiveProject) {
                           setIsRecordingMode(true);
-                        } else {
-                          alert("Please select a project first.");
                         }
                       }}
+                      disabled={!hasActiveProject}
+                      title={!hasActiveProject ? "Select a project first" : "Record a voice note"}
                       style={{
                         fontFamily: "'IBM Plex Mono', monospace",
                         fontSize: 11,
                         padding: "9px 14px",
-                        background: "rgba(255, 255, 255, 0.03)",
-                        color: "var(--by-text-2)",
+                        background: hasActiveProject ? "rgba(255, 255, 255, 0.03)" : "rgba(255, 255, 255, 0.02)",
+                        color: hasActiveProject ? "var(--by-text-2)" : "var(--by-text-3)",
                         border: "0.5px solid rgba(255,255,255,0.08)",
                         borderRadius: 4,
-                        cursor: "pointer",
+                        cursor: hasActiveProject ? "pointer" : "not-allowed",
                         display: "inline-flex",
                         alignItems: "center",
                         gap: 6,
                         transition: "background 120ms ease",
+                        opacity: hasActiveProject ? 1 : 0.7,
                       }}
                     >
                       <IconMicrophone size={12} stroke={2} />
@@ -279,8 +282,9 @@ export function OverviewTab({
                       style={{
                         fontFamily: "'IBM Plex Mono', monospace",
                         fontSize: 11,
+                        fontWeight: 600,
                         padding: "9px 14px",
-                        background: "var(--by-accent)",
+                        background: "#A63D00",
                         color: "#F5F2EC",
                         border: "none",
                         borderRadius: 4,
@@ -291,11 +295,16 @@ export function OverviewTab({
                         transition: "opacity 120ms ease",
                       }}
                     >
-                      <IconBolt size={12} stroke={2} />
+                      <IconBolt size={12} stroke={2} aria-hidden="true" />
                       run pipeline
                     </button>
                   </div>
                 </div>
+                {!hasActiveProject && (
+                  <span style={{ color: "var(--by-text-3)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}>
+                    select a project to enable voice capture
+                  </span>
+                )}
               </>
             )}
             </div>

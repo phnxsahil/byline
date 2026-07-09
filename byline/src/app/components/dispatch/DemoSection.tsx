@@ -211,6 +211,7 @@ function LeftPanel({
       <div>
         <InputLabel>Log a milestone</InputLabel>
         <textarea
+          aria-label="Log a milestone for the dispatch demo"
           value={milestone}
           onChange={(e) => onMilestoneChange(e.target.value)}
           rows={5}
@@ -255,6 +256,7 @@ function LeftPanel({
 
       {/* Byline action button — idle / loading / done */}
       <button
+        aria-label="Publish the demo dispatch"
         onClick={onDispatch}
         disabled={dispatchState !== "idle"}
         style={{

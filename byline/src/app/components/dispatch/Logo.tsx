@@ -20,126 +20,44 @@ export function Logo({ size = 14 }: LogoProps) {
       onMouseLeave={() => setHovered(false)}
       style={{
         display: "inline-flex",
-        flexDirection: "column",
-        position: "relative",
+        alignItems: "center",
+        gap: 10,
         cursor: "pointer",
         userSelect: "none",
       }}
     >
-      <style>{`
-        @keyframes byline-blink {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0; }
-        }
-        .byline-cursor-blink {
-          animation: byline-blink 0.9s step-end infinite;
-        }
-      `}</style>
-      
-      <div style={{ display: "flex", alignItems: "baseline" }}>
-        <span
-          style={{
-            fontFamily: "Space Grotesk, system-ui, sans-serif",
-            fontSize: size,
-            fontWeight: size > 16 ? 600 : 500,
-            color: "var(--text-primary)",
-            letterSpacing: "-0.03em",
-            lineHeight: 1.1,
-            transition: "color 0.3s ease",
-          }}
-        >
-          byline
-        </span>
-        <span
-          className="byline-cursor-blink"
-          style={{
-            display: "inline-block",
-            width: size * 0.38,
-            height: size * 0.12,
-            backgroundColor: hovered ? "#FF6600" : "rgba(255,102,0,0.75)",
-            marginLeft: 2,
-            transition: "background-color 0.2s ease",
-          }}
-        />
+      <div
+        style={{
+          width: size * 1.8,
+          height: size * 1.8,
+          background: "linear-gradient(135deg, var(--amber, #F0A500) 0%, #D4820C 100%)",
+          borderRadius: Math.max(6, size * 0.4),
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: size * 1.0,
+          boxShadow: "0 0 20px rgba(245,166,35,0.25), inset 0 1px 0 rgba(255,255,255,0.2)",
+          flexShrink: 0,
+          transition: "transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease",
+          transform: hovered ? "scale(1.08)" : "scale(1)",
+        }}
+      >
+        🦉
       </div>
-
-      {/* Underline container */}
-      <div style={{ position: "relative", width: "100%", height: 6, marginTop: 2 }}>
-        {/* Baseline unified line (fades out on hover) */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 2,
-            height: 1,
-            backgroundColor: "rgba(255,102,0,0.8)",
-            transition: "opacity 0.2s ease",
-            opacity: hovered ? 0 : 1,
-          }}
-        />
-
-        {/* 4 platform lines that split on hover */}
-        {/* LinkedIn line: slides Up & Left */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 2,
-            height: 1,
-            backgroundColor: colors.linkedin,
-            opacity: hovered ? 0.95 : 0,
-            transform: hovered ? "translate(-3px, -2px)" : "translate(0, 0)",
-            transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease",
-          }}
-        />
-
-        {/* X line: slides Up & Right */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 2,
-            height: 1,
-            backgroundColor: colors.x,
-            opacity: hovered ? 0.95 : 0,
-            transform: hovered ? "translate(3px, -1px)" : "translate(0, 0)",
-            transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease",
-          }}
-        />
-
-        {/* Reddit line: slides Down & Left */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 2,
-            height: 1,
-            backgroundColor: colors.reddit,
-            opacity: hovered ? 0.95 : 0,
-            transform: hovered ? "translate(-2px, 2px)" : "translate(0, 0)",
-            transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease",
-          }}
-        />
-
-        {/* Threads line: slides Down & Right */}
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: 2,
-            height: 1,
-            backgroundColor: colors.threads,
-            opacity: hovered ? 0.95 : 0,
-            transform: hovered ? "translate(2px, 1px)" : "translate(0, 0)",
-            transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease",
-          }}
-        />
-      </div>
+      <span
+        style={{
+          fontFamily: "Space Grotesk, system-ui, sans-serif",
+          fontSize: size,
+          fontWeight: size > 16 ? 600 : 500,
+          color: "var(--text-primary)",
+          letterSpacing: "-0.03em",
+          lineHeight: 1,
+          transition: "color 0.3s ease",
+          paddingBottom: size * 0.1, // optical center adjustment for Space Grotesk
+        }}
+      >
+        byline
+      </span>
     </div>
   );
 }

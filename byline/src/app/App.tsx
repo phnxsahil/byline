@@ -178,12 +178,13 @@ export default function App() {
       {/* ── Navbar ─────────────────────────────────────────────────────────── */}
       {view !== "dashboard" && <Navbar />}
 
-      {view === "docs" ? (
-        <DocsSection />
-      ) : view === "dashboard" ? (
-        <DashboardSection />
-      ) : (
-        <>
+      <main id="main-content">
+        {view === "docs" ? (
+          <DocsSection />
+        ) : view === "dashboard" ? (
+          <DashboardSection />
+        ) : (
+          <>
           {/* ── Hero ───────────────────────────────────────────────────────────── */}
           <Hero />
 
@@ -211,8 +212,9 @@ export default function App() {
 
           {/* ── Footer ─────────────────────────────────────────────────────────── */}
           <Footer />
-        </>
-      )}
+          </>
+        )}
+      </main>
       {/* ── Shutter Transition ── */}
       <ShutterTransition active={shutterActive} key={shutterKey} />
     </div>

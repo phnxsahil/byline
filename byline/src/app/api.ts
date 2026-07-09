@@ -59,7 +59,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   });
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`${res.status} ${res.statusText}: ${text}`);
+    let message = text;
+    try {
+      const parsed = JSON.parse(text);
+      message = parsed?.error?.message || parsed?.detail || text;
+    } catch {
+      // Keep the raw response body when the server does not return JSON.
+    }
+    throw new Error(`${res.status} ${res.statusText}: ${message}`);
   }
   return res.json();
 }

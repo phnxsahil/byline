@@ -100,6 +100,7 @@ export function TopBar({
 
       {isMobile && (
         <button
+          aria-label="Open dashboard navigation"
           onClick={onMenuClick}
           style={{
             width: 34,
@@ -114,7 +115,7 @@ export function TopBar({
             justifyContent: "center",
           }}
         >
-          <IconMenu2 size={18} stroke={1.6} />
+          <IconMenu2 size={18} stroke={1.6} title="Open dashboard navigation" aria-hidden="true" />
         </button>
       )}
 
@@ -158,6 +159,7 @@ export function TopBar({
         <div ref={dropdownRef} style={{ position: "relative", display: "inline-block" }}>
           <button
             id="project-switcher-btn"
+            aria-label={`Switch project. Current project ${currentProject?.name ?? "unknown project"}`}
             onClick={() => setDropdownOpen(!dropdownOpen)}
             style={{
               display: "flex",
@@ -181,7 +183,7 @@ export function TopBar({
               <span style={{ color: "var(--by-text)", lineHeight: 1 }}>{currentProject?.name}</span>
               <span style={{ color: "var(--by-text-3)", fontSize: 10, lineHeight: 1 }}>{currentProject?.arc}</span>
             </div>
-            <IconChevronDown size={12} stroke={1.5} color="var(--by-text-3)" />
+            <IconChevronDown size={12} stroke={1.5} color="var(--by-text-3)" title="Open project switcher" aria-hidden="true" />
           </button>
 
           {dropdownOpen && (
@@ -236,6 +238,7 @@ export function TopBar({
 
       {!isMobile && (
         <button
+          aria-label="Open command palette"
           onClick={onSearchClick}
           style={{
             display: "flex",
@@ -269,7 +272,7 @@ export function TopBar({
               gap: 4,
             }}
           >
-            <IconCommand size={11} stroke={1.8} />
+            <IconCommand size={11} stroke={1.8} title="Open command palette" aria-hidden="true" />
             K
           </kbd>
         </button>
@@ -292,9 +295,10 @@ export function TopBar({
           style={{
             fontFamily: "DM Mono, monospace",
             fontSize: 12,
+            fontWeight: 600,
             height: 38,
             padding: "0 14px",
-            background: "#FF6600",
+            background: "#A63D00",
             color: "#F5F2EC",
             border: "none",
             borderRadius: 11,
@@ -306,7 +310,7 @@ export function TopBar({
             flexShrink: 0,
           }}
         >
-          <IconBolt size={12} stroke={2} />
+          <IconBolt size={12} stroke={2} aria-hidden="true" />
           {isMobile ? "Run" : "Dispatch"}
         </button>
 

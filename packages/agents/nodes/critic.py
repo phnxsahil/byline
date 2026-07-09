@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-import json
-
 from packages.agents.constants import Platform
 from packages.agents.fallbacks import fallback_critic
 from packages.agents.llm import call_json_model
 from packages.agents.prompt_loader import load_prompt
+from packages.agents.prompt_safety import build_untrusted_json_prompt
 
 from ..state import DispatchState
 
@@ -19,7 +18,7 @@ async def _emit(state: DispatchState, payload: dict) -> None:
 async def _critic(platform: Platform, state: DispatchState) -> dict:
     draft = dict(state["drafts"][platform])
     system_prompt = load_prompt("critic.txt")
-    user_prompt = json.dumps(
+    user_prompt = build_untrusted_json_prompt(
         {
             "voice_profile": state["voice_profile"],
             "platform": platform,
@@ -27,9 +26,6 @@ async def _critic(platform: Platform, state: DispatchState) -> dict:
             "milestone": state["dispatch_body"],
             "draft": draft,
         },
-        ensure_ascii=False,
-        indent=2,
-        default=str,
     )
 
     try:
@@ -72,4 +68,3 @@ async def critic_reddit(state: DispatchState) -> dict:
 
 async def critic_threads(state: DispatchState) -> dict:
     return await _critic("threads", state)
-

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import json
-
 from packages.agents.constants import Platform
 from packages.agents.fallbacks import (
     fallback_reddit_subreddit,
@@ -10,6 +8,7 @@ from packages.agents.fallbacks import (
 )
 from packages.agents.llm import call_json_model
 from packages.agents.prompt_loader import load_prompt
+from packages.agents.prompt_safety import build_untrusted_json_prompt
 
 from ..state import DispatchState
 
@@ -24,7 +23,7 @@ async def _write(platform: Platform, state: DispatchState) -> dict:
     await _emit(state, {"platform": platform, "status": "writing"})
     prompt_name = f"{platform}_writer.txt"
     system_prompt = load_prompt(prompt_name)
-    user_prompt = json.dumps(
+    user_prompt = build_untrusted_json_prompt(
         {
             "milestone": state["dispatch_body"],
             "project_context": state["project"],
@@ -34,9 +33,6 @@ async def _write(platform: Platform, state: DispatchState) -> dict:
             "narrative_arc": state.get("narrative_arc"),
             "suggested_hook": state.get("strategist_output", {}).get("suggested_hook"),
         },
-        ensure_ascii=False,
-        indent=2,
-        default=str,
     )
 
     try:
@@ -83,4 +79,3 @@ async def reddit_writer(state: DispatchState) -> dict:
 
 async def threads_writer(state: DispatchState) -> dict:
     return await _write("threads", state)
-

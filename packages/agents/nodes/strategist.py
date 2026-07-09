@@ -1,17 +1,16 @@
 from __future__ import annotations
 
-import json
-
 from packages.agents.fallbacks import fallback_strategist
 from packages.agents.llm import call_json_model
 from packages.agents.prompt_loader import load_prompt
+from packages.agents.prompt_safety import build_untrusted_json_prompt
 
 from ..state import DispatchState
 
 
 async def strategist(state: DispatchState) -> dict:
     system_prompt = load_prompt("strategist.txt")
-    user_prompt = json.dumps(
+    user_prompt = build_untrusted_json_prompt(
         {
             "milestone": state["dispatch_body"],
             "project_context": state["project"],
@@ -20,9 +19,6 @@ async def strategist(state: DispatchState) -> dict:
             "retrieved_context": state.get("retrieved_context") or [],
             "voice_profile": state["voice_profile"],
         },
-        ensure_ascii=False,
-        indent=2,
-        default=str,
     )
 
     try:
@@ -49,4 +45,3 @@ async def strategist(state: DispatchState) -> dict:
         "key_points": response.get("key_points", []),
         "avoid": response.get("avoid", []),
     }
-

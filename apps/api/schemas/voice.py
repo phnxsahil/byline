@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from .common import ORMModel
 
@@ -18,6 +18,5 @@ class VoiceProfileRead(ORMModel):
 
 
 class VoiceProfileCreate(BaseModel):
-    raw_posts: str
-    platform: str = "all"
-
+    raw_posts: str = Field(min_length=1, max_length=50000)
+    platform: str = Field(default="all", pattern=r"^(all|linkedin|x|reddit|threads)$")

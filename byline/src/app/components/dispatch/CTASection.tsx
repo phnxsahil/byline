@@ -131,6 +131,7 @@ function QuickStart() {
         </span>
       </div>
       <button
+        aria-label={copied ? "Quick start command copied" : "Copy quick start command"}
         onClick={handleCopy}
         style={{
           background: "rgba(255, 255, 255, 0.05)",
@@ -250,8 +251,7 @@ function GitHubLink() {
         style={{
           fontFamily: "JetBrains Mono, IBM Plex Mono, monospace",
           fontSize: 11,
-          color: "var(--text-secondary)",
-          opacity: 0.8,
+          color: "rgba(237, 234, 227, 0.72)",
         }}
       >
         github.com/sahil/byline

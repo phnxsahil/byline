@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { TopBar, DashTab } from "./TopBar";
-import { StatusBar } from "./StatusBar";
+import { StatusBar } from "./StatusBarClean";
 import {
   IconLayoutDashboard,
   IconInbox,
@@ -116,9 +116,11 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
   const [dispatches, setDispatches] = useState<DispatchRead[]>([]);
   const [activeDispatch, setActiveDispatch] = useState<DispatchRead | null>(null);
   const [drafts, setDrafts] = useState<DraftRead[]>([]);
+  const [backendError, setBackendError] = useState<string | null>(null);
 
   const loadData = async () => {
     try {
+      setBackendError(null);
       const projList = await listProjects();
       setProjects(projList);
       setApiConnected(true);
@@ -133,7 +135,9 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
         setDrafts(draftList);
       }
     } catch (err) {
+      const message = err instanceof Error ? err.message : "Unknown backend error";
       console.warn("Backend API not reachable, running in offline/simulation mode.", err);
+      setBackendError(`Live backend unavailable: ${message}`);
       setApiConnected(false);
       setProjects(MOCK_PROJECTS);
       setDispatches(MOCK_DISPATCHES);
@@ -157,9 +161,12 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
     setActiveDispatch(d);
     if (apiConnected) {
       try {
+        setBackendError(null);
         const list = await getDrafts(d.id);
         setDrafts(list);
-      } catch {
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Unknown draft load error";
+        setBackendError(`Couldn't load drafts for the selected dispatch: ${message}`);
         setDrafts([]);
       }
     } else {
@@ -833,6 +840,37 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
 
   return (
     <section style={{ height: "100vh", display: "flex", flexDirection: "column", background: "var(--by-bg)", color: "var(--by-text)", overflow: "hidden", overscrollBehavior: "contain" }}>
+      {backendError && (
+        <div style={{
+          background: "rgba(248,81,73,0.08)",
+          borderBottom: "0.5px solid rgba(248,81,73,0.25)",
+          color: "var(--by-red)",
+          padding: "6px 16px",
+          fontSize: 11,
+          fontFamily: "'IBM Plex Mono', monospace",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 12,
+        }}>
+          <span>{backendError}</span>
+          <button
+            onClick={() => loadData()}
+            style={{
+              background: "none",
+              border: "0.5px solid rgba(248,81,73,0.35)",
+              color: "var(--by-red)",
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: 10,
+              padding: "2px 8px",
+              borderRadius: 3,
+              cursor: "pointer",
+            }}
+          >
+            retry
+          </button>
+        </div>
+      )}
       {apiConnected === false && (
         <div style={{
           background: "rgba(245,158,11,0.08)",

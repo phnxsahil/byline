@@ -29,7 +29,7 @@ const LINES: TermLine[] = [
 ];
 
 const LINE_COLOR: Record<TermLine["type"], string> = {
-  comment: "var(--by-text-3)",
+  comment: "rgba(237, 234, 227, 0.66)",
   prompt: "var(--by-text)",
   arrow: "var(--by-text-2)",
   success: "var(--by-green)",
@@ -57,16 +57,16 @@ function EyebrowPill() {
       }}
     >
       <span
-        className="dispatch-pulse-dot"
         style={{
-          width: 7,
-          height: 7,
-          borderRadius: "50%",
-          backgroundColor: "var(--by-green)",
-          display: "inline-block",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 14,
           flexShrink: 0,
         }}
-      />
+      >
+        🦉
+      </span>
       <span
         style={{
           fontFamily: "'Inter', system-ui, sans-serif",
@@ -97,22 +97,22 @@ function CTAPrimary() {
         justifyContent: "center",
         minWidth: 176,
         padding: "14px 20px",
-        backgroundColor: "var(--text-primary)",
-        color: "var(--bg)",
-        opacity: hov ? 0.85 : 1,
+        background: "linear-gradient(135deg, #F0A500 0%, #D4820C 100%)",
+        color: "#000",
         borderRadius: 8,
         textDecoration: "none",
-        border: "0.5px solid transparent",
-        boxShadow: hov ? "0 12px 28px rgba(49,48,45,0.18)" : "0 6px 16px rgba(49,48,45,0.08)",
-        transition: "opacity 0.14s ease, box-shadow 0.14s ease",
+        border: "1px solid rgba(255,255,255,0.1)",
+        boxShadow: hov ? "0 12px 28px rgba(240,165,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2)" : "0 6px 16px rgba(240,165,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2)",
+        transition: "all 0.2s ease",
+        transform: hov ? "scale(1.02)" : "scale(1)",
       }}
     >
       <span
         style={{
           fontFamily: "'Inter', system-ui, sans-serif",
           fontSize: 14,
-          fontWeight: 600,
-          letterSpacing: "-0.02em",
+          fontWeight: 700,
+          letterSpacing: "-0.01em",
           whiteSpace: "nowrap",
         }}
       >
@@ -187,7 +187,7 @@ function TerminalCard() {
             marginLeft: 10,
             fontFamily: "IBM Plex Mono, monospace",
             fontSize: 12,
-            color: "rgba(255,255,255,0.28)",
+            color: "rgba(237, 234, 227, 0.58)",
             letterSpacing: "0.03em",
           }}
         >
@@ -353,8 +353,7 @@ export function Hero() {
               style={{
                 fontFamily: "IBM Plex Mono, monospace",
                 fontSize: 13,
-                color: "var(--text-secondary)",
-                opacity: 0.6,
+                color: "rgba(237, 234, 227, 0.72)",
                 letterSpacing: "0.05em",
                 marginBottom: 28,
               }}

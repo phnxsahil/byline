@@ -290,9 +290,7 @@ export function Navbar() {
           align-items: center;
           padding: 0 16px;
         }
-        .dispatch-nav-block + .dispatch-nav-block {
-          border-left: 0.5px solid var(--border);
-        }
+
         .dispatch-nav-brand {
           font-family: ${APPLE_FONT_STACK};
           font-size: 15px;

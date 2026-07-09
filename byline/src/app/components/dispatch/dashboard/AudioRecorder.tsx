@@ -19,6 +19,7 @@ export function AudioRecorder({ projectId, onTranscriptionSuccess, onCancel }: A
   const [isPaused, setIsPaused] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [status, setStatus] = useState<"idle" | "recording" | "review" | "uploading" | "done">("idle");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -181,6 +182,7 @@ export function AudioRecorder({ projectId, onTranscriptionSuccess, onCancel }: A
   const startRecording = async () => {
     audioChunksRef.current = [];
     setRecordingTime(0);
+    setErrorMessage(null);
     isSimulatedRef.current = false;
     
     try {
@@ -263,6 +265,7 @@ export function AudioRecorder({ projectId, onTranscriptionSuccess, onCancel }: A
   };
 
   const handleReset = () => {
+    setErrorMessage(null);
     if (isSimulatedRef.current) {
       cleanupAudioNodes();
       setIsRecording(false);
@@ -291,6 +294,7 @@ export function AudioRecorder({ projectId, onTranscriptionSuccess, onCancel }: A
   const handleSubmit = async () => {
     if (!audioBlobRef.current) return;
     setStatus("uploading");
+    setErrorMessage(null);
 
     if (isSimulatedRef.current) {
       await new Promise((resolve) => setTimeout(resolve, 800));
@@ -313,14 +317,24 @@ export function AudioRecorder({ projectId, onTranscriptionSuccess, onCancel }: A
       });
 
       if (!response.ok) {
-        throw new Error("Voice note upload failed");
+        const text = await response.text();
+        let message = "Voice note upload failed";
+        try {
+          const parsed = JSON.parse(text);
+          message = parsed?.error?.message || parsed?.detail || message;
+        } catch {
+          if (text.trim()) {
+            message = text;
+          }
+        }
+        throw new Error(message);
       }
 
       const result = await response.json();
       setStatus("done");
       onTranscriptionSuccess(result.transcription, result.dispatch_id);
     } catch (error) {
-      alert("Failed to upload/transcribe voice note.");
+      setErrorMessage(error instanceof Error ? error.message : "Failed to upload/transcribe voice note.");
       setStatus("review");
       console.error(error);
     }
@@ -385,6 +399,24 @@ export function AudioRecorder({ projectId, onTranscriptionSuccess, onCancel }: A
           />
         )}
       </div>
+
+      {errorMessage && (
+        <div
+          role="alert"
+          style={{
+            padding: "10px 12px",
+            borderRadius: 4,
+            border: "0.5px solid rgba(248,81,73,0.28)",
+            background: "rgba(248,81,73,0.08)",
+            color: "var(--by-red)",
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: 11,
+            lineHeight: 1.45,
+          }}
+        >
+          {errorMessage}
+        </div>
+      )}
 
       {/* Visualizer / Waveform */}
       {(status === "recording" || status === "idle") && (

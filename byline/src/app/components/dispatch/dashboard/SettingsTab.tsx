@@ -42,7 +42,8 @@ const APPROVAL_MODES = [
   { id: "drafts only", label: "drafts only", color: "var(--by-text-2)", background: "rgba(234,229,220,0.06)" },
 ] as const;
 
-const APPROVAL_OVERRIDES: Record<string, typeof APPROVAL_MODES[number]["id"]> = {
+const DEFAULT_APPROVAL_MODE: (typeof APPROVAL_MODES)[number]["id"] = "review required";
+const DEFAULT_OVERRIDES: Record<string, typeof APPROVAL_MODES[number]["id"]> = {
   LinkedIn: "auto-post",
   X: "review required",
   Reddit: "drafts only",
@@ -342,10 +343,9 @@ export function SettingsTab({ isMobile, projects = [], drafts = [] }: SettingsTa
         return saved as any;
       }
     } catch {}
-    return "review required";
+    return DEFAULT_APPROVAL_MODE;
   });
   const [overrides, setOverrides] = React.useState<Record<string, typeof APPROVAL_MODES[number]["id"]>>(() => {
-    const defaultOverrides = { LinkedIn: "auto-post", X: "review required", Reddit: "drafts only", Threads: "review required" } as const;
     try {
       const saved = localStorage.getItem("byline.settings.overrides");
       if (saved) {
@@ -356,13 +356,13 @@ export function SettingsTab({ isMobile, projects = [], drafts = [] }: SettingsTa
           if (val && APPROVAL_MODES.some(m => m.id === val)) {
             validated[platform] = val;
           } else {
-            validated[platform] = defaultOverrides[platform as keyof typeof defaultOverrides] || "review required";
+            validated[platform] = DEFAULT_OVERRIDES[platform as keyof typeof DEFAULT_OVERRIDES] || DEFAULT_APPROVAL_MODE;
           }
         }
         return validated;
       }
     } catch {}
-    return { ...defaultOverrides };
+    return { ...DEFAULT_OVERRIDES };
   });
   const [confirmReset, setConfirmReset] = React.useState(false);
   const [realVoiceProfile, setRealVoiceProfile] = React.useState<any>(null);
@@ -419,7 +419,12 @@ export function SettingsTab({ isMobile, projects = [], drafts = [] }: SettingsTa
 
   const handleReset = () => {
     setConfirmReset(false);
-    window.location.reload();
+    try {
+      localStorage.removeItem("byline.settings.approvalMode");
+      localStorage.removeItem("byline.settings.overrides");
+    } catch {}
+    setApprovalMode(DEFAULT_APPROVAL_MODE);
+    setOverrides({ ...DEFAULT_OVERRIDES });
   };
 
   return (

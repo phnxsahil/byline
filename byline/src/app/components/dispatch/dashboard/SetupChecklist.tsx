@@ -82,6 +82,7 @@ export function SetupChecklist() {
           </div>{" "}
         </div>{" "}
         <button
+          aria-label="Dismiss setup checklist"
           onClick={() => {
             if (allDone) setDismissed(true);
           }}
@@ -99,7 +100,7 @@ export function SetupChecklist() {
           }}
         >
           {" "}
-          <IconX size={14} stroke={1.5} />{" "}
+          <IconX size={14} stroke={1.5} aria-hidden="true" />{" "}
         </button>{" "}
       </div>{" "}
       <div

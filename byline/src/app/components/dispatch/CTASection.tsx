@@ -1,5 +1,6 @@
 import React from "react";
 import { IconBrandGithub } from "@tabler/icons-react";
+import { BrandMark } from "./BrandMark";
 export function CTASection() {
   return (
     <section 
@@ -29,6 +30,22 @@ export function CTASection() {
         zIndex: 0,
         pointerEvents: "none"
       }} />
+
+      {/* Reusable Brand Mark acting as a painted detail on the equipment */}
+      <BrandMark 
+        size={84} 
+        opacity={0.15} 
+        color="#ffffff"
+        bracketColor="#ffffff"
+        style={{
+          position: "absolute",
+          right: "15%",
+          bottom: "15%",
+          transform: "rotate(-12deg)",
+          zIndex: 1,
+          mixBlendMode: "overlay"
+        }} 
+      />
       <style>{`
         .cta-github-btn {
           font-family: var(--byline-font-mono);

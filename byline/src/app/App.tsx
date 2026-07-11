@@ -494,6 +494,27 @@ export default function App() {
               background: "linear-gradient(to bottom, var(--bg) 0%, rgba(13,17,23,0.8) 25%, rgba(13,17,23,0.65) 50%, rgba(13,17,23,0.85) 75%, var(--bg) 100%)",
               zIndex: 0
             }} />
+            
+            {/* Synthetic Monitor Overlay in HTML (not burned into image) */}
+            <div 
+              className="dispatch-mono"
+              style={{ 
+                position: "absolute", 
+                left: "25%", 
+                bottom: "45%", 
+                transform: "perspective(800px) rotateY(12deg) rotateZ(-1deg)",
+                color: "var(--text-primary)",
+                fontSize: 12,
+                fontWeight: 600,
+                opacity: 0.6,
+                textShadow: "0 0 12px rgba(255,255,255,0.3)",
+                pointerEvents: "none",
+                zIndex: 0
+              }}>
+              <span style={{ color: "var(--accent)" }}>[</span>b<span style={{ color: "var(--accent)" }}>]</span> byline<br/>
+              <span style={{ fontSize: 10, color: "var(--text-secondary)" }}>_ awaiting input</span>
+            </div>
+
             <div style={{ position: "relative", zIndex: 1 }}>
               <CTASection />
               <Footer />

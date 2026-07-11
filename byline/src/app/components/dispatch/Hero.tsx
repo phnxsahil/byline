@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { IconArrowRight, IconBrandGithub } from "@tabler/icons-react";
-import { StampBadge } from "./StampBadge";
 
 
 
@@ -128,8 +127,6 @@ export function Hero() {
         <div className="ta-col" style={{ position: "relative", zIndex: 2, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
           <div className="ta-cross" style={{ bottom: -5, left: -5 }}></div>
           <div className="ta-cross" style={{ top: -5, right: -5 }}></div>
-          
-          <StampBadge size={480} opacity={0.15} rotation={-18} style={{ transform: "translate(160px, -20px)" }} />
         </div>
 
       </div>

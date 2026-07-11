@@ -9,10 +9,44 @@ export function CTASection() {
         marginBottom: 0, 
         borderBottom: "1px solid var(--border)",
         position: "relative",
-        background: "var(--bg)"
+        background: "var(--bg)",
+        overflow: "hidden"
       } as React.CSSProperties}
     >
+      {/* Background Image & Overlay */}
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        backgroundImage: "url('/cta-bg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center bottom",
+        zIndex: 0,
+        opacity: 1,
+        pointerEvents: "none"
+      }} />
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        background: "radial-gradient(ellipse 80% 80% at 50% 30%, rgba(13,17,23,0.95) 0%, rgba(13,17,23,0.7) 40%, transparent 80%)",
+        zIndex: 0,
+        pointerEvents: "none"
+      }} />
 
+      {/* Reusable Brand Mark acting as a painted detail on the equipment */}
+      <BrandMark 
+        size={84} 
+        opacity={0.15} 
+        color="#ffffff"
+        bracketColor="#ffffff"
+        style={{
+          position: "absolute",
+          right: "15%",
+          bottom: "15%",
+          transform: "rotate(-12deg)",
+          zIndex: 1,
+          mixBlendMode: "overlay"
+        }} 
+      />
       <style>{`
         .cta-github-btn {
           font-family: var(--byline-font-mono);
@@ -55,42 +89,8 @@ export function CTASection() {
         }
       `}</style>
       
-      <div className="ta-grid" style={{ overflow: "hidden" }}>
-        {/* Background Image & Overlay */}
-        <div style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage: "url('/cta_startup_garage_bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
-          zIndex: 0,
-          opacity: 1,
-          pointerEvents: "none"
-        }} />
-        <div style={{
-          position: "absolute",
-          inset: 0,
-          background: "radial-gradient(ellipse 80% 80% at 50% 30%, rgba(13,17,23,0.95) 0%, rgba(13,17,23,0.7) 40%, transparent 80%)",
-          zIndex: 0,
-          pointerEvents: "none"
-        }} />
-
-        {/* Reusable Brand Mark acting as a painted detail on the equipment */}
-        <BrandMark 
-          size={84} 
-          opacity={0.15} 
-          color="#ffffff"
-          bracketColor="#ffffff"
-          style={{
-            position: "absolute",
-            right: "15%",
-            bottom: "15%",
-            transform: "rotate(-12deg)",
-            zIndex: 1,
-            mixBlendMode: "overlay"
-          }} 
-        />
-        <div className="ta-col" style={{ gridColumn: "span 4", padding: "140px 48px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", position: "relative", overflow: "hidden" }}>
+      <div className="ta-grid">
+        <div className="ta-col" style={{ gridColumn: "span 4", padding: "160px 48px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", position: "relative", overflow: "hidden" }}>
           
           {/* Removed SVG Stamp Background */}
 

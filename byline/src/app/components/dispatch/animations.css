@@ -196,3 +196,31 @@
 .morph-anim {
   animation: shapeMorph 4s ease-in-out infinite;
 }
+
+/* ── 11. Stamp Physics Animation ────────────────────────────────────────── */
+
+@keyframes stamp-slam {
+  0% {
+    opacity: 0;
+    transform: scale(3) rotate(25deg);
+    filter: blur(4px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(0.95) rotate(-3deg);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    filter: blur(0px);
+  }
+}
+
+.dispatch-stamp-anim {
+  opacity: 0;
+  animation: stamp-slam 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation-delay: 1.2s;
+  transform-origin: center center;
+  will-change: transform, opacity, filter;
+}

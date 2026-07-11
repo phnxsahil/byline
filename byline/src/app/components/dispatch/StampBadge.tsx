@@ -33,8 +33,12 @@ export function StampBadge({
       >
         <defs>
           <path 
-            id="stampPath" 
-            d="M 100, 100 m -70, 0 a 70,70 0 1,1 140,0 a 70,70 0 1,1 -140,0" 
+            id="stampPathTop" 
+            d="M 28,100 A 72,72 0 1,1 172,100" 
+          />
+          <path 
+            id="stampPathBottom" 
+            d="M 28,100 A 72,72 0 0,0 172,100" 
           />
           {/* SVG filter for the slightly worn/stamped texture */}
           <filter id="wornTexture" x="-10%" y="-10%" width="120%" height="120%">
@@ -66,19 +70,32 @@ export function StampBadge({
             [b]
           </text>
 
-          {/* Circular Text path (radius 70 = circumference ~440) */}
+          {/* Circular Text using two paths so bottom text isn't upside down */}
           <text 
             fontFamily="var(--byline-font-mono), monospace" 
             fontSize="14" 
             fontWeight="bold" 
           >
             <textPath 
-              href="#stampPath" 
-              startOffset="0%" 
-              textLength="435" 
-              lengthAdjust="spacing"
+              href="#stampPathTop" 
+              startOffset="50%" 
+              textAnchor="middle"
             >
-              FILED • BYLINE MULTI-AGENT CONTENT ENGINE • 
+              BYLINE MULTI-AGENT CONTENT ENGINE
+            </textPath>
+          </text>
+          <text 
+            fontFamily="var(--byline-font-mono), monospace" 
+            fontSize="14" 
+            fontWeight="bold" 
+          >
+            <textPath 
+              href="#stampPathBottom" 
+              startOffset="50%" 
+              textAnchor="middle"
+              dominantBaseline="hanging"
+            >
+              • FILED •
             </textPath>
           </text>
         </g>

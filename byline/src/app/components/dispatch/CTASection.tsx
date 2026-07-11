@@ -9,7 +9,8 @@ export function CTASection() {
         marginBottom: 0, 
         borderBottom: "1px solid var(--border)",
         position: "relative",
-        background: "var(--bg)"
+        background: "var(--bg)",
+        overflow: "hidden"
       } as React.CSSProperties}
     >
       {/* Background Image & Overlay */}

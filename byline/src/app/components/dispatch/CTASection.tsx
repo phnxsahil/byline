@@ -18,7 +18,7 @@ export function CTASection() {
         inset: 0,
         backgroundImage: "url('/cta_punchcard_bg.png')",
         backgroundSize: "cover",
-        backgroundPosition: "center center",
+        backgroundPosition: "center bottom",
         zIndex: 0,
         opacity: 1,
         pointerEvents: "none"
@@ -89,7 +89,7 @@ export function CTASection() {
       `}</style>
       
       <div className="ta-grid">
-        <div className="ta-col" style={{ gridColumn: "span 4", padding: "140px 48px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", position: "relative", overflow: "hidden" }}>
+        <div className="ta-col" style={{ gridColumn: "span 4", padding: "160px 48px", textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", position: "relative", overflow: "hidden" }}>
           
           {/* Removed SVG Stamp Background */}
 

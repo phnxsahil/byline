@@ -54,7 +54,14 @@ export function Hero() {
         }
       `}</style>
 
-      <div className="ta-grid">
+      <div className="ta-grid" style={{ overflow: "hidden" }}>
+        
+        {/* Background Stamp centered and cut by grid bounds */}
+        <div style={{ position: "absolute", top: "45%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 0, pointerEvents: "none" }}>
+          <div className="dispatch-stamp-anim">
+            <StampBadge size={640} opacity={0.15} rotation={-18} />
+          </div>
+        </div>
         
         {/* Left column: Content spanning 3 columns for asymmetrical feel */}
         <div className="ta-col" style={{ gridColumn: "span 3", position: "relative", zIndex: 1 }}>
@@ -114,15 +121,9 @@ export function Hero() {
         </div>
 
         {/* Right column: 1 column, empty for asymmetry and minimalism */}
-        <div className="ta-col" style={{ position: "relative", zIndex: 2, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+        <div className="ta-col" style={{ position: "relative", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div className="ta-cross" style={{ bottom: -5, left: -5 }}></div>
           <div className="ta-cross" style={{ top: -5, right: -5 }}></div>
-          
-          <div style={{ transform: "translate(160px, -20px)" }}>
-            <div className="dispatch-stamp-anim">
-              <StampBadge size={480} opacity={0.25} rotation={-18} />
-            </div>
-          </div>
         </div>
 
       </div>

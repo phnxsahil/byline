@@ -18,17 +18,6 @@ export function Hero() {
 
   return (
     <section className="ta-grid-wrapper" style={{ overflow: 'hidden', position: 'relative' }}>
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        backgroundImage: "url('/hero_bg.png')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        opacity: 0.12,
-        zIndex: 0,
-        pointerEvents: 'none'
-      }} />
-      <div className="dither-pattern" />
       <style>{`
         .hero-abstract-btn {
           font-size: 13px;

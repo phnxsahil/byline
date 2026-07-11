@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { BrandMark } from "./BrandMark";
 
 const DEMO_LINES = [
   { prefix: "$", text: 'byline log "shipped semantic search on fltrd using pgvector"', delay: 0 },
@@ -42,13 +41,8 @@ export function DemoSection() {
           border-color: rgba(255, 255, 255, 0.4);
         }
       `}</style>
-      <div className="ta-grid" style={{ position: "relative", zIndex: 1, overflow: "hidden" }}>
-        <BrandMark 
-          size={480} 
-          opacity={0.02} 
-          style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%) rotate(-5deg)", zIndex: 0 }} 
-        />
-        <div className="ta-col" style={{ justifyContent: "center", position: "relative", zIndex: 1 }}>
+      <div className="ta-grid" style={{ position: "relative", zIndex: 1 }}>
+        <div className="ta-col" style={{ justifyContent: "center" }}>
           <div style={{ padding: "48px" }}>
             <div className="ta-badge"><span style={{ color: "var(--accent)", marginRight: 8 }}>/05</span> LIVE DEMO</div>
             <h2 className="ta-hero-title" style={{ fontSize: "2rem", marginTop: 12 }}>Watch it run.</h2>

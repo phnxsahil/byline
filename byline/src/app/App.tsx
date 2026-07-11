@@ -482,39 +482,18 @@ export default function App() {
             <div style={{
               position: "absolute",
               inset: 0,
-              backgroundImage: "url('/cta_workspace_bg.png')",
+              backgroundImage: "url('/cta_punchcard_bg.png')",
               backgroundSize: "cover",
               backgroundPosition: "center center",
               zIndex: 0,
-              opacity: 0.9
+              opacity: 0.85
             }} />
             <div style={{
               position: "absolute",
               inset: 0,
-              background: "linear-gradient(to bottom, var(--bg) 0%, rgba(13,17,23,0.8) 25%, rgba(13,17,23,0.65) 50%, rgba(13,17,23,0.85) 75%, var(--bg) 100%)",
+              background: "radial-gradient(ellipse at 50% 20%, var(--bg) 0%, rgba(13,17,23,0.9) 30%, transparent 65%), linear-gradient(to bottom, transparent 50%, rgba(13,17,23,0.9) 75%, var(--bg) 100%)",
               zIndex: 0
             }} />
-            
-            {/* Synthetic Monitor Overlay in HTML (not burned into image) */}
-            <div 
-              className="dispatch-mono"
-              style={{ 
-                position: "absolute", 
-                left: "25%", 
-                bottom: "45%", 
-                transform: "perspective(800px) rotateY(12deg) rotateZ(-1deg)",
-                color: "var(--text-primary)",
-                fontSize: 12,
-                fontWeight: 600,
-                opacity: 0.6,
-                textShadow: "0 0 12px rgba(255,255,255,0.3)",
-                pointerEvents: "none",
-                zIndex: 0
-              }}>
-              <span style={{ color: "var(--accent)" }}>[</span>b<span style={{ color: "var(--accent)" }}>]</span> byline<br/>
-              <span style={{ fontSize: 10, color: "var(--text-secondary)" }}>_ awaiting input</span>
-            </div>
-
             <div style={{ position: "relative", zIndex: 1 }}>
               <CTASection />
               <Footer />

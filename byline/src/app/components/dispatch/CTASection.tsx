@@ -7,9 +7,28 @@ export function CTASection() {
       style={{ 
         marginBottom: 0, 
         borderBottom: "none",
-        background: "transparent"
+        position: "relative",
+        background: "var(--bg)"
       } as React.CSSProperties}
     >
+      {/* Background Image & Overlay */}
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        backgroundImage: "url('/cta_punchcard_bg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center center",
+        zIndex: 0,
+        opacity: 0.85,
+        pointerEvents: "none"
+      }} />
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        background: "radial-gradient(ellipse at 50% 30%, var(--bg) 0%, rgba(13,17,23,0.9) 35%, transparent 70%), linear-gradient(to bottom, transparent 80%, var(--bg) 100%)",
+        zIndex: 0,
+        pointerEvents: "none"
+      }} />
       <style>{`
         .cta-github-btn {
           font-family: var(--byline-font-mono);

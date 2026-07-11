@@ -96,10 +96,28 @@ export function Footer() {
       style={{ 
         position: "relative", 
         borderTop: "none", 
-        background: "transparent", 
+        background: "var(--bg)", 
         overflow: "hidden"
       } as React.CSSProperties}
     >
+      {/* Background Image & Overlay */}
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        backgroundImage: "url('/footer_bg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center bottom",
+        zIndex: 0,
+        opacity: 0.85,
+        pointerEvents: "none"
+      }} />
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        background: "linear-gradient(to bottom, var(--bg) 0%, rgba(13,17,23,0.9) 25%, rgba(13,17,23,0.6) 65%, var(--bg) 90%)",
+        zIndex: 0,
+        pointerEvents: "none"
+      }} />
       <style>{`
         /* Main Grid Architecture */
         .f-grid {

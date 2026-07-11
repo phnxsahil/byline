@@ -477,28 +477,11 @@ export default function App() {
           {/* ── Installation & FAQ ─────────────────────────────────────────────── */}
           <InstallationFAQSection />
 
-          {/* ── Final CTA & Footer ─────────────────────────────────────────────── */}
-          <div style={{ position: "relative", marginTop: 32 }}>
-            <div style={{
-              position: "absolute",
-              inset: 0,
-              backgroundImage: "url('/cta_punchcard_bg.png')",
-              backgroundSize: "cover",
-              backgroundPosition: "center center",
-              zIndex: 0,
-              opacity: 0.85
-            }} />
-            <div style={{
-              position: "absolute",
-              inset: 0,
-              background: "radial-gradient(ellipse at 50% 20%, var(--bg) 0%, rgba(13,17,23,0.9) 30%, transparent 65%), linear-gradient(to bottom, transparent 50%, rgba(13,17,23,0.9) 75%, var(--bg) 100%)",
-              zIndex: 0
-            }} />
-            <div style={{ position: "relative", zIndex: 1 }}>
-              <CTASection />
-              <Footer />
-            </div>
-          </div>
+          {/* ── Final CTA ──────────────────────────────────────────────────────── */}
+          <CTASection />
+
+          {/* ── Footer ─────────────────────────────────────────────────────────── */}
+          <Footer />
           </>
         )}
       </main>

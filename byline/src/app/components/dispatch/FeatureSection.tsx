@@ -1,5 +1,6 @@
 import React from "react";
 import { IconBrandGithub, IconMicrophone, IconDatabase, IconPencil, IconShieldCheck, IconChartBar } from "@tabler/icons-react";
+import { BrandMark } from "./BrandMark";
 
 const FEATURES = [
   { Icon: IconBrandGithub, title: "GitHub Watcher", desc: "Automatically detects PRs and deploys worth talking about." },
@@ -45,11 +46,16 @@ export function FeatureSection() {
         }
       `}</style>
       <div className="ta-grid">
-        <div className="ta-col">
-          <div style={{ padding: "48px 48px 24px 48px" }}>
+        <div className="ta-col" style={{ position: "relative", overflow: "hidden" }}>
+          <div style={{ padding: "48px 48px 24px 48px", position: "relative", zIndex: 1 }}>
             <div className="ta-badge"><span style={{ color: "var(--accent)", marginRight: 8 }}>/04</span> FEATURES</div>
             <h2 className="ta-hero-title" style={{ fontSize: "2rem", marginBottom: 0 }}>Tools for builders.</h2>
           </div>
+          <BrandMark 
+            size={180} 
+            opacity={0.03} 
+            style={{ position: "absolute", bottom: -30, left: 24, zIndex: 0 }} 
+          />
         </div>
         
         <div className="ta-col" style={{ gridColumn: "span 3" }}>

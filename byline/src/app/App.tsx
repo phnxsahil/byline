@@ -482,7 +482,7 @@ export default function App() {
             <div style={{
               position: "absolute",
               inset: 0,
-              backgroundImage: "url('/cta_typewriter_bg.png')",
+              backgroundImage: "url('/cta_ticker_bg.png')",
               backgroundSize: "cover",
               backgroundPosition: "center center",
               zIndex: 0,

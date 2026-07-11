@@ -482,16 +482,16 @@ export default function App() {
             <div style={{
               position: "absolute",
               inset: 0,
-              backgroundImage: "url('/cta_punchcard_bg.png')",
+              backgroundImage: "url('/cta_workspace_bg.png')",
               backgroundSize: "cover",
               backgroundPosition: "center center",
               zIndex: 0,
-              opacity: 0.85
+              opacity: 0.9
             }} />
             <div style={{
               position: "absolute",
               inset: 0,
-              background: "radial-gradient(ellipse at 50% 20%, var(--bg) 0%, rgba(13,17,23,0.9) 30%, transparent 65%), linear-gradient(to bottom, transparent 80%, var(--bg) 100%)",
+              background: "linear-gradient(to bottom, var(--bg) 0%, rgba(13,17,23,0.8) 25%, rgba(13,17,23,0.65) 50%, rgba(13,17,23,0.85) 75%, var(--bg) 100%)",
               zIndex: 0
             }} />
             <div style={{ position: "relative", zIndex: 1 }}>

@@ -477,11 +477,28 @@ export default function App() {
           {/* ── Installation & FAQ ─────────────────────────────────────────────── */}
           <InstallationFAQSection />
 
-          {/* ── Final CTA ──────────────────────────────────────────────────────── */}
-          <CTASection />
-
-          {/* ── Footer ─────────────────────────────────────────────────────────── */}
-          <Footer />
+          {/* ── Final CTA & Footer ─────────────────────────────────────────────── */}
+          <div style={{ position: "relative", marginTop: 32 }}>
+            <div style={{
+              position: "absolute",
+              inset: 0,
+              backgroundImage: "url('/cta_typewriter_bg.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center center",
+              zIndex: 0,
+              opacity: 0.85
+            }} />
+            <div style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to bottom, var(--bg) 0%, rgba(13,17,23,0.1) 40%, rgba(13,17,23,0.3) 70%, var(--bg) 100%)",
+              zIndex: 0
+            }} />
+            <div style={{ position: "relative", zIndex: 1 }}>
+              <CTASection />
+              <Footer />
+            </div>
+          </div>
           </>
         )}
       </main>

@@ -6,7 +6,8 @@ export function CTASection() {
       className="ta-grid-wrapper dispatch-reveal" 
       style={{ 
         marginBottom: 0, 
-        borderBottom: "none"
+        borderBottom: "none",
+        background: "transparent"
       } as React.CSSProperties}
     >
       <style>{`
@@ -56,14 +57,7 @@ export function CTASection() {
           
           {/* Removed SVG Stamp Background */}
 
-          {/* Dark Overlay Gradient to ensure legibility */}
-          <div style={{
-            position: "absolute",
-            inset: 0,
-            zIndex: 1,
-            background: "radial-gradient(circle at center, transparent 20%, var(--bg) 90%)",
-            pointerEvents: "none"
-          }}></div>
+          {/* Removed internal radial gradient to rely on the parent wrapper's linear gradient */}
 
           <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
             <h2 className="ta-hero-title" style={{ fontSize: "3rem" }}>Ready to ship in public?</h2>

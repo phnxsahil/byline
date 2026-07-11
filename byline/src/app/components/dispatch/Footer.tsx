@@ -96,7 +96,7 @@ export function Footer() {
       style={{ 
         position: "relative", 
         borderTop: "none", 
-        background: "var(--bg)", 
+        background: "transparent", 
         overflow: "hidden"
       } as React.CSSProperties}
     >

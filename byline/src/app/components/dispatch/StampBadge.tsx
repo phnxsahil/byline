@@ -57,7 +57,18 @@ export function StampBadge({
           {/* Inner ring bordering text */}
           <circle cx="100" cy="100" r="52" fill="none" stroke="currentColor" strokeWidth="1" />
           
-
+          {/* Center Mark */}
+          <text 
+            x="100" 
+            y="110" 
+            textAnchor="middle" 
+            fontFamily="var(--byline-font-mono), monospace" 
+            fontSize="30" 
+            fontWeight="bold"
+            letterSpacing="-1"
+          >
+            [b]
+          </text>
 
           {/* Circular Text using two paths so bottom text isn't upside down */}
           <text 

@@ -106,7 +106,7 @@ export function Footer() {
         inset: 0,
         backgroundImage: "url('/footer_bg.png')",
         backgroundSize: "cover",
-        backgroundPosition: "center bottom",
+        backgroundPosition: "center center",
         zIndex: 0,
         opacity: 0.85,
         pointerEvents: "none"

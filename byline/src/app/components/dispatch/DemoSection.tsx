@@ -23,15 +23,6 @@ export function DemoSection() {
 
   return (
     <section id="demo" className="ta-grid-wrapper dispatch-reveal" style={{ position: "relative" }}>
-      <div className="dither-pattern" />
-      {/* Dark overlay gradient to ensure text legibility */}
-      <div style={{
-        position: "absolute",
-        inset: 0,
-        zIndex: 0,
-        background: "radial-gradient(ellipse at left center, transparent 0%, var(--bg) 70%)",
-        pointerEvents: "none"
-      }}></div>
       <style>{`
         .demo-run-btn {
           background: transparent;

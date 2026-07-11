@@ -1,322 +1,94 @@
-import React, { useEffect, useRef, useState } from "react";
-import { IconBolt, IconChevronDown, IconCommand, IconMenu2 } from "@tabler/icons-react";
+import React from "react";
+import type { Project as ApiProject } from "../../../api";
+import { IconCommand, IconBolt, IconAlertCircle } from "@tabler/icons-react";
 import Avatar from "boring-avatars";
 
-export type DashTab = "overview" | "desk" | "signal" | "activity" | "settings" | "docs";
-
-interface Project {
-  name: string;
-  stack: string;
-  arc: string;
-}
-
 interface TopBarProps {
-  "data-testid"?: string;
-  activeTab: DashTab;
-  onDispatchClick: () => void;
-  onLandingClick: () => void;
-  isRunning: boolean;
-  isMobile: boolean;
-  onMenuClick: () => void;
-  projects: Project[];
-  activeProject: number;
-  setActiveProject: (idx: number) => void;
+  currentProject: ApiProject | null;
   onSearchClick: () => void;
+  onLogNew: () => void;
+  onLandingClick: () => void;
+  backendError?: string | null;
+  apiConnected?: boolean | null;
+  onOpenSettings?: () => void;
+  onOpenAnalytics?: () => void;
 }
 
 export function TopBar({
-  "data-testid": dataTestId,
-  activeTab,
-  onDispatchClick,
-  onLandingClick,
-  isRunning,
-  isMobile,
-  onMenuClick,
-  projects,
-  activeProject,
-  setActiveProject,
+  currentProject,
   onSearchClick,
+  onLogNew,
+  onLandingClick,
+  backendError,
+  apiConnected,
+  onOpenSettings,
+  onOpenAnalytics
 }: TopBarProps) {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const currentProject = projects[activeProject];
-  const activeLabel = activeTab === "desk" ? "The Desk" : activeTab.charAt(0).toUpperCase() + activeTab.slice(1);
-
   return (
-    <div
-      data-testid={dataTestId}
-      style={{
-        height: 58,
-        background: "linear-gradient(180deg, rgba(19,20,24,0.98), rgba(18,19,23,0.94))",
-        borderBottom: "0.5px solid rgba(255,255,255,0.07)",
-        display: "flex",
-        alignItems: "center",
-        padding: isMobile ? "0 12px" : "0 18px",
-        flexShrink: 0,
-        position: "sticky",
-        top: 0,
-        zIndex: 50,
-        gap: 12,
-        boxShadow: "0 12px 30px rgba(0,0,0,0.18)",
-      }}
-    >
-      {!isMobile && (
-        <div style={{ display: "flex", gap: 7, marginRight: 4, flexShrink: 0 }}>
-          {[["#FF5F57", "#FF3B30"], ["#FFBD2E", "#FF9F0A"], ["#28C840", "#30D158"]].map(([bg, hover], i) => (
-            <div
-              key={i}
-              style={{
-                width: 11,
-                height: 11,
-                borderRadius: "50%",
-                background: bg,
-                cursor: i === 0 ? "pointer" : "default",
-                transition: "background 150ms",
-                flexShrink: 0,
-              }}
-              onClick={i === 0 ? onLandingClick : undefined}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLDivElement).style.background = hover;
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLDivElement).style.background = bg;
-              }}
-              title={i === 0 ? "Back to site" : i === 1 ? "Minimize" : "Full screen"}
-            />
-          ))}
-        </div>
-      )}
-
-      {isMobile && (
-        <button
-          aria-label="Open dashboard navigation"
-          onClick={onMenuClick}
-          style={{
-            width: 34,
-            height: 34,
-            borderRadius: 10,
-            background: "rgba(255,255,255,0.03)",
-            border: "0.5px solid rgba(255,255,255,0.08)",
-            cursor: "pointer",
-            color: "var(--by-text-2)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <IconMenu2 size={18} stroke={1.6} title="Open dashboard navigation" aria-hidden="true" />
-        </button>
-      )}
-
-      <button
-        onClick={onLandingClick}
-        style={{
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          padding: 0,
-          fontFamily: "DM Mono, monospace",
-          fontSize: 17,
-          fontWeight: 500,
-          color: "var(--by-text)",
-          letterSpacing: "-0.04em",
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          flexShrink: 0,
-        }}
-      >
-        <span>byline_</span>
-        {!isMobile && (
-          <span
-            style={{
-              fontSize: 10,
-              padding: "4px 8px",
-              borderRadius: 999,
-              background: "rgba(255,102,0,0.1)",
-              color: "var(--by-accent)",
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-            }}
+    <div className="flex flex-col flex-shrink-0 z-50">
+      {/* Main TopBar */}
+      <div className="h-[60px] bg-paper border-b border-surface flex items-center px-6 justify-between relative">
+        
+        {/* Left: Logo & Navigation */}
+        <div className="flex items-center gap-8">
+          <button 
+            onClick={onLandingClick}
+            className="flex items-center gap-2 font-display text-xl font-bold tracking-tight text-ink hover:opacity-80 transition-opacity"
           >
-            operator
-          </span>
-        )}
-      </button>
-
-      {!isMobile && (
-        <div ref={dropdownRef} style={{ position: "relative", display: "inline-block" }}>
-          <button
-            id="project-switcher-btn"
-            aria-label={`Switch project. Current project ${currentProject?.name ?? "unknown project"}`}
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "7px 10px",
-              borderRadius: 10,
-              border: "0.5px solid rgba(255,255,255,0.08)",
-              background: "rgba(255,255,255,0.03)",
-              color: "var(--by-text)",
-              fontSize: 12,
-              fontFamily: "DM Mono, monospace",
-              cursor: "pointer",
-              transition: "all 120ms ease",
-            }}
-          >
-            {currentProject && (
-              <Avatar name={currentProject.name} variant="marble" colors={["#E8593C", "#2C2C2A", "#F0EDE8"]} size={18} />
-            )}
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 2, minWidth: 0 }}>
-              <span style={{ color: "var(--by-text)", lineHeight: 1 }}>{currentProject?.name}</span>
-              <span style={{ color: "var(--by-text-3)", fontSize: 10, lineHeight: 1 }}>{currentProject?.arc}</span>
-            </div>
-            <IconChevronDown size={12} stroke={1.5} color="var(--by-text-3)" title="Open project switcher" aria-hidden="true" />
+            <span className="font-mono text-stamp font-medium">[ b ]</span> byline
           </button>
 
-          {dropdownOpen && (
-            <div
-              style={{
-                position: "absolute",
-                top: "calc(100% + 8px)",
-                left: 0,
-                width: 250,
-                backgroundColor: "rgba(18,19,23,0.98)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                borderRadius: 14,
-                boxShadow: "0 18px 34px rgba(0,0,0,0.38)",
-                zIndex: 100,
-                padding: 6,
-              }}
-            >
-              {projects.map((p, idx) => (
-                <button
-                  key={p.name}
-                  onClick={() => {
-                    setActiveProject(idx);
-                    setDropdownOpen(false);
-                  }}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                    width: "100%",
-                    padding: "9px 10px",
-                    borderRadius: 10,
-                    border: "none",
-                    background: activeProject === idx ? "rgba(255,102,0,0.1)" : "transparent",
-                    color: "var(--by-text)",
-                    fontSize: 12,
-                    fontFamily: "DM Mono, monospace",
-                    textAlign: "left",
-                    cursor: "pointer",
-                  }}
-                >
-                  <Avatar name={p.name} variant="marble" colors={["#E8593C", "#2C2C2A", "#F0EDE8"]} size={18} />
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.name}</div>
-                    <div style={{ color: "var(--by-text-3)", fontSize: 10, marginTop: 2 }}>{p.stack}</div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+          <div className="hidden md:flex items-center gap-6 text-[11px] font-medium text-mute tracking-widest uppercase">
+            <button className="hover:text-ink transition-colors">Dashboard</button>
+            <button onClick={onOpenAnalytics} className="hover:text-ink transition-colors">Analytics</button>
+            <button onClick={onOpenSettings} className="hover:text-ink transition-colors">Settings</button>
+          </div>
         </div>
-      )}
 
-      {!isMobile && (
-        <button
-          aria-label="Open command palette"
-          onClick={onSearchClick}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: 244,
-            height: 36,
-            borderRadius: 10,
-            border: "0.5px solid rgba(255,255,255,0.08)",
-            background: "rgba(255,255,255,0.03)",
-            padding: "0 10px 0 12px",
-            color: "var(--by-text-3)",
-            fontSize: 12,
-            fontFamily: "'Inter', sans-serif",
-            cursor: "pointer",
-            marginLeft: 4,
-          }}
-        >
-          <span>Search milestones, docs, commands...</span>
-          <kbd
-            style={{
-              fontFamily: "DM Mono, monospace",
-              fontSize: 10,
-              padding: "3px 5px",
-              border: "0.5px solid rgba(255,255,255,0.08)",
-              background: "rgba(255,255,255,0.04)",
-              borderRadius: 6,
-              color: "var(--by-text-3)",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-            }}
+        {/* Center: Search (Absolute centered on large screens) */}
+        <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2">
+          <button
+            onClick={onSearchClick}
+            className="flex items-center justify-between w-[340px] h-[36px] bg-surface/50 border border-rule/50 rounded-lg px-3 text-xs text-mute hover:bg-surface transition-colors focus:outline-none focus:ring-1 focus:ring-mute"
           >
-            <IconCommand size={11} stroke={1.8} title="Open command palette" aria-hidden="true" />
-            K
-          </kbd>
-        </button>
-      )}
+            <span className="opacity-70">Search milestones, docs, commands...</span>
+            <kbd className="flex items-center gap-1 bg-paper border border-rule rounded px-1.5 py-0.5 text-[10px] font-mono text-mute">
+              <IconCommand size={10} /> K
+            </kbd>
+          </button>
+        </div>
 
-      {isMobile && (
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, fontWeight: 600, color: "var(--by-text)" }}>
-            {activeLabel}
+        {/* Right: Actions & Profile */}
+        <div className="flex items-center gap-5">
+          <div className="hidden sm:flex items-center gap-2 text-[10px] uppercase tracking-widest text-mute font-medium group relative">
+            {backendError ? (
+              <IconAlertCircle size={14} className="text-amber-500" />
+            ) : (
+              <span className={`w-2 h-2 rounded-full ${apiConnected ? 'bg-emerald-500/80 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-amber-500/80'}`}></span>
+            )}
+            {apiConnected ? 'Live' : 'Demo'}
+            
+            {/* Tooltip for backend error */}
+            {backendError && (
+              <div className="absolute top-full right-0 mt-2 w-64 p-2 bg-surface border border-rule rounded-md text-[10px] text-amber-500 normal-case hidden group-hover:block z-50">
+                {backendError}
+              </div>
+            )}
           </div>
-          <div style={{ fontFamily: "DM Mono, monospace", fontSize: 10, color: "var(--by-text-3)", marginTop: 2 }}>
-            {currentProject?.name}
+
+          <button
+            onClick={onLogNew}
+            className="flex items-center gap-2 h-[34px] px-4 bg-ink text-paper rounded-md text-[11px] font-semibold tracking-wider uppercase hover:opacity-90 transition-opacity"
+          >
+            <IconBolt size={14} />
+            Log New
+          </button>
+
+          <div className="w-[34px] h-[34px] rounded-full overflow-hidden flex-shrink-0 cursor-pointer border border-rule/50 hover:border-rule transition-colors">
+            <Avatar name="Sahil" variant="marble" colors={["#E8593C", "#2C2C2A", "#F0EDE8", "#C44A2E", "#1F1F22"]} size={34} />
           </div>
         </div>
-      )}
 
-      <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-        <button
-          onClick={onDispatchClick}
-          style={{
-            fontFamily: "DM Mono, monospace",
-            fontSize: 12,
-            fontWeight: 600,
-            height: 38,
-            padding: "0 14px",
-            background: "#A63D00",
-            color: "#F5F2EC",
-            border: "none",
-            borderRadius: 11,
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: 7,
-            boxShadow: "0 10px 24px rgba(255,102,0,0.18)",
-            flexShrink: 0,
-          }}
-        >
-          <IconBolt size={12} stroke={2} aria-hidden="true" />
-          {isMobile ? "Run" : "Dispatch"}
-        </button>
-
-        <div style={{ cursor: "pointer", borderRadius: "50%", overflow: "hidden", flexShrink: 0 }}>
-          <Avatar name="Sahil" variant="marble" colors={["#E8593C", "#2C2C2A", "#F0EDE8", "#C44A2E", "#1F1F22"]} size={28} />
-        </div>
       </div>
     </div>
   );

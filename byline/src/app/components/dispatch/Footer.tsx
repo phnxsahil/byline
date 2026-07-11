@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { IconArrowUpRight, IconBrandGithub, IconBrandX, IconArrowUp } from "@tabler/icons-react";
+import { IconArrowUpRight, IconBrandGithub, IconBrandX, IconArrowUp, IconCode, IconTerminal2 } from "@tabler/icons-react";
+import { StampBadge } from "./StampBadge";
 
 const PRODUCT_LINKS = [
   { label: "AI Agents", href: "#how-it-works" },
@@ -12,14 +13,17 @@ const DEV_LINKS = [
   { label: "Documentation", href: "#docs" },
   { label: "API Reference", href: "#api" },
   { label: "GitHub Repo", href: "https://github.com/sahil/byline" },
-  { label: "Self-Hosting", href: "#" },
+  { label: "Self-Hosting", href: "#self-hosting" },
 ];
 
 const LEGAL_LINKS = [
-  { label: "Privacy Policy", href: "#" },
-  { label: "Terms of Service", href: "#" },
-  { label: "MIT License", href: "#" },
+  { label: "Privacy Policy", href: "#privacy" },
+  { label: "Terms of Service", href: "#terms" },
+  { label: "MIT License", href: "#license" },
 ];
+
+
+
 
 function FooterLink({ label, href }: { label: string; href: string }) {
   const [hov, setHov] = useState(false);
@@ -30,27 +34,29 @@ function FooterLink({ label, href }: { label: string; href: string }) {
       onMouseLeave={() => setHov(false)}
       style={{
         display: "inline-flex",
-        alignItems: "center",
-        gap: 6,
         fontFamily: "var(--byline-font-body)",
         fontSize: 14,
         color: hov ? "var(--text-primary)" : "var(--text-secondary)",
         textDecoration: "none",
-        transition: "all 0.15s ease",
         marginBottom: 16,
-        transform: hov ? "translateX(2px)" : "translateX(0)",
+        overflow: "hidden",
+        height: "20px",
       }}
     >
-      <span>{label}</span>
-      <IconArrowUpRight
-        size={14}
-        stroke={1.5}
-        style={{
-          opacity: hov ? 1 : 0,
-          transform: hov ? "translate(0, 0)" : "translate(-4px, 4px)",
-          transition: "all 0.15s ease",
-        }}
-      />
+      <div style={{ 
+        display: "flex", 
+        flexDirection: "column", 
+        transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)", 
+        transform: hov ? "translateY(-20px)" : "translateY(0)" 
+      }}>
+        <span style={{ display: "inline-flex", alignItems: "center", height: "20px" }}>
+          {label}
+        </span>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 6, height: "20px", color: "var(--text-primary)" }}>
+          {label}
+          <IconArrowUpRight size={14} stroke={1.5} color="var(--accent)" />
+        </span>
+      </div>
     </a>
   );
 }
@@ -86,25 +92,15 @@ function LinkColumn({ title, links }: { title: string; links: { label: string; h
 
 export function Footer() {
   return (
-    <footer
-      style={{
-        background: "var(--bg-footer)",
-        borderTop: "1px dashed var(--border)",
-        position: "relative",
-        overflow: "hidden",
-      }}
+    <footer 
+      style={{ 
+        position: "relative", 
+        borderTop: "none", 
+        background: "var(--bg)", 
+        overflow: "hidden"
+      } as React.CSSProperties}
     >
       <style>{`
-        /* Noise Overlay for Imperfection */
-        .f-noise {
-          position: absolute;
-          inset: 0;
-          opacity: 0.04;
-          pointer-events: none;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-          z-index: 0;
-        }
-
         /* Main Grid Architecture */
         .f-grid {
           display: grid;
@@ -113,8 +109,9 @@ export function Footer() {
           margin: 0 auto;
           position: relative;
           z-index: 1;
-          border-left: 1px dashed var(--border);
-          border-right: 1px dashed var(--border);
+          border-left: 1px solid var(--border);
+          border-right: 1px solid var(--border);
+          border-top: 1px solid var(--border);
         }
 
         /* Grid Intersection Crosses (Imperfection/Blueprint feel) */
@@ -136,8 +133,8 @@ export function Footer() {
         }
 
         .f-col {
-          border-right: 1px dashed var(--border); /* Dashed lines for imperfection */
-          padding: 64px 48px;
+          border-right: 1px solid var(--border);
+          padding: 80px 48px;
           display: flex;
           flex-direction: column;
           position: relative;
@@ -152,32 +149,12 @@ export function Footer() {
           overflow: hidden;
         }
 
-        /* Giant Faded Branding */
-        .f-watermark {
-          position: absolute;
-          right: -40px;
-          bottom: -60px;
-          font-size: 380px;
-          line-height: 1;
-          opacity: 0.08;
-          filter: grayscale(100%);
-          transform: rotate(-12deg);
-          pointer-events: none;
-          userSelect: none;
-          z-index: 0;
-          /* Subtle glitch hover effect */
-          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-        }
-        .f-brand-col:hover .f-watermark {
-          transform: rotate(-8deg) scale(1.05);
-          opacity: 0.12;
-          filter: grayscale(0%); /* Brings back color on hover */
-        }
+        /* Footer Mascot container styling is handled inside the component */
 
         .f-bottom-bar {
-          border-top: 1px dashed var(--border);
-          border-left: 1px dashed var(--border);
-          border-right: 1px dashed var(--border);
+          border-top: 1px solid var(--border);
+          border-left: 1px solid var(--border);
+          border-right: 1px solid var(--border);
           padding: 24px 48px;
           display: flex;
           justify-content: space-between;
@@ -188,25 +165,9 @@ export function Footer() {
           z-index: 1;
         }
 
-        .f-cta-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 10px 18px;
-          background: var(--text-primary);
-          color: var(--bg);
-          font-family: var(--byline-font-body);
-          font-size: 13px;
-          font-weight: 600;
-          text-decoration: none;
-          border-radius: var(--byline-radius-btn, 4px);
-          transition: transform 0.15s ease, opacity 0.15s ease;
-          position: relative;
-          z-index: 2;
-        }
-        .f-cta-btn:hover {
-          transform: translateY(-1px);
-          opacity: 0.9;
+        .f-pixel-btn-override {
+          padding: 12px 24px;
+          font-size: 12px;
         }
 
         .f-socials {
@@ -221,20 +182,19 @@ export function Footer() {
           color: var(--text-primary);
         }
 
-        /* Blocky 'Back to Top' Button */
         .f-pixel-block {
           position: absolute;
           bottom: 48px;
           right: 48px;
           width: 56px;
           height: 40px;
-          background: var(--surface);
+          background: var(--text-secondary);
           display: flex;
           align-items: center;
           justify-content: center;
-          color: var(--text-primary);
+          color: var(--bg);
           cursor: pointer;
-          transition: all 0.2s ease;
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
           clip-path: polygon(
             100% 0, 100% 100%, 0 100%, 0 50%, 25% 50%, 25% 25%, 50% 25%, 50% 0
           );
@@ -243,6 +203,9 @@ export function Footer() {
         .f-pixel-block:hover {
           background: var(--accent);
           color: #000;
+          clip-path: polygon(
+            100% 0, 100% 100%, 0 100%, 0 75%, 25% 75%, 25% 50%, 50% 50%, 50% 0
+          );
         }
 
         @media (max-width: 1024px) {
@@ -256,15 +219,23 @@ export function Footer() {
           }
           .f-cross { display: none; }
         }
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
           .f-grid {
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
+          }
+          .f-brand-col {
+            grid-column: span 1;
           }
           .f-col {
-            padding: 40px 24px;
+            padding: 48px 32px;
+            border-right: none;
+            border-bottom: 1px dashed var(--border);
+          }
+          .f-col:last-child {
+            border-bottom: none;
           }
           .f-bottom-bar {
-            padding: 24px;
+            padding: 24px 32px;
             flex-direction: column;
             align-items: flex-start;
             gap: 24px;
@@ -272,12 +243,15 @@ export function Footer() {
         }
       `}</style>
 
-      {/* Global Noise Overlay */}
-      <div className="f-noise" />
+      <div className="dither-pattern" style={{ opacity: 0.08 }} />
+
+      {/* SVG Stamp Background Watermark (Continuing from CTA Section) */}
+      <div style={{ position: "absolute", top: -212, left: "50%", transform: "translate(-50%, -50%)", zIndex: 0, width: "100%", height: "100%", overflow: "hidden", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <StampBadge size={400} opacity={0.15} rotation={15} />
+      </div>
 
       {/* Main Architectural Grid */}
       <div className="f-grid">
-        
         {/* Intersection Markers (Desktop only) */}
         <div className="f-cross" style={{ top: 0, left: '50%' }}>+</div>
         <div className="f-cross" style={{ top: 0, left: '75%' }}>+</div>
@@ -285,20 +259,19 @@ export function Footer() {
         <div className="f-cross" style={{ bottom: 0, left: '75%' }}>+</div>
 
         <div className="f-col f-brand-col">
-          {/* Giant Watermark Mascot */}
-          <div className="f-watermark">🦉</div>
-
           <div style={{ position: "relative", zIndex: 2 }}>
-            <div style={{
+            <a href="#home" style={{
               fontFamily: "var(--byline-font-mono), monospace",
               fontSize: 20,
               fontWeight: 600,
               color: "var(--text-primary)",
               marginBottom: 32,
-              letterSpacing: "-0.01em"
+              letterSpacing: "-0.01em",
+              textDecoration: "none",
+              display: "inline-block"
             }}>
               <span style={{ color: "var(--accent)" }}>[</span>b<span style={{ color: "var(--accent)" }}>]</span> byline
-            </div>
+            </a>
             <p
               style={{
                 fontFamily: "var(--byline-font-body)",
@@ -311,9 +284,6 @@ export function Footer() {
             >
               Ship your code. We'll orchestrate the content. A multi-agent engine for developers building in public.
             </p>
-            <a href="#dashboard" className="f-cta-btn">
-              Get the Desk
-            </a>
           </div>
 
           <div
@@ -322,7 +292,7 @@ export function Footer() {
               fontSize: 11,
               color: "var(--text-secondary)",
               marginTop: 64,
-              opacity: 0.5,
+              opacity: 0.8,
               position: "relative",
               zIndex: 2,
             }}
@@ -353,9 +323,10 @@ export function Footer() {
 
       {/* Bottom Status & Socials */}
       <div className="f-bottom-bar">
-        <div style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "var(--byline-font-mono)", fontSize: 11, color: "var(--text-secondary)" }}>
-          <div style={{ width: 6, height: 6, background: "#3FB950", boxShadow: "0 0 8px #3FB950" }} />
-          SYSTEMS ONLINE
+        <div style={{ display: "flex", alignItems: "center", gap: 16, fontFamily: "var(--byline-font-mono)", fontSize: 10, color: "var(--text-secondary)", letterSpacing: "0.1em" }}>
+          <span>100% OPEN SOURCE. BUILT FOR DEVELOPERS WHO SHIP.</span>
+          <span style={{ color: "var(--border)" }}>|</span>
+          <span>MIT LICENSE</span>
         </div>
 
         <div className="f-socials">

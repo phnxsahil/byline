@@ -1,23 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { TopBar, DashTab } from "./TopBar";
-import { StatusBar } from "./StatusBarClean";
-import {
-  IconLayoutDashboard,
-  IconInbox,
-  IconRadio,
-  IconActivity,
-  IconSettings,
-  IconBook,
-  IconX
-} from "@tabler/icons-react";
-import { AgentRail, AgentStep } from "./AgentRail";
-import { OverviewTab } from "./OverviewTab";
-import { DeskTab } from "./DeskTab";
-import { SignalTab } from "./SignalTab";
-import { ActivityTab } from "./ActivityTab";
-import { SettingsTab } from "./SettingsTab";
-import { DocsTab } from "./DocsTab";
+import { TopBar } from "./TopBar";
+import { SignalHub } from "./SignalHub";
+import { FeedPanel } from "./FeedPanel";
+import { DeskDrawer } from "./DeskDrawer";
 import { CommandPalette } from "../CommandPalette";
+import { AnalyticsOverlay } from "./AnalyticsOverlay";
+import { SettingsOverlay } from "./SettingsOverlay";
+import type { AgentStep } from "./AgentRail";
 import {
   listProjects,
   listDispatches,
@@ -96,19 +85,16 @@ const MOCK_DRAFTS: Record<string, DraftRead[]> = {
 };
 
 export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
-  const STORAGE_KEY = "byline.dashboard.agentSteps";
-  const [activeTab, setActiveTab] = useState<DashTab>("overview");
   const [isRunning, setIsRunning] = useState(false);
-  const [runningAgent, setRunningAgent] = useState(0);
   const [agentSteps, setAgentSteps] = useState<AgentStep[]>([]);
-  const [railState, setRailState] = useState<"collapsed" | "expanded" | "fullscreen">("collapsed");
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [deskOpen, setDeskOpen] = useState(false);
+  
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-  const [commandPaletteMode, setCommandPaletteMode] = useState<"default" | "dispatch">("default");
-  const [docsScrollTarget, setDocsScrollTarget] = useState<string | null>(null);
-  const [noProjectsBanner, setNoProjectsBanner] = useState(false);
-  const noProjTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [commandPaletteMode, setCommandPaletteMode] = useState<"search" | "command">("search");
+
+  // Overlays
+  const [analyticsOpen, setAnalyticsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const [apiConnected, setApiConnected] = useState<boolean | null>(null);
   const [projects, setProjects] = useState<ApiProject[]>([]);
@@ -159,14 +145,14 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
 
   const handleSelectDispatch = async (d: DispatchRead) => {
     setActiveDispatch(d);
+    setDeskOpen(true);
     if (apiConnected) {
       try {
         setBackendError(null);
         const list = await getDrafts(d.id);
         setDrafts(list);
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Unknown draft load error";
-        setBackendError(`Couldn't load drafts for the selected dispatch: ${message}`);
+        setBackendError(`Couldn't load drafts: ${err}`);
         setDrafts([]);
       }
     } else {
@@ -188,274 +174,79 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
     }
   };
 
-  const handleSendBack = async () => {
-    if (activeDispatch) {
-      runPipeline(activeDispatch.body);
-    }
-  };
-
-  const handleRegenerate = async (platform: string) => {
-    if (activeDispatch) {
-      runPipeline(activeDispatch.body);
-    }
-  };
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 900);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        if (
-          (e.target as HTMLElement).tagName === "INPUT" ||
-          (e.target as HTMLElement).tagName === "TEXTAREA" ||
-          (e.target as HTMLElement).isContentEditable
-        ) {
-          return;
-        }
-        e.preventDefault();
-        setCommandPaletteMode("default");
-        setCommandPaletteOpen(prev => !prev);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
   const makeAgentSteps = (query: string): AgentStep[] => [
     {
       agentId: "strategist",
       startedAt: Date.now(),
       status: "pending",
-      input: {
-        context: ["Project context loaded", "Voice profile loaded", `Milestone: ${query}`],
-        instructions: "Choose angle, platforms, and narrative arc.",
-      },
-      decisions: [
-        { label: "Waiting on dispatch", detail: "The strategist will classify the incoming milestone before any writer starts." },
-      ],
+      input: { context: ["Project context loaded", `Milestone: ${query}`], instructions: "Choose angle." },
+      decisions: [{ label: "Waiting on dispatch", detail: "Strategist classification." }],
     },
     {
       agentId: "linkedin",
       startedAt: Date.now(),
       status: "pending",
-      input: {
-        context: ["LinkedIn prefers sentence case", "Short paragraphs outperform walls of text"],
-        instructions: "Write a clear build-in-public narrative draft.",
-      },
-      decisions: [
-        { label: "Standing by", detail: "Waiting for strategist output before drafting for LinkedIn." },
-      ],
+      input: { context: [], instructions: "Write draft." },
+      decisions: [{ label: "Standing by", detail: "Waiting for strategist." }],
     },
     {
       agentId: "x",
       startedAt: Date.now(),
       status: "pending",
-      input: {
-        context: ["Lowercase voice", "Opinionated first tweet", "3-5 tweets maximum"],
-        instructions: "Turn the milestone into a short, punchy thread.",
-      },
-      decisions: [
-        { label: "Standing by", detail: "Waiting for strategist output before drafting for X." },
-      ],
+      input: { context: [], instructions: "Write draft." },
+      decisions: [{ label: "Standing by", detail: "Waiting for strategist." }],
     },
     {
       agentId: "reddit",
       startedAt: Date.now(),
       status: "pending",
-      input: {
-        context: ["Educational framing required", "No promo language in the opening"],
-        instructions: "Only publish if there is enough depth for a useful lesson.",
-      },
-      decisions: [
-        { label: "Standing by", detail: "Waiting for strategist output before drafting for Reddit." },
-      ],
+      input: { context: [], instructions: "Write draft." },
+      decisions: [{ label: "Standing by", detail: "Waiting for strategist." }],
     },
     {
       agentId: "qa",
       startedAt: Date.now(),
       status: "pending",
-      input: {
-        context: ["Draft validation", "Length compliance", "Token overlap rules"],
-        instructions: "Validate character limits and formatting layout before Critic review.",
-      },
-      decisions: [
-        { label: "Standing by", detail: "Waiting for platform drafts to validate." },
-      ],
+      input: { context: [], instructions: "Validate limits." },
+      decisions: [{ label: "Standing by", detail: "Waiting for drafts." }],
     },
     {
       agentId: "critic",
       startedAt: Date.now(),
       status: "pending",
-      input: {
-        context: ["Check for AI slop", "Verify platform fit", "Flag risky self-promo"],
-        instructions: "Score every generated draft honestly.",
-      },
-      decisions: [
-        { label: "Waiting for drafts", detail: "The critic only runs once the selected writers finish." },
-      ],
+      input: { context: [], instructions: "Score drafts." },
+      decisions: [{ label: "Waiting for drafts", detail: "Critic runs last." }],
     },
   ];
 
-  const runRealPipeline = async (milestoneText: string) => {
-    if (!currentProject) return;
-    setIsRunning(true);
-    setRailState(isMobile ? "fullscreen" : "expanded");
-    
-    const initSteps = makeAgentSteps(milestoneText);
-    setAgentSteps(initSteps);
-    
-    try {
-      const dispatch = await createDispatch({
-        project_id: currentProject.id,
-        body: milestoneText,
-        source: "manual",
-      });
-      
-      setActiveDispatch(dispatch);
-      
-      setAgentSteps(prev => prev.map(s => s.agentId === "strategist" ? {
-        ...s,
-        status: "running" as const,
-        decisions: [{ label: "Running Strategist", detail: "Analyzing milestone content and grounding with past bylines." }]
-      } : s));
-
-      streamGeneration(
-        dispatch.id,
-        (event) => {
-          const platform = event.platform as string;
-          const status = event.status as string;
-          
-          setAgentSteps(prev => {
-            let nextSteps = prev.map(s => {
-              if (s.agentId === "strategist" && s.status !== "done") {
-                return {
-                  ...s,
-                  status: "done" as const,
-                  finishedAt: Date.now(),
-                  decisions: [{ label: "Analysis complete", detail: "Milestone is post-worthy. Routing to target platforms." }]
-                };
-              }
-              return s;
-            });
-            
-            let stepStatus: AgentStep["status"] = "pending";
-            let stepDecisions: AgentStep["decisions"] = [];
-            if (status === "writing") {
-              stepStatus = "running";
-              stepDecisions = [{ label: "Drafting", detail: "Generating native copy matching voice profile rules." }];
-            } else if (status === "ready") {
-              stepStatus = "done";
-              stepDecisions = [{ label: "Draft complete", detail: "Native draft has been successfully generated." }];
-            } else if (status === "flagged") {
-              stepStatus = "blocked";
-              stepDecisions = [{ label: "Rejected by Critic", detail: (event.critic_note as string) || "SLOP or self-promo filter triggered." }];
-            }
-            
-            nextSteps = nextSteps.map(s => {
-              if (s.agentId === platform) {
-                return {
-                  ...s,
-                  status: stepStatus,
-                  decisions: stepDecisions
-                };
-              }
-              return s;
-            });
-
-            // Update QA Agent status dynamically
-            const writersRunning = nextSteps.some(s => ["linkedin", "x", "reddit"].includes(s.agentId) && s.status === "running");
-            const activeWriters = nextSteps.filter(s => ["linkedin", "x", "reddit"].includes(s.agentId) && s.status !== "pending");
-            const writersDone = activeWriters.length > 0 && activeWriters.every(s => s.status === "done" || s.status === "blocked");
-
-            nextSteps = nextSteps.map(s => {
-              if (s.agentId === "qa") {
-                if (writersRunning || !writersDone) {
-                  return {
-                    ...s,
-                    status: "running" as const,
-                    decisions: [{ label: "Analyzing stream", detail: "Validating character counts, styles, and guidelines." }]
-                  };
-                }
-              }
-              return s;
-            });
-            
-            return nextSteps;
-          });
-        },
-        (error) => {
-          console.error("SSE stream error", error);
-          setIsRunning(false);
-          setAgentSteps(prev => prev.map(s => s.status === "running" ? { ...s, status: "error" as const } : s));
-        },
-        async () => {
-          setIsRunning(false);
-          setAgentSteps(prev => prev.map(s => {
-            if (s.agentId === "critic") {
-              return {
-                ...s,
-                status: "done" as const,
-                finishedAt: Date.now(),
-                decisions: [{ label: "Verification complete", detail: "Reviewed voice and platform compliance constraints." }]
-              };
-            }
-            if (s.agentId === "qa") {
-              return {
-                ...s,
-                status: "done" as const,
-                finishedAt: Date.now(),
-                decisions: [
-                  { label: "Linting completed", detail: "Guidelines validated: character limits, hooks, formatting layout." },
-                  { label: "Anti-slop check passed", detail: "Scanned for forbidden AI marketing phrases." }
-                ]
-              };
-            }
-            if (s.agentId === "strategist" && s.status !== "done") {
-              return { ...s, status: "done" as const };
-            }
-            return s;
-          }));
-          
-          const list = await listDispatches();
-          setDispatches(list);
-          const updated = list.find(d => d.id === dispatch.id);
-          if (updated) {
-            setActiveDispatch(updated);
-            const draftList = await getDrafts(updated.id);
-            setDrafts(draftList);
-          }
-        }
-      );
-    } catch (err) {
-      console.error("Failed to start generation", err);
-      setIsRunning(false);
-    }
-  };
-
   const runPipelineSimulated = (milestoneText: string) => {
     setIsRunning(true);
-    setRailState(isMobile ? "fullscreen" : "expanded");
-    setRunningAgent(0);
     setAgentSteps(makeAgentSteps(milestoneText));
+    setDeskOpen(false);
 
     const sequence = [
       () => setAgentSteps((prev) => prev.map((s) => s.agentId === "strategist" ? { ...s, status: "running", decisions: [{ label: "Running Strategist", detail: "Analyzing milestone content." }] } : s)),
       () => {
-        setRunningAgent(1);
-        setAgentSteps((prev) => prev.map((s) => s.agentId === "strategist" ? { ...s, status: "done", finishedAt: Date.now(), decisions: [{ label: "Analysis complete", detail: "Milestone post-worthy. Routing to LinkedIn and X." }] } : s.agentId === "linkedin" || s.agentId === "x" ? { ...s, status: "running", decisions: [{ label: "Drafting", detail: "Generating native copy." }] } : s.agentId === "qa" ? { ...s, status: "running", decisions: [{ label: "Analyzing stream", detail: "Validating constraints in parallel." }] } : s));
+        setAgentSteps((prev) => prev.map((s) => s.agentId === "strategist" ? { ...s, status: "done", finishedAt: Date.now(), decisions: [{ label: "Analysis complete", detail: "Routing to LinkedIn and X." }] } : s.agentId === "linkedin" || s.agentId === "x" ? { ...s, status: "running", decisions: [{ label: "Drafting", detail: "Generating native copy." }] } : s));
       },
       () => {
-        setRunningAgent(3);
-        setAgentSteps((prev) => prev.map((s) => ["linkedin", "x"].includes(s.agentId) ? { ...s, status: "done", decisions: [{ label: "Draft complete", detail: "Native draft generated." }] } : s.agentId === "qa" ? { ...s, status: "done", finishedAt: Date.now(), decisions: [{ label: "Linting completed", detail: "Guidelines validated: character limits, hooks." }] } : s.agentId === "critic" ? { ...s, status: "running", decisions: [{ label: "Verifying", detail: "Running anti-slop and voice compliance." }] } : s));
+        setAgentSteps((prev) => prev.map((s) => {
+          if (["linkedin", "x"].includes(s.agentId)) {
+            const platform = s.agentId;
+            const draftText = platform === "linkedin" ? `We just shipped: "${milestoneText}"` : `shipped: ${milestoneText.toLowerCase()}.`;
+            return { ...s, status: "done", output: { draft: draftText }, decisions: [{ label: "Draft complete", detail: "Native draft generated." }] };
+          }
+          if (s.agentId === "qa") {
+            return { ...s, status: "done", finishedAt: Date.now(), decisions: [{ label: "Linting completed", detail: "Guidelines validated." }] };
+          }
+          if (s.agentId === "critic") {
+            return { ...s, status: "running", decisions: [{ label: "Verifying", detail: "Running anti-slop and voice compliance." }] };
+          }
+          return s;
+        }));
       },
       () => {
         setIsRunning(false);
-        setRunningAgent(0);
         setAgentSteps((prev) => prev.map((s) => s.agentId === "critic" ? { ...s, status: "done", finishedAt: Date.now(), decisions: [{ label: "Verification complete", detail: "Reviewed voice and compliance constraints." }] } : s));
         
         const newMockId = `disp-mock-${Date.now()}`;
@@ -481,34 +272,8 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
         };
         
         MOCK_DRAFTS[newMockId] = [
-          {
-            id: `dr-mock-li-${Date.now()}`,
-            dispatch_id: newMockId,
-            platform: "linkedin",
-            body: `We just shipped: "${milestoneText}"`,
-            reddit_title: null,
-            reddit_subreddit: null,
-            critic_score: 8.5,
-            critic_note: "Passed",
-            voice_match_score: 8.5,
-            critic_grade: "A",
-            status: "draft",
-            created_at: new Date().toISOString()
-          },
-          {
-            id: `dr-mock-x-${Date.now()}`,
-            dispatch_id: newMockId,
-            platform: "x",
-            body: `shipped: ${milestoneText.toLowerCase()}.`,
-            reddit_title: null,
-            reddit_subreddit: null,
-            critic_score: 8.2,
-            critic_note: "Passed",
-            voice_match_score: 8.2,
-            critic_grade: "A",
-            status: "draft",
-            created_at: new Date().toISOString()
-          }
+          { id: `dr-mock-li-${Date.now()}`, dispatch_id: newMockId, platform: "linkedin", body: `We just shipped: "${milestoneText}"`, reddit_title: null, reddit_subreddit: null, critic_score: 8.5, critic_note: "Passed", voice_match_score: 8.5, critic_grade: "A", status: "draft", created_at: new Date().toISOString() },
+          { id: `dr-mock-x-${Date.now()}`, dispatch_id: newMockId, platform: "x", body: `shipped: ${milestoneText.toLowerCase()}.`, reddit_title: null, reddit_subreddit: null, critic_score: 8.2, critic_note: "Passed", voice_match_score: 8.2, critic_grade: "A", status: "draft", created_at: new Date().toISOString() }
         ];
         
         setDispatches(prev => [newMockDisp, ...prev]);
@@ -524,624 +289,74 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
 
   const runPipeline = (query?: string) => {
     if (isRunning) return;
-    if (!currentProject) {
-      // Show the no-projects banner
-      setNoProjectsBanner(true);
-      if (noProjTimerRef.current) clearTimeout(noProjTimerRef.current);
-      noProjTimerRef.current = setTimeout(() => setNoProjectsBanner(false), 4000);
-      return;
-    }
     const milestone = query?.trim() || "shipped semantic search on fltrd.tech using pgvector";
-    if (apiConnected) {
-      runRealPipeline(milestone);
-    } else {
-      runPipelineSimulated(milestone);
-    }
+    runPipelineSimulated(milestone); // Using mock for now per plan
   };
-
-  const handleDispatchClick = () => {
-    setCommandPaletteMode("dispatch");
-    setCommandPaletteOpen(true);
-  };
-  const handleQuickPublish = (txt: string) => { runPipeline(txt); };
-  const handleVoicePublish = async (transcription: string, dispatchId: string) => {
-    if (!currentProject) return;
-    setIsRunning(true);
-    setRailState(isMobile ? "fullscreen" : "expanded");
-    setAgentSteps(makeAgentSteps(transcription));
-
-    if (apiConnected) {
-      try {
-        streamGeneration(
-          dispatchId,
-          (event) => {
-            const platform = event.platform as string;
-            const status = event.status as string;
-            
-            setAgentSteps(prev => {
-              let nextSteps = prev.map(s => {
-                if (s.agentId === "strategist" && s.status !== "done") {
-                  return {
-                    ...s,
-                    status: "done" as const,
-                    finishedAt: Date.now(),
-                    decisions: [{ label: "Analysis complete", detail: "Milestone is post-worthy. Routing to target platforms." }]
-                  };
-                }
-                return s;
-              });
-              
-              let stepStatus: AgentStep["status"] = "pending";
-              let stepDecisions: AgentStep["decisions"] = [];
-              if (status === "writing") {
-                stepStatus = "running";
-                stepDecisions = [{ label: "Drafting", detail: "Generating native copy matching voice profile rules." }];
-              } else if (status === "ready") {
-                stepStatus = "done";
-                stepDecisions = [{ label: "Draft complete", detail: "Native draft has been successfully generated." }];
-              } else if (status === "flagged") {
-                stepStatus = "blocked";
-                stepDecisions = [{ label: "Rejected by Critic", detail: (event.critic_note as string) || "SLOP or self-promo filter triggered." }];
-              }
-              
-              nextSteps = nextSteps.map(s => {
-                if (s.agentId === platform) {
-                  return {
-                    ...s,
-                    status: stepStatus,
-                    decisions: stepDecisions
-                  };
-                }
-                return s;
-              });
-
-              // Update QA Agent status dynamically
-              const writersRunning = nextSteps.some(s => ["linkedin", "x", "reddit"].includes(s.agentId) && s.status === "running");
-              const activeWriters = nextSteps.filter(s => ["linkedin", "x", "reddit"].includes(s.agentId) && s.status !== "pending");
-              const writersDone = activeWriters.length > 0 && activeWriters.every(s => s.status === "done" || s.status === "blocked");
-
-              nextSteps = nextSteps.map(s => {
-                if (s.agentId === "qa") {
-                  if (writersRunning || !writersDone) {
-                    return {
-                      ...s,
-                      status: "running" as const,
-                      decisions: [{ label: "Analyzing stream", detail: "Validating character counts, styles, and guidelines." }]
-                    };
-                  }
-                }
-                return s;
-              });
-              
-              return nextSteps;
-            });
-          },
-          (error) => {
-            console.error("SSE stream error", error);
-            setIsRunning(false);
-            setAgentSteps(prev => prev.map(s => s.status === "running" ? { ...s, status: "error" as const } : s));
-          },
-          async () => {
-            setIsRunning(false);
-            setAgentSteps(prev => prev.map(s => {
-              if (s.agentId === "critic") {
-                return {
-                  ...s,
-                  status: "done" as const,
-                  finishedAt: Date.now(),
-                  decisions: [{ label: "Verification complete", detail: "Reviewed voice and platform compliance constraints." }]
-                };
-              }
-              if (s.agentId === "qa") {
-                return {
-                  ...s,
-                  status: "done" as const,
-                  finishedAt: Date.now(),
-                  decisions: [
-                    { label: "Linting completed", detail: "Guidelines validated: character limits, hooks, formatting layout." },
-                    { label: "Anti-slop check passed", detail: "Scanned for forbidden AI marketing phrases." }
-                  ]
-                };
-              }
-              if (s.agentId === "strategist" && s.status !== "done") {
-                return { ...s, status: "done" as const };
-              }
-              return s;
-            }));
-            
-            const list = await listDispatches();
-            setDispatches(list);
-            const updated = list.find(d => d.id === dispatchId);
-            if (updated) {
-              setActiveDispatch(updated);
-              const draftList = await getDrafts(updated.id);
-              setDrafts(draftList);
-            }
-          }
-        );
-      } catch (err) {
-        console.error("Failed to start generation", err);
-        setIsRunning(false);
-      }
-    } else {
-      // API not connected: fall back to simulated visual sequence
-      runPipelineSimulated(transcription);
-    }
-  };
-  const toggleRail = () => setRailState((prev) => (prev === "collapsed" ? "expanded" : "collapsed"));
-  const handleNavigateToDocHeading = (headingId: string) => {
-    setActiveTab("docs");
-    setDocsScrollTarget(headingId);
-  };
-
-  const commands = [
-    {
-      id: "nav-overview",
-      label: "Navigate to Overview",
-      shortcut: "G O",
-      group: "Navigation",
-      action: () => setActiveTab("overview"),
-    },
-    {
-      id: "nav-desk",
-      label: "Navigate to Desk",
-      shortcut: "G D",
-      group: "Navigation",
-      action: () => setActiveTab("desk"),
-    },
-    {
-      id: "nav-signal",
-      label: "Navigate to Signal",
-      shortcut: "G S",
-      group: "Navigation",
-      action: () => setActiveTab("signal"),
-    },
-    {
-      id: "nav-activity",
-      label: "Navigate to Activity",
-      shortcut: "G A",
-      group: "Navigation",
-      action: () => setActiveTab("activity"),
-    },
-    {
-      id: "nav-settings",
-      label: "Navigate to Settings",
-      shortcut: "G E",
-      group: "Navigation",
-      action: () => setActiveTab("settings"),
-    },
-    {
-      id: "nav-docs",
-      label: "Navigate to Docs",
-      shortcut: "G H",
-      group: "Navigation",
-      action: () => setActiveTab("docs"),
-    },
-    {
-      id: "docs-getting-started",
-      label: "Docs: Getting Started",
-      shortcut: "G H G",
-      group: "Documentation",
-      action: () => handleNavigateToDocHeading("getting-started"),
-    },
-    {
-      id: "docs-dispatching",
-      label: "Docs: Dispatching from the Dashboard",
-      shortcut: "G H D",
-      group: "Documentation",
-      action: () => handleNavigateToDocHeading("dispatching-from-the-dashboard"),
-    },
-    {
-      id: "docs-agents",
-      label: "Docs: Agent Pipeline",
-      shortcut: "G H A",
-      group: "Documentation",
-      action: () => handleNavigateToDocHeading("agents"),
-    },
-    {
-      id: "docs-voice-profile",
-      label: "Docs: Voice Profile",
-      shortcut: "G H V",
-      group: "Documentation",
-      action: () => handleNavigateToDocHeading("voice-profile"),
-    },
-    {
-      id: "docs-platforms",
-      label: "Docs: Platforms",
-      shortcut: "G H P",
-      group: "Documentation",
-      action: () => handleNavigateToDocHeading("platforms"),
-    },
-    {
-      id: "docs-api",
-      label: "Docs: API Reference",
-      shortcut: "G H R",
-      group: "Documentation",
-      action: () => handleNavigateToDocHeading("api"),
-    },
-    {
-      id: "action-run",
-      label: "Run Agent Pipeline",
-      shortcut: "⌥R",
-      group: "Actions",
-      action: () => runPipeline(),
-    },
-    {
-      id: "action-chat",
-      label: "Toggle Chat Assistant",
-      shortcut: "⌥C",
-      group: "Actions",
-      action: () => toggleRail(),
-    },
-  ];
-
-  const renderTab = () => {
-    switch (activeTab) {
-      case "overview": 
-        return (
-          <OverviewTab 
-            onPublish={handleQuickPublish} 
-            onVoicePublish={handleVoicePublish} 
-            isMobile={isMobile}
-            projects={projects}
-            activeProject={currentProject}
-            dispatches={projectDispatches}
-            onSelectDispatch={handleSelectDispatch}
-            onNavigate={setActiveTab}
-          />
-        );
-      case "desk":     
-        return (
-          <DeskTab 
-            isMobile={isMobile} 
-            activeDispatch={activeDispatch}
-            drafts={drafts}
-            allDispatches={dispatches}
-            onUpdateDraft={handleUpdateDraft}
-            onSendBack={handleSendBack}
-            onRegenerate={handleRegenerate}
-            onSelectDispatch={handleSelectDispatch}
-          />
-        );
-      case "signal":   
-        return (
-          <SignalTab 
-            isMobile={isMobile}
-            dispatches={projectDispatches}
-            onSelectDispatch={handleSelectDispatch}
-            onNavigate={setActiveTab}
-          />
-        );
-      case "activity": 
-        return (
-          <ActivityTab 
-            isMobile={isMobile} 
-            dispatches={projectDispatches}
-            onNavigate={setActiveTab}
-            onSelectDispatch={handleSelectDispatch}
-          />
-        );
-      case "settings": return <SettingsTab isMobile={isMobile} projects={projects} drafts={drafts} />;
-      case "docs":     return (
-        <DocsTab
-          isMobile={isMobile}
-          scrollTarget={docsScrollTarget}
-          onScrollComplete={() => setDocsScrollTarget(null)}
-        />
-      );
-    }
-  };
-
-  const mappedProjectsForTopBar = projects.map(p => ({
-    name: p.name,
-    stack: p.repo_url || p.slug || "",
-    arc: p.description || "",
-  }));
 
   return (
-    <section style={{ height: "100vh", display: "flex", flexDirection: "column", background: "var(--by-bg)", color: "var(--by-text)", overflow: "hidden", overscrollBehavior: "contain" }}>
-      {backendError && (
-        <div style={{
-          background: "rgba(248,81,73,0.08)",
-          borderBottom: "0.5px solid rgba(248,81,73,0.25)",
-          color: "var(--by-red)",
-          padding: "6px 16px",
-          fontSize: 11,
-          fontFamily: "'IBM Plex Mono', monospace",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 12,
-        }}>
-          <span>{backendError}</span>
-          <button
-            onClick={() => loadData()}
-            style={{
-              background: "none",
-              border: "0.5px solid rgba(248,81,73,0.35)",
-              color: "var(--by-red)",
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 10,
-              padding: "2px 8px",
-              borderRadius: 3,
-              cursor: "pointer",
-            }}
-          >
-            retry
-          </button>
-        </div>
-      )}
-      {apiConnected === false && (
-        <div style={{
-          background: "rgba(245,158,11,0.08)",
-          borderBottom: "0.5px solid rgba(245,158,11,0.2)",
-          color: "rgba(245,158,11,0.9)",
-          padding: "5px 16px",
-          fontSize: 11,
-          fontFamily: "'IBM Plex Mono', monospace",
-          textAlign: "center",
-          letterSpacing: "0.02em",
-        }}>
-          demo mode — simulated data. connect the backend to use live pipeline.
-        </div>
-      )}
-      {noProjectsBanner && (
-        <div style={{
-          background: "rgba(248,81,73,0.08)",
-          borderBottom: "0.5px solid rgba(248,81,73,0.25)",
-          color: "var(--by-red)",
-          padding: "6px 16px",
-          fontSize: 11,
-          fontFamily: "'IBM Plex Mono', monospace",
-          textAlign: "center",
-          letterSpacing: "0.02em",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 12,
-        }}>
-          <span>no project loaded — add one first</span>
-          <button
-            onClick={() => { setActiveTab("settings"); setNoProjectsBanner(false); }}
-            style={{
-              background: "none", border: "0.5px solid rgba(248,81,73,0.4)",
-              color: "var(--by-red)", fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 10, padding: "2px 8px", borderRadius: 3, cursor: "pointer",
-            }}
-          >
-            go to settings →
-          </button>
-        </div>
-      )}
-      <TopBar
-        data-testid="topbar"
-        activeTab={activeTab}
-        onDispatchClick={handleDispatchClick}
+    <div className="flex flex-col h-screen bg-paper text-ink overflow-hidden font-sans">
+      
+      {/* Top Navigation */}
+      <TopBar 
+        currentProject={currentProject}
+        onSearchClick={() => setCommandPaletteOpen(true)}
+        onLogNew={() => runPipeline()}
         onLandingClick={onLandingClick}
-        isRunning={isRunning}
-        isMobile={isMobile}
-        onMenuClick={() => setMobileMenuOpen(v => !v)}
-        projects={mappedProjectsForTopBar}
-        activeProject={activeProjectIdx}
-        setActiveProject={setActiveProjectIdx}
-        onSearchClick={() => {
-          setCommandPaletteMode("default");
-          setCommandPaletteOpen(true);
-        }}
+        backendError={backendError}
+        apiConnected={apiConnected}
+        onOpenSettings={() => setSettingsOpen(true)}
+        onOpenAnalytics={() => setAnalyticsOpen(true)}
       />
 
-      <article style={{ flex: 1, display: "flex", overflow: "hidden", position: "relative", overscrollBehavior: "contain" }}>
+      {/* 3-Zone Layout */}
+      <div className="flex flex-1 overflow-hidden">
+        
+        {/* Zone 1: Signal Hub (Left) */}
+        <div className="w-64 flex-shrink-0">
+          <SignalHub 
+            currentProject={currentProject}
+            projects={projects}
+            dispatches={projectDispatches}
+            onSelectProject={setActiveProjectIdx}
+            onSelectDispatch={handleSelectDispatch}
+            activeDispatchId={activeDispatch?.id}
+            onLogNew={() => runPipeline()}
+          />
+        </div>
 
-        {isMobile && mobileMenuOpen && (
-          <div
-            style={{
-              position: "fixed", inset: 0, zIndex: 60,
-              display: "flex",
-              backgroundColor: "rgba(0,0,0,0.6)",
-            }}
-          >
-            <div
-              style={{ height: "100%", width: 232, display: "flex", flexDirection: "column" }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <LeftSidebarNavigation
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-                isMobile={true}
-                onCloseMobile={() => setMobileMenuOpen(false)}
-              />
-            </div>
-            <div style={{ flex: 1 }} onClick={() => setMobileMenuOpen(false)} />
-          </div>
-        )}
-
-        {!isMobile && (
-          <div data-testid="sidebar" style={{ width: 232, flexShrink: 0 }}>
-            <LeftSidebarNavigation
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-            />
-          </div>
-        )}
-
-        {renderTab()}
-
-        {!isMobile && railState !== "fullscreen" && (
-          <AgentRail
-            railState={railState}
-            onRailStateChange={setRailState}
+        {/* Zone 2: Command Feed (Center) */}
+        <div className="flex-1 flex flex-col min-w-0 bg-surface">
+          <FeedPanel 
             agentSteps={agentSteps}
             isRunning={isRunning}
-            onRunMilestone={(txt, images) => {
-              handleQuickPublish(txt + (images && images.length > 0 ? ` (${images.length} image(s) attached)` : ""));
-            }}
-            onNavigate={(tab) => setActiveTab(tab as DashTab)}
+            onRunMilestone={runPipeline}
+            onReviewDraft={() => setDeskOpen(true)}
           />
-        )}
-      </article>
+        </div>
 
-      {railState === "fullscreen" && (
-        <div
-          style={{
-            position: "fixed", inset: 0, zIndex: 45,
-            display: "flex", flexDirection: "column",
-          }}
-        >
-          {/* Translucent backdrop — click to collapse */}
-          <div
-            style={{
-              position: "absolute", inset: 0,
-              background: "rgba(0,0,0,0.55)",
-              backdropFilter: "blur(2px)",
-            }}
-            onClick={() => setRailState("collapsed")}
-          />
-          {/* Rail card floating above backdrop */}
-          <div style={{
-            position: "relative",
-            margin: isMobile ? "12px" : "44px",
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            borderRadius: 8,
-            overflow: "hidden",
-            zIndex: 1,
-          }}>
-            <AgentRail
-              railState={railState}
-              onRailStateChange={setRailState}
-              agentSteps={agentSteps}
-              isRunning={isRunning}
-              onRunMilestone={(txt, images) => {
-                handleQuickPublish(txt + (images && images.length > 0 ? ` (${images.length} image(s) attached)` : ""));
-              }}
-              onNavigate={(tab) => setActiveTab(tab as DashTab)}
+        {/* Zone 3: Desk Drawer (Right) */}
+        {deskOpen && (
+          <div className="w-96 flex-shrink-0 animate-in slide-in-from-right duration-300">
+            <DeskDrawer 
+              drafts={drafts}
+              activeDispatch={activeDispatch}
+              onUpdateDraft={handleUpdateDraft}
+              onClose={() => setDeskOpen(false)}
             />
           </div>
-          {/* StatusBar stays visible inside the overlay on mobile */}
-          {isMobile && (
-            <div style={{ position: "relative", zIndex: 1, flexShrink: 0 }}>
-              <StatusBar
-                isRunning={isRunning}
-                onOpenChat={() => setRailState("collapsed")}
-                chatOpen={true}
-              />
-            </div>
-          )}
-        </div>
-      )}
+        )}
 
-      <StatusBar
-        isRunning={isRunning}
-        onOpenChat={() =>
-          setRailState((prev) =>
-            prev === "collapsed" ? "expanded" : "collapsed"
-          )
-        }
-        chatOpen={railState !== "collapsed"}
-      />
-
-      <CommandPalette
-        open={commandPaletteOpen}
-        onClose={() => setCommandPaletteOpen(false)}
-        commands={commands}
-        runPipeline={runPipeline}
-        mode={commandPaletteMode}
-      />
-    </section>
-  );
-}
-
-interface LeftSidebarNavigationProps {
-  activeTab: DashTab;
-  onTabChange: (tab: DashTab) => void;
-  isMobile?: boolean;
-  onCloseMobile?: () => void;
-}
-
-const TABS: { id: DashTab; label: string; icon: React.ComponentType<any> }[] = [
-  { id: "overview", label: "Overview", icon: IconLayoutDashboard },
-  { id: "desk", label: "Desk", icon: IconInbox },
-  { id: "signal", label: "Signal", icon: IconRadio },
-  { id: "activity", label: "Activity", icon: IconActivity },
-  { id: "settings", label: "Settings", icon: IconSettings },
-  { id: "docs", label: "Docs", icon: IconBook },
-];
-
-function LeftSidebarNavigation({
-  activeTab,
-  onTabChange,
-  isMobile = false,
-  onCloseMobile,
-}: LeftSidebarNavigationProps) {
-  return (
-    <div data-testid="sidebar" style={{
-      width: 232, height: "100%", background: "var(--by-bg-2)",
-      borderRight: "0.5px solid var(--by-border)",
-      display: "flex", flexDirection: "column", position: "relative",
-      boxSizing: "border-box",
-    }}>
-      {isMobile && (
-        <div style={{
-          display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "14px 16px", borderBottom: "0.5px solid var(--by-border)",
-        }}>
-          <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 16, fontWeight: 700, color: "var(--by-text)", letterSpacing: "-0.04em" }}>
-            byline_
-          </span>
-          <button onClick={onCloseMobile} style={{
-            background: "none", border: "none", cursor: "pointer",
-            color: "var(--by-text-2)", display: "flex", alignItems: "center",
-            justifyContent: "center", padding: 4,
-          }}>
-            <IconX size={18} stroke={1.5} />
-          </button>
-        </div>
-      )}
-
-      <div style={{ display: "flex", flexDirection: "column", padding: "12px 0", gap: 2, flex: 1 }}>
-        {TABS.map((tab) => {
-          const isActive = activeTab === tab.id;
-          const Icon = tab.icon;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => {
-                onTabChange(tab.id);
-                if (isMobile && onCloseMobile) onCloseMobile();
-              }}
-              style={{
-                display: "flex", alignItems: "center", gap: 12,
-                width: "100%", height: 40, padding: "0 16px",
-                border: "none",
-                background: isActive ? "rgba(255,102,0,0.07)" : "transparent",
-                borderLeft: "2px solid " + (isActive ? "var(--by-accent)" : "transparent"),
-                cursor: "pointer", textAlign: "left",
-                color: isActive ? "var(--by-text)" : "var(--by-text-2)",
-                fontFamily: "'Inter', sans-serif", fontSize: 13,
-                fontWeight: isActive ? 500 : 400,
-                transition: "color 120ms ease, background 120ms ease, border-color 120ms ease",
-                boxSizing: "border-box",
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.color = "var(--by-text)";
-                  e.currentTarget.style.background = "rgba(255, 255, 255, 0.02)";
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.color = "var(--by-text-2)";
-                  e.currentTarget.style.background = "transparent";
-                }
-              }}
-            >
-              <Icon size={16} stroke={1.5} style={{ color: isActive ? "var(--by-accent)" : "inherit" }} />
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
       </div>
+
+      <CommandPalette 
+        open={commandPaletteOpen} 
+        onClose={() => setCommandPaletteOpen(false)}
+        mode={commandPaletteMode}
+        commands={[]}
+      />
+
+      {analyticsOpen && <AnalyticsOverlay onClose={() => setAnalyticsOpen(false)} />}
+      {settingsOpen && <SettingsOverlay onClose={() => setSettingsOpen(false)} apiConnected={apiConnected} />}
     </div>
   );
 }

@@ -1,0 +1,9 @@
+last_synced_sha: "HEAD"
+last_synced_date: "2026-07-09"
+audience:
+  primary: "Developer-founders setting up their own Byline instance — Solo developers or small teams wanting to automate their 'build in public' social media presence, needing local deployment and immediate time-to-value."
+  secondary:
+    - "Open-source maintainers and contributors — Developers wanting to submit PRs to the core Byline repo, caring about the monorepo setup and architecture."
+    - "Content Creators exploring AI automation — Less technical founders or marketers deploying Byline for its content engine, caring about the dashboard and voice profiles."
+  inferred: false
+ask_audience: true

@@ -490,61 +490,88 @@ export function SettingsTab({ isMobile, projects = [], drafts = [] }: SettingsTa
 
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         {activeSection === "connect" && (
-          <SectionShell title="Connect your stack" eyebrow="Connect">
-            <TokenRow label="Anthropic" value="configured" meta="Primary LLM provider for the Strategist, Writers, and Critic." />
-            <TokenRow label="GitHub webhook" value="watching 3 repos" meta="fltrd.tech, byline, and stash are already mapped as signal sources." />
-            <TokenRow label="Platform outlets" value="linkedin · x · reddit" meta="Threads stays manual until the posting layer is turned on." />
+          <SectionShell title="Platform Integrations" eyebrow="Connect">
+            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px", background: "var(--by-bg-3)", borderRadius: 6, border: "0.5px solid var(--by-border)", transition: "border-color 100ms ease" }} onMouseEnter={e => e.currentTarget.style.borderColor="var(--by-text-3)"} onMouseLeave={e => e.currentTarget.style.borderColor="var(--by-border)"}>
+                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                  <IconBrandGithub size={24} color="var(--by-text)" />
+                  <div>
+                    <div style={{ fontSize: 13, color: "var(--by-text)", fontWeight: 600 }}>GitHub Source Monitor</div>
+                    <div style={{ fontSize: 11, color: "var(--by-text-3)", marginTop: 4 }}>Watching <span style={{ color: "var(--by-text-2)" }}>fltrd.tech, byline, stash</span> for code milestones.</div>
+                  </div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 10, color: "var(--by-green)", background: "rgba(63,185,80,0.1)", padding: "2px 6px", borderRadius: 4, fontWeight: 600 }}>Active</span>
+                  <button style={{ background: "rgba(255,255,255,0.05)", border: "0.5px solid var(--by-border)", color: "var(--by-text)", padding: "6px 12px", borderRadius: 4, fontSize: 11, cursor: "pointer", transition: "background 100ms" }} onMouseEnter={e => e.currentTarget.style.background="rgba(255,255,255,0.1)"} onMouseLeave={e => e.currentTarget.style.background="rgba(255,255,255,0.05)"}>Configure</button>
+                </div>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px", background: "var(--by-bg-3)", borderRadius: 6, border: "0.5px solid var(--by-border)", transition: "border-color 100ms ease" }} onMouseEnter={e => e.currentTarget.style.borderColor="var(--by-text-3)"} onMouseLeave={e => e.currentTarget.style.borderColor="var(--by-border)"}>
+                <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                  <div style={{ width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", background: "#0A66C2", borderRadius: 4, color: "#fff", fontWeight: "bold", fontSize: 14 }}>in</div>
+                  <div>
+                    <div style={{ fontSize: 13, color: "var(--by-text)", fontWeight: 600 }}>LinkedIn</div>
+                    <div style={{ fontSize: 11, color: "var(--by-text-3)", marginTop: 4 }}>Composio OAuth token valid. Ready to post.</div>
+                  </div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 10, color: "var(--by-green)", background: "rgba(63,185,80,0.1)", padding: "2px 6px", borderRadius: 4, fontWeight: 600 }}>Active</span>
+                  <button style={{ background: "rgba(255,255,255,0.05)", border: "0.5px solid var(--by-border)", color: "var(--by-text)", padding: "6px 12px", borderRadius: 4, fontSize: 11, cursor: "pointer", transition: "background 100ms" }} onMouseEnter={e => e.currentTarget.style.background="rgba(255,255,255,0.1)"} onMouseLeave={e => e.currentTarget.style.background="rgba(255,255,255,0.05)"}>Disconnect</button>
+                </div>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px", background: "var(--by-bg-3)", borderRadius: 6, border: "0.5px solid var(--by-border)", transition: "border-color 100ms ease" }} onMouseEnter={e => e.currentTarget.style.borderColor="var(--by-text-3)"} onMouseLeave={e => e.currentTarget.style.borderColor="var(--by-border)"}>
+                <div style={{ display: "flex", alignItems: "center", gap: 14, opacity: 0.6 }}>
+                  <div style={{ width: 24, height: 24, display: "flex", alignItems: "center", justifyContent: "center", background: "#000", borderRadius: 4, color: "#fff", fontWeight: "bold", fontSize: 14, border: "1px solid rgba(255,255,255,0.2)" }}>𝕏</div>
+                  <div>
+                    <div style={{ fontSize: 13, color: "var(--by-text)", fontWeight: 600 }}>X (Twitter)</div>
+                    <div style={{ fontSize: 11, color: "var(--by-text-3)", marginTop: 4 }}>Connect to unlock thread publishing.</div>
+                  </div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <button style={{ background: "var(--by-accent)", border: "none", color: "#fff", padding: "6px 12px", borderRadius: 4, fontSize: 11, cursor: "pointer", fontWeight: 600, transition: "opacity 100ms" }} onMouseEnter={e => e.currentTarget.style.opacity="0.8"} onMouseLeave={e => e.currentTarget.style.opacity="1"}>Connect</button>
+                </div>
+              </div>
+            </div>
           </SectionShell>
         )}
 
         {activeSection === "voice" && (
-          <SectionShell title="Voice & brand guardrails" eyebrow="Voice">
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.4fr 0.9fr", gap: 14 }}>
-              <div style={{ background: "var(--by-bg-3)", borderRadius: 6, padding: 14, border: "0.5px solid var(--by-border)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                  <IconBulb size={16} stroke={1.7} color="var(--by-accent)" />
-                  <span style={{ fontSize: 13, color: "var(--by-text)" }}>Active voice profile</span>
+          <SectionShell title="Voice & Brand Guardrails" eyebrow="Voice">
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1.4fr 1fr", gap: 14 }}>
+                <div style={{ background: "var(--by-bg-3)", borderRadius: 8, padding: 16, border: "0.5px solid var(--by-border)" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+                    <div style={{ width: 28, height: 28, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,102,0,0.1)", borderRadius: 6 }}>
+                      <IconBulb size={16} stroke={1.7} color="var(--by-accent)" />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 13, color: "var(--by-text)", fontWeight: 600 }}>Active Voice Profile</div>
+                      <div style={{ fontSize: 11, color: "var(--by-text-3)" }}>Learned from your past posts</div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 12, color: "var(--by-text)", lineHeight: 1.6, background: "rgba(255,255,255,0.02)", padding: 12, borderRadius: 6, border: "0.5px solid var(--by-border)" }}>
+                    "lowercase on casual channels, sentence case on LinkedIn, hook-led openings, short paragraphs, no corporate filler."
+                  </div>
+                  <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
+                    <button style={{ flex: 1, padding: "8px 0", borderRadius: 6, border: "0.5px solid var(--by-border)", background: "rgba(255,255,255,0.05)", color: "var(--by-text)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, cursor: "pointer", transition: "background 100ms", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }} onMouseEnter={e => e.currentTarget.style.background="rgba(255,255,255,0.1)"} onMouseLeave={e => e.currentTarget.style.background="rgba(255,255,255,0.05)"}>
+                      <IconRefresh size={14} stroke={1.6} />
+                      Retrain Voice
+                    </button>
+                  </div>
                 </div>
-                <div style={{ fontSize: 12, color: "var(--by-text-2)", lineHeight: 1.6 }}>
-                  lowercase on casual channels, sentence case on LinkedIn, hook-led openings, short paragraphs, no corporate filler.
-                </div>
-                <button
-                  style={{
-                    marginTop: 12,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    padding: "6px 10px",
-                    borderRadius: 5,
-                    border: "0.5px solid var(--by-border)",
-                    background: "transparent",
-                    color: "var(--by-text)",
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 10,
-                    cursor: "pointer",
-                  }}
-                >
-                  <IconRefresh size={12} stroke={1.6} />
-                  retrain voice
-                </button>
-              </div>
-              <div style={{ background: "var(--by-bg-3)", borderRadius: 6, padding: 14, border: "0.5px solid var(--by-border)" }}>
-                <div style={{ fontSize: 12, color: "var(--by-text-3)", marginBottom: 8 }}>Blocked phrases</div>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                  {["excited to announce", "humbled", "thrilled to share", "game-changer"].map((phrase) => (
-                    <span
-                      key={phrase}
-                      style={{
-                        padding: "4px 7px",
-                        borderRadius: 999,
-                        background: "rgba(248,113,113,0.1)",
-                        color: "var(--by-red)",
-                        fontSize: 11,
-                      }}
-                    >
-                      {phrase}
-                    </span>
-                  ))}
+                <div style={{ background: "var(--by-bg-3)", borderRadius: 8, padding: 16, border: "0.5px solid var(--by-border)", display: "flex", flexDirection: "column" }}>
+                  <div style={{ fontSize: 13, color: "var(--by-text)", fontWeight: 600, marginBottom: 4 }}>Banned Phrases</div>
+                  <div style={{ fontSize: 11, color: "var(--by-text-3)", marginBottom: 12 }}>Critic agent will reject drafts using these.</div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6, flex: 1, alignContent: "flex-start" }}>
+                    {["excited to announce", "humbled", "thrilled to share", "game-changer", "synergy", "delve"].map((phrase) => (
+                      <span
+                        key={phrase}
+                        style={{ padding: "4px 8px", borderRadius: 4, background: "rgba(248,81,73,0.1)", border: "0.5px solid rgba(248,81,73,0.2)", color: "var(--by-red)", fontSize: 11 }}
+                      >
+                        {phrase}
+                      </span>
+                    ))}
+                  </div>
+                  <button style={{ marginTop: 12, width: "100%", padding: "6px 0", borderRadius: 4, border: "0.5px dashed var(--by-border)", background: "transparent", color: "var(--by-text-3)", fontSize: 11, cursor: "pointer" }}>+ Add Phrase</button>
                 </div>
               </div>
             </div>

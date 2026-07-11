@@ -13,18 +13,49 @@ const FEATURES = [
 export function FeatureSection() {
   return (
     <section id="features" className="ta-grid-wrapper dispatch-reveal">
+      <style>{`
+        .feat-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          height: 100%;
+        }
+        .feat-card {
+          padding: 48px;
+          border-right: 1px dashed var(--border);
+          border-bottom: 1px dashed var(--border);
+        }
+        .feat-card:nth-child(3n) {
+          border-right: none;
+        }
+        .feat-card:nth-last-child(-n+3) {
+          border-bottom: none;
+        }
+        @media (max-width: 1024px) {
+          .feat-grid {
+            grid-template-columns: 1fr;
+          }
+          .feat-card {
+            border-right: none !important;
+            border-bottom: 1px dashed var(--border) !important;
+            padding: 32px 24px;
+          }
+          .feat-card:last-child {
+            border-bottom: none !important;
+          }
+        }
+      `}</style>
       <div className="ta-grid">
         <div className="ta-col">
-          <div style={{ padding: "80px 48px" }}>
-            <div className="ta-badge"><span style={{ color: "var(--accent)", marginRight: 8 }}>/03</span> FEATURES</div>
-            <h2 className="ta-hero-title" style={{ fontSize: "2rem" }}>Tools for builders.</h2>
+          <div style={{ padding: "48px 48px 24px 48px" }}>
+            <div className="ta-badge"><span style={{ color: "var(--accent)", marginRight: 8 }}>/04</span> FEATURES</div>
+            <h2 className="ta-hero-title" style={{ fontSize: "2rem", marginBottom: 0 }}>Tools for builders.</h2>
           </div>
         </div>
         
         <div className="ta-col" style={{ gridColumn: "span 3" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", height: "100%" }}>
+          <div className="feat-grid">
             {FEATURES.map((f, i) => (
-              <div key={i} style={{ padding: 48, borderRight: (i+1)%3!==0 ? "1px dashed var(--border)" : "none", borderBottom: i<3 ? "1px dashed var(--border)" : "none" }}>
+              <div key={i} className="feat-card dispatch-bento-card" data-index={i}>
                 <f.Icon size={24} color="var(--text-secondary)" stroke={1.5} style={{ marginBottom: 24 }} />
                 <div style={{ fontFamily: "Space Grotesk", fontSize: 16, fontWeight: 600, color: "var(--text-primary)", marginBottom: 8 }}>{f.title}</div>
                 <div style={{ fontFamily: "Inter", fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.5 }}>{f.desc}</div>

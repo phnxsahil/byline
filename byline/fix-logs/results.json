@@ -4,7 +4,7 @@
       "C:\\Program Files\\nodejs\\node.exe",
       "D:\\Projects\\dispatch\\byline\\node_modules\\@playwright\\test\\cli.js",
       "test",
-      "scripts/byline-audit.spec.ts"
+      "scripts/dashboard.spec.ts"
     ],
     "configFile": "D:\\Projects\\dispatch\\byline\\playwright.config.ts",
     "rootDir": "D:/Projects/dispatch/byline/scripts",
@@ -66,21 +66,21 @@
   },
   "suites": [
     {
-      "title": "byline-audit.spec.ts",
-      "file": "byline-audit.spec.ts",
+      "title": "dashboard.spec.ts",
+      "file": "dashboard.spec.ts",
       "column": 0,
       "line": 0,
       "specs": [],
       "suites": [
         {
-          "title": "Landing Page",
-          "file": "byline-audit.spec.ts",
-          "line": 36,
+          "title": "Dashboard Smoke Tests",
+          "file": "dashboard.spec.ts",
+          "line": 3,
           "column": 6,
           "specs": [
             {
-              "title": "navbar: full links visible at 1280px",
-              "ok": false,
+              "title": "Dashboard loads and displays core zones",
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -93,59 +93,27 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "timedOut",
-                      "duration": 31616,
-                      "error": {
-                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
-                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                      },
-                      "errors": [
-                        {
-                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
-                        },
-                        {
-                          "location": {
-                            "file": "D:\\Projects\\dispatch\\byline\\scripts\\byline-audit.spec.ts",
-                            "column": 16,
-                            "line": 41
-                          },
-                          "message": "Error: page.waitForLoadState: Test timeout of 30000ms exceeded.\n\n  39 |     await page.setViewportSize({ width: 1280, height: 800 });\n  40 |     await page.goto(BASE_URL);\n> 41 |     await page.waitForLoadState('networkidle');\n     |                ^\n  42 |     for (const link of ['demo', 'features', 'docs', 'pricing', 'github']) {\n  43 |       await expect(page.locator(`nav a:has-text(\"${link}\")`).first()).toBeVisible();\n  44 |     }\n    at D:\\Projects\\dispatch\\byline\\scripts\\byline-audit.spec.ts:41:16"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 5892,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-21T17:17:20.303Z",
+                      "startTime": "2026-07-11T12:27:07.872Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "D:\\Projects\\dispatch\\byline\\test-results\\byline-audit-Landing-Page--3f4b1-ull-links-visible-at-1280px\\test-failed-1.png"
-                        },
-                        {
-                          "name": "video",
-                          "contentType": "video/webm",
-                          "path": "D:\\Projects\\dispatch\\byline\\test-results\\byline-audit-Landing-Page--3f4b1-ull-links-visible-at-1280px\\video.webm"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "D:\\Projects\\dispatch\\byline\\test-results\\byline-audit-Landing-Page--3f4b1-ull-links-visible-at-1280px\\error-context.md"
-                        }
-                      ]
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
-              "id": "f521449ea6d2d3df4f73-a1375784b2a7f1cdd008",
-              "file": "byline-audit.spec.ts",
-              "line": 38,
+              "id": "90cda532ab82d274b30b-348c2f1402944a469491",
+              "file": "dashboard.spec.ts",
+              "line": 4,
               "column": 3
             },
             {
-              "title": "navbar: hamburger appears and works at 375px",
+              "title": "Settings overlay opens and closes",
               "ok": true,
               "tags": [],
               "tests": [
@@ -157,15 +125,15 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 11267,
+                      "duration": 2577,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-21T17:18:21.605Z",
+                      "startTime": "2026-07-11T12:27:15.268Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -173,13 +141,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "f521449ea6d2d3df4f73-01a62ff02d594e497865",
-              "file": "byline-audit.spec.ts",
-              "line": 47,
+              "id": "90cda532ab82d274b30b-b3413c562ccc8bb5f8b0",
+              "file": "dashboard.spec.ts",
+              "line": 24,
               "column": 3
             },
             {
-              "title": "navbar: dark mode toggle is NOT between two CTA buttons",
+              "title": "Analytics overlay opens and closes",
               "ok": true,
               "tags": [],
               "tests": [
@@ -191,15 +159,15 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4644,
+                      "duration": 2196,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-21T17:18:34.231Z",
+                      "startTime": "2026-07-11T12:27:17.865Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -207,13 +175,13 @@
                   "status": "expected"
                 }
               ],
-              "id": "f521449ea6d2d3df4f73-d080f1eb82d9c59414b1",
-              "file": "byline-audit.spec.ts",
-              "line": 72,
+              "id": "90cda532ab82d274b30b-e7dcd2aef9cb7414dc3c",
+              "file": "dashboard.spec.ts",
+              "line": 40,
               "column": 3
             },
             {
-              "title": "hero: no large gap between CTA buttons and trust badges",
+              "title": "Running an agent pipeline simulation",
               "ok": true,
               "tags": [],
               "tests": [
@@ -225,15 +193,15 @@
                   "projectName": "",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3610,
+                      "duration": 6464,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-06-21T17:18:38.923Z",
+                      "startTime": "2026-07-11T12:27:20.080Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -241,289 +209,9 @@
                   "status": "expected"
                 }
               ],
-              "id": "f521449ea6d2d3df4f73-9dcd92bb63e21fc3a904",
-              "file": "byline-audit.spec.ts",
-              "line": 89,
-              "column": 3
-            },
-            {
-              "title": "problem section: label tight to headline (≤ 16px gap)",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 3712,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-06-21T17:18:42.567Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "f521449ea6d2d3df4f73-2dc91f15e270b40e754d",
-              "file": "byline-audit.spec.ts",
-              "line": 101,
-              "column": 3
-            },
-            {
-              "title": "problem section: all 4 cards same height",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 3372,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-06-21T17:18:46.314Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "f521449ea6d2d3df4f73-6b91d0aeafbd00f5b8d2",
-              "file": "byline-audit.spec.ts",
-              "line": 118,
-              "column": 3
-            }
-          ]
-        },
-        {
-          "title": "Dashboard",
-          "file": "byline-audit.spec.ts",
-          "line": 138,
-          "column": 6,
-          "specs": [
-            {
-              "title": "dashboard page has dark background",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 7810,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-06-21T17:18:49.716Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "f521449ea6d2d3df4f73-1b3090cd6b2ae1d77e4c",
-              "file": "byline-audit.spec.ts",
-              "line": 151,
-              "column": 3
-            },
-            {
-              "title": "no blue accent on active sidebar state",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 6522,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-06-21T17:18:57.578Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "f521449ea6d2d3df4f73-f1ebe403ad1c20ef59df",
-              "file": "byline-audit.spec.ts",
-              "line": 170,
-              "column": 3
-            },
-            {
-              "title": "active sidebar item uses orange, not blue",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 7011,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-06-21T17:19:04.139Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "f521449ea6d2d3df4f73-96e3d71b0287a3e47d52",
-              "file": "byline-audit.spec.ts",
-              "line": 175,
-              "column": 3
-            },
-            {
-              "title": "voice score chart: no unicode escape in label",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 6713,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-06-21T17:19:11.194Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "f521449ea6d2d3df4f73-e753ba571f55992a5dca",
-              "file": "byline-audit.spec.ts",
-              "line": 192,
-              "column": 3
-            },
-            {
-              "title": "milestone table: no rows with score 0",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 6949,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-06-21T17:19:17.951Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "f521449ea6d2d3df4f73-e74b0f985b3b8090b47a",
-              "file": "byline-audit.spec.ts",
-              "line": 198,
-              "column": 3
-            },
-            {
-              "title": "posts/week chart: no purple for X/Twitter",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 1,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 6682,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-06-21T17:19:24.949Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "f521449ea6d2d3df4f73-e6f5b1f1f75416729e0d",
-              "file": "byline-audit.spec.ts",
-              "line": 209,
+              "id": "90cda532ab82d274b30b-5820a7a8fc4d6eb754f3",
+              "file": "dashboard.spec.ts",
+              "line": 53,
               "column": 3
             }
           ]
@@ -533,11 +221,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-06-21T17:17:18.065Z",
-    "duration": 135952.582,
-    "expected": 11,
+    "startTime": "2026-07-11T12:27:07.192Z",
+    "duration": 19694.637000000002,
+    "expected": 4,
     "skipped": 0,
-    "unexpected": 1,
+    "unexpected": 0,
     "flaky": 0
   }
 }

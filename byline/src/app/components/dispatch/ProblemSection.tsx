@@ -11,25 +11,45 @@ const PROBLEMS = [
 export function ProblemSection() {
   return (
     <section className="ta-grid-wrapper dispatch-reveal">
-      <div className="ta-grid">
-        <div className="ta-col">
-          <div style={{ padding: "80px 48px" }}>
-            <div className="ta-badge"><span style={{ color: "var(--accent)", marginRight: 8 }}>/01</span> THE PROBLEM</div>
-            <h2 className="ta-hero-title" style={{ fontSize: "2rem" }}>Building in public shouldn't be a second job.</h2>
-            <p className="ta-hero-desc">You ship code daily. But talking about it takes longer than the build itself.</p>
+      <div id="problem-section" className="ta-grid">
+        
+        {/* Title on the Left */}
+        <div className="ta-col" style={{ gridColumn: 'span 2' }}>
+          <div style={{ padding: "48px", display: "flex", flexDirection: "column", justifyContent: "center", flex: 1 }}>
+            <div className="ta-badge"><span style={{ color: "var(--accent)", marginRight: 8 }}>/02</span> THE PROBLEM</div>
+            <h2 className="ta-hero-title" style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}>
+              Building in public shouldn't be a second job.
+            </h2>
+            <p className="ta-hero-desc">
+              You ship code daily. But talking about it takes longer than the build itself.
+            </p>
           </div>
         </div>
         
-        {PROBLEMS.map((p, i) => (
-          <div key={i} className="ta-col" style={{ padding: 48, justifyContent: "space-between", background: "var(--bg)" }}>
-            <p.Icon size={24} color="var(--accent)" stroke={1.5} />
-            <div style={{ marginTop: 40 }}>
-              <div style={{ fontFamily: "Space Grotesk", fontSize: 18, fontWeight: 600, color: "var(--text-primary)", marginBottom: 12 }}>{p.title}</div>
-              <div style={{ fontFamily: "Inter", fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.6 }}>{p.body}</div>
-            </div>
-            <div className="ta-cross" style={{ bottom: -5, left: -5 }}></div>
+        {/* Content on the Right */}
+        <div className="ta-col" style={{ gridColumn: 'span 2' }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr", height: "100%" }}>
+            {PROBLEMS.map((p, i) => (
+              <div key={i} style={{ 
+                padding: 48, 
+                display: "flex", 
+                flexDirection: "column", 
+                justifyContent: "space-between",
+                borderBottom: i < 2 ? "1px dashed var(--border)" : "none",
+                borderRight: i % 2 === 0 ? "1px dashed var(--border)" : "none",
+                position: "relative"
+              }}>
+                <p.Icon size={24} color="var(--text-secondary)" stroke={1.5} />
+                <div style={{ marginTop: 40 }}>
+                  <div style={{ fontFamily: "Space Grotesk", fontSize: 18, fontWeight: 600, color: "var(--text-primary)", marginBottom: 12 }}>{p.title}</div>
+                  <div style={{ fontFamily: "Inter", fontSize: 14, color: "var(--text-secondary)", lineHeight: 1.6 }}>{p.body}</div>
+                </div>
+                <div className="ta-cross" style={{ bottom: -5, left: -5 }}></div>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+        
       </div>
     </section>
   );

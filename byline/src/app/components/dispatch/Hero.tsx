@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { IconArrowRight } from "@tabler/icons-react";
+import { IconArrowRight, IconBrandGithub } from "@tabler/icons-react";
+import { StampBadge } from "./StampBadge";
+
+
 
 export function Hero() {
   const [typed, setTyped] = useState("");
@@ -15,58 +18,40 @@ export function Hero() {
   }, []);
 
   return (
-    <section className="ta-grid-wrapper" style={{ overflow: 'hidden' }}>
+    <section className="ta-grid-wrapper" style={{ overflow: 'hidden', position: 'relative' }}>
+      <div className="dither-pattern" />
       <style>{`
-        .hero-watermark {
-          position: absolute;
-          right: -80px;
-          bottom: -120px;
-          font-size: 500px;
-          line-height: 1;
-          opacity: 0.04;
-          filter: grayscale(100%);
-          transform: rotate(-15deg);
-          pointer-events: none;
-          user-select: none;
-          z-index: 0;
-          transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
-        }
-        .ta-grid-wrapper:hover .hero-watermark {
-          transform: rotate(-10deg) scale(1.02);
-          opacity: 0.08;
-          filter: grayscale(0%);
-        }
-        
         .hero-abstract-btn {
-          position: relative;
-          background: var(--accent);
-          color: #000;
-          padding: 16px 32px;
-          font-family: var(--byline-font-mono), monospace;
           font-size: 13px;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          text-decoration: none;
-          display: inline-flex;
-          align-items: center;
-          gap: 12px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          /* Abstract pixel-cut shape */
-          clip-path: polygon(
-            0 0, 
-            calc(100% - 16px) 0, 
-            100% 16px, 
-            100% 100%, 
-            16px 100%, 
-            0 calc(100% - 16px)
-          );
+          padding: 16px 32px;
+          border: 2px solid #000;
         }
-        .hero-abstract-btn:hover {
-          background: var(--text-primary);
-          color: var(--bg);
-          transform: translateY(-2px);
+
+        .hero-abstract-btn-secondary {
+          font-size: 13px;
+          padding: 16px 32px;
+        }
+        .hero-btn-container {
+          margin-top: 48px;
+          display: flex;
+          gap: 24px;
+          align-items: center;
+          flex-wrap: wrap;
+        }
+        @media (max-width: 640px) {
+          .hero-btn-container {
+            gap: 16px;
+          }
+          .hero-abstract-btn {
+            padding: 14px 24px;
+            font-size: 12px;
+            white-space: nowrap;
+          }
+          .hero-abstract-btn-secondary {
+            padding: 12px 24px;
+            font-size: 12px;
+            white-space: nowrap;
+          }
         }
       `}</style>
 
@@ -75,9 +60,15 @@ export function Hero() {
         {/* Left column: Content spanning 3 columns for asymmetrical feel */}
         <div className="ta-col" style={{ gridColumn: "span 3", position: "relative", zIndex: 1 }}>
           <div className="ta-hero-content dispatch-hero-content">
-            <div className="ta-badge">
-              <span style={{ color: "var(--accent)", marginRight: 8 }}>/00</span>
-              MULTI-AGENT CONTENT ENGINE
+            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 32, flexWrap: "wrap" }}>
+              <div className="ta-badge" style={{ margin: 0 }}>
+                <span style={{ color: "var(--accent)", marginRight: 8 }}>/00</span>
+                MULTI-AGENT CONTENT ENGINE
+              </div>
+              <div style={{ width: 3, height: 3, background: "var(--border)" }} />
+              <div style={{ fontFamily: "var(--byline-font-mono)", fontSize: 11, letterSpacing: "0.05em", color: "var(--accent)", textTransform: "uppercase" }}>
+                Backed by Y (Combinator rejected us).
+              </div>
             </div>
             
             <h1 className="ta-hero-title">
@@ -87,7 +78,18 @@ export function Hero() {
             </h1>
             
             <div style={{ fontFamily: "var(--byline-font-mono)", fontSize: 16, color: "var(--accent)", marginBottom: 24, minHeight: 24 }}>
-              {typed}<span style={{ display: "inline-block", width: 2, height: 18, background: "var(--accent)", marginLeft: 2, animation: "blink 1s step-end infinite", verticalAlign: "text-bottom" }} />
+              {typed}
+              <span style={{ 
+                display: "inline-block", 
+                width: 2, 
+                height: 18, 
+                background: "var(--accent)", 
+                marginLeft: 2, 
+                animation: typed.length === tagline.length ? "none" : "blink 1s step-end infinite", 
+                verticalAlign: "text-bottom",
+                opacity: typed.length === tagline.length ? 0 : 1,
+                transition: "opacity 1.5s ease 0.8s"
+              }} />
             </div>
 
             <p className="ta-hero-desc">
@@ -95,29 +97,33 @@ export function Hero() {
               platform-native content for LinkedIn, X, Reddit, and Threads — in your voice.
             </p>
 
-            <div style={{ marginTop: 48, display: "flex", gap: 24, alignItems: "center" }}>
-              <a href="#dashboard" className="hero-abstract-btn">
-                GET THE DESK <IconArrowRight size={16} stroke={2} />
+            <div className="hero-btn-container">
+              <a 
+                href="https://github.com/sahil/byline" 
+                className="ta-btn-pixel hero-abstract-btn dispatch-cta-pulse"
+                target="_blank"
+              >
+                <IconBrandGithub size={18} stroke={2} style={{ marginRight: 8 }} /> STAR ON GITHUB
               </a>
-              <a href="#how-it-works" style={{ 
-                fontFamily: "var(--byline-font-mono)", fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", textDecoration: "none", textTransform: "uppercase", letterSpacing: "0.05em", transition: "color 0.2s ease"
-              }} onMouseEnter={(e) => e.currentTarget.style.color = "var(--text-primary)"} onMouseLeave={(e) => e.currentTarget.style.color = "var(--text-secondary)"}>
-                SEE HOW IT WORKS
+              <a href="#docs" className="ta-btn-pixel-secondary hero-abstract-btn-secondary">
+                READ THE DOCS
               </a>
             </div>
+
+
           </div>
         </div>
 
-        {/* Right column: 1 column, empty for asymmetry and hosting the watermark */}
-        <div className="ta-col" style={{ position: "relative" }}>
+        {/* Right column: 1 column, empty for asymmetry and minimalism */}
+        <div className="ta-col" style={{ position: "relative", zIndex: 2, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
           <div className="ta-cross" style={{ bottom: -5, left: -5 }}></div>
           <div className="ta-cross" style={{ top: -5, right: -5 }}></div>
           
-          {/* Faded Watermark Mascot */}
-          <div className="hero-watermark">🦉</div>
+          <StampBadge size={480} opacity={0.15} rotation={-18} style={{ transform: "translate(160px, -20px)" }} />
         </div>
 
       </div>
     </section>
   );
 }
+

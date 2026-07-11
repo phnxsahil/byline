@@ -3,6 +3,12 @@
    Component-scoped CSS (injected via <style>) stays in each component file.
    ──────────────────────────────────────────────────────────────────────────── */
 
+/* ── 0. Global shared pulse ────────────────────────────────────────────────── */
+@keyframes by-rail-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
 /* ── 1. Hero terminal — per-line fadeInUp ─────────────────────────────────── */
 
 @keyframes dispatch-fade-up {
@@ -41,9 +47,8 @@
 
 .dispatch-reveal {
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.85, 0, 0.15, 1);
   will-change: opacity, transform;
   contain: layout;
 }
@@ -144,18 +149,50 @@
 
 /* ── 8. Hero content fade-in ──────────────────────────────────────────────── */
 
-@keyframes dispatch-hero-in {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+@keyframes dispatch-shutter-in {
+  0% { 
+    opacity: 0; 
+    transform: translateY(16px);
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0);
+  }
 }
 
 .dispatch-hero-content > * {
   opacity: 0;
-  animation: dispatch-hero-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: dispatch-shutter-in 0.6s cubic-bezier(0.85, 0, 0.15, 1) forwards;
 }
 
 .dispatch-hero-content > *:nth-child(1) { animation-delay: 0.1s; }
-.dispatch-hero-content > *:nth-child(2) { animation-delay: 0.2s; }
+.dispatch-hero-content > *:nth-child(2) { animation-delay: 0.25s; }
 .dispatch-hero-content > *:nth-child(3) { animation-delay: 0.4s; }
-.dispatch-hero-content > *:nth-child(4) { animation-delay: 0.6s; }
-.dispatch-hero-content > *:nth-child(5) { animation-delay: 0.8s; }
+.dispatch-hero-content > *:nth-child(4) { animation-delay: 0.55s; }
+.dispatch-hero-content > *:nth-child(5) { animation-delay: 0.7s; }
+
+/* ── 9. Amber CTA pulse ───────────────────────────────────────────────────── */
+
+@keyframes amberPulse {
+  0% { box-shadow: 0 0 0 0 rgba(240, 165, 0, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(240, 165, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(240, 165, 0, 0); }
+}
+
+.dispatch-cta-pulse {
+  animation: amberPulse 2.5s infinite;
+}
+
+/* ── 10. Asymmetric Morph Animation ───────────────────────────────────────── */
+
+@keyframes shapeMorph {
+  0% { border-radius: 8px; }
+  25% { border-radius: 20px 4px 20px 4px; }
+  50% { border-radius: 4px 20px 4px 20px; }
+  75% { border-radius: 12px 12px 4px 4px; }
+  100% { border-radius: 8px; }
+}
+
+.morph-anim {
+  animation: shapeMorph 4s ease-in-out infinite;
+}

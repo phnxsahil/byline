@@ -13,3 +13,9 @@ root-package-lock.json
 .idea/
 *.db
 *.sqlite
+
+test-results/
+.agents/
+playwright-report/
+playwright/.cache/
+*.log

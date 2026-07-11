@@ -12,28 +12,86 @@ const STEPS = [
 export function HowItWorksSection() {
   return (
     <section id="how-it-works" className="ta-grid-wrapper dispatch-reveal">
-      <div className="ta-grid">
-        <div className="ta-col">
-          <div style={{ padding: "80px 48px" }}>
-            <div className="ta-badge"><span style={{ color: "var(--accent)", marginRight: 8 }}>/02</span> HOW IT WORKS</div>
-            <h2 className="ta-hero-title" style={{ fontSize: "2rem" }}>One signal in. Four platforms out.</h2>
-            <p className="ta-hero-desc">A LangGraph pipeline runs five specialized agents.</p>
-          </div>
-        </div>
+      <style>{`
+        .hiw-grid {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          height: 100%;
+        }
+        .hiw-card {
+          padding: 48px 24px;
+          position: relative;
+          border-right: 1px dashed var(--border);
+          border-bottom: none;
+        }
+        .hiw-card:last-child {
+          border-right: none;
+        }
+        .step-arrow {
+          position: absolute;
+          right: -8px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 16px;
+          height: 16px;
+          background: var(--bg);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 2;
+        }
+        @media (max-width: 1024px) {
+          .hiw-grid {
+            grid-template-columns: 1fr;
+          }
+          .hiw-card {
+            border-right: none !important;
+            border-bottom: 1px dashed var(--border);
+            padding: 32px 24px;
+          }
+          .hiw-card:last-child {
+            border-bottom: none;
+          }
+          .step-arrow {
+            right: auto;
+            left: 50%;
+            top: auto;
+            bottom: -8px;
+            transform: translateX(-50%) rotate(90deg);
+          }
+        }
+      `}</style>
+      <div id="how-it-works-grid" className="ta-grid">
         
+        {/* Content on the Left */}
         <div className="ta-col" style={{ gridColumn: "span 3" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", height: "100%" }}>
+          <div className="hiw-grid">
             {STEPS.map((step, i) => (
-              <div key={i} style={{ borderRight: i < 4 ? "1px dashed var(--border)" : "none", padding: "48px 24px", position: "relative" }}>
-                <div style={{ fontFamily: "var(--byline-font-mono)", fontSize: 32, fontWeight: 700, color: "var(--border)", opacity: 0.4, marginBottom: 16 }}>0{step.num}</div>
+              <div key={i} className="hiw-card">
+                <div style={{ fontFamily: "var(--byline-font-mono)", fontSize: 32, fontWeight: 700, color: "var(--text-secondary)", opacity: 0.6, marginBottom: 16 }}>0{step.num}</div>
                 <step.Icon size={24} color={step.color} stroke={1.5} style={{ marginBottom: 16 }} />
                 <div style={{ fontFamily: "Space Grotesk", fontSize: 14, fontWeight: 600, color: "var(--text-primary)", marginBottom: 8 }}>{step.title}</div>
                 <div style={{ fontFamily: "Inter", fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.5 }}>{step.desc}</div>
-                {i < 4 && <div style={{ position: "absolute", right: -8, top: "50%", transform: "translateY(-50%)", width: 16, height: 16, background: "var(--bg)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2 }}><IconArrowRight size={10} color="var(--text-secondary)" /></div>}
+                {i < 4 && <div className="step-arrow"><IconArrowRight size={10} color="var(--text-secondary)" /></div>}
               </div>
             ))}
           </div>
         </div>
+
+        {/* Title on the Right */}
+        <div className="ta-col" style={{ gridColumn: 'span 1' }}>
+          <div style={{ padding: "48px", display: "flex", flexDirection: "column", justifyContent: "center", flex: 1 }}>
+            <div className="ta-badge"><span style={{ color: "var(--accent)", marginRight: 8 }}>/03</span> HOW IT WORKS</div>
+            <h2 className="ta-hero-title" style={{ fontSize: "2rem" }}>
+              One signal in.<br/>Four platforms out.
+            </h2>
+            <p className="ta-hero-desc">
+              A LangGraph pipeline runs five specialized agents.
+            </p>
+          </div>
+        </div>
+
       </div>
     </section>
   );

@@ -2,17 +2,20 @@ import React, { useEffect, useState } from "react";
 import "./components/dispatch/animations.css";
 import { Navbar } from "./components/dispatch/Navbar";
 import { Hero } from "./components/dispatch/Hero";
+import { SetupSection } from "./components/dispatch/SetupSection";
 import { ProblemSection } from "./components/dispatch/ProblemSection";
 import { HowItWorksSection } from "./components/dispatch/HowItWorks";
 import { FeatureSection } from "./components/dispatch/FeatureSection";
 import { DemoSection } from "./components/dispatch/DemoSection";
 import { IntegrationsSection } from "./components/dispatch/IntegrationsSection";
-import { PricingSection } from "./components/dispatch/PricingSection";
+import { InstallationFAQSection } from "./components/dispatch/InstallationFAQSection";
 import { CTASection } from "./components/dispatch/CTASection";
 import { Footer } from "./components/dispatch/Footer";
 import { DocsSection } from "./components/dispatch/DocsSection";
 import { DashboardSection } from "./components/dispatch/DashboardSection";
-
+import { PlaceholderPage } from "./components/dispatch/PlaceholderPage";
+import { PricingPage } from "./components/dispatch/pages/PricingPage";
+import { LegalPage, PrivacyPolicyContent, TermsOfServiceContent, MITLicenseContent } from "./components/dispatch/pages/LegalPage";
 function ShutterTransition({ active }: { active: boolean }) {
   if (!active) return null;
 
@@ -33,35 +36,46 @@ function ShutterTransition({ active }: { active: boolean }) {
 }
 
 export default function App() {
-  const [view, setView] = useState<"landing" | "docs" | "dashboard">(
-    window.location.hash.startsWith("#docs") ? "docs" :
-    window.location.hash.startsWith("#dashboard") ? "dashboard" :
-    "landing"
-  );
-  const [shutterActive, setShutterActive] = useState(false);
-  const [shutterKey, setShutterKey] = useState(0);
+  const getRouteState = (hash: string) => {
+    if (hash.startsWith("#docs")) return "docs";
+    if (hash === "#api") return "docs"; // Redirect directly to docs
+    if (hash === "#self-hosting") return "docs"; // Redirect directly to docs
+    if (hash.startsWith("#dashboard")) return "dashboard";
+    if (hash === "#pricing") return "pricing";
+    if (hash === "#privacy") return "privacy";
+    if (hash === "#terms") return "terms";
+    if (hash === "#license") return "license";
+    if (["#placeholder"].includes(hash)) return "placeholder";
+    return "landing";
+  };
 
-  // Theme state
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
-  const handleToggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+  const getPlaceholderTitle = (hash: string) => {
+    switch (hash) {
+      case "#api": return "API Reference";
+      case "#privacy": return "Privacy Policy";
+      case "#terms": return "Terms of Service";
+      case "#license": return "MIT License";
+      case "#self-hosting": return "Self-Hosting Guide";
+      case "#pricing": return "Pricing";
+      default: return "Coming Soon";
     }
   };
 
+  const [view, setView] = useState<"landing" | "docs" | "dashboard" | "placeholder">(getRouteState(window.location.hash));
+  const [placeholderTitle, setPlaceholderTitle] = useState(getPlaceholderTitle(window.location.hash));
+  const [shutterActive, setShutterActive] = useState(false);
+  const [shutterKey, setShutterKey] = useState(0);
+
   useEffect(() => {
     const handleHashChange = () => {
-      const isDocs = window.location.hash.startsWith("#docs");
-      const isDash = window.location.hash.startsWith("#dashboard");
-      const targetView = isDocs ? "docs" : isDash ? "dashboard" : "landing";
+      const targetView = getRouteState(window.location.hash);
+      const isScrollTarget = targetView === "landing" && window.location.hash && !["#", ""].includes(window.location.hash);
 
       if (view === targetView) {
-        if (!isDocs && !isDash && window.location.hash) {
+        if (targetView === "placeholder") {
+          setPlaceholderTitle(getPlaceholderTitle(window.location.hash));
+          window.scrollTo(0, 0);
+        } else if (isScrollTarget) {
           const id = window.location.hash.substring(1);
           const el = document.getElementById(id);
           if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -71,12 +85,25 @@ export default function App() {
         return;
       }
 
+      if (targetView === "placeholder") {
+        setPlaceholderTitle(getPlaceholderTitle(window.location.hash));
+      }
+
       setShutterKey(k => k + 1);
       setShutterActive(true);
 
       const t1 = setTimeout(() => {
         setView(targetView);
-        if (!isDocs && !isDash && window.location.hash) {
+        if (targetView === "docs") {
+          // If the user clicked a hash that we redirect to docs
+          if (window.location.hash === "#api") {
+            window.location.hash = "#docs/api";
+          } else if (window.location.hash === "#self-hosting") {
+            window.location.hash = "#docs/self-host";
+          }
+        }
+        
+        if (isScrollTarget) {
           setTimeout(() => {
             const id = window.location.hash.substring(1);
             const el = document.getElementById(id);
@@ -98,21 +125,16 @@ export default function App() {
     };
     window.addEventListener("hashchange", handleHashChange);
     // Initialize if needed
-    const isDocs = window.location.hash.startsWith("#docs");
-    const isDash = window.location.hash.startsWith("#dashboard");
-    const initView = isDocs ? "docs" : isDash ? "dashboard" : "landing";
+    const initView = getRouteState(window.location.hash);
     if (view !== initView) {
       setView(initView);
+      if (initView === "placeholder") setPlaceholderTitle(getPlaceholderTitle(window.location.hash));
     }
+    
+    // Redirect logic on init
+    if (window.location.hash === "#api") window.location.hash = "#docs/api";
+    if (window.location.hash === "#self-hosting") window.location.hash = "#docs/self-host";
     return () => window.removeEventListener("hashchange", handleHashChange);
-  }, [view]);
-
-  // Force dark mode on dashboard; Navbar owns theme for landing/docs views
-  useEffect(() => {
-    if (view === "dashboard") {
-      document.documentElement.setAttribute("data-theme", "dark");
-      document.documentElement.classList.add("dark");
-    }
   }, [view]);
 
   // ── Scroll-triggered reveals ──────────────────────────────────────────────
@@ -132,7 +154,7 @@ export default function App() {
 
     // Observe all section-reveal and bento-card targets
     document
-      .querySelectorAll(".dispatch-reveal, .dispatch-bento-card")
+      .querySelectorAll(".dispatch-reveal, .dispatch-bento-card, .ta-grid-wrapper")
       .forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
@@ -149,18 +171,27 @@ export default function App() {
       <style>{`
         /* ── Global editorial overrides ────────────────────────────────── */
 
+        html {
+          scroll-behavior: smooth;
+        }
+
+        ::selection {
+          background-color: var(--accent);
+          color: #000;
+        }
+
         /* Warm body font */
         body {
           font-family: 'Inter', system-ui, sans-serif;
           background: var(--bg);
           color: var(--text-primary);
-          transition: background-color 0.3s ease, color 0.3s ease;
           margin: 0;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Display headings use Space Grotesk */
         h1, h2, h3 {
-          font-family: 'Space Grotesk', system-ui, sans-serif;
+          font-family: 'Bricolage Grotesque', system-ui, sans-serif;
           letter-spacing: -0.04em;
         }
 
@@ -172,23 +203,53 @@ export default function App() {
         /* ── TesterArmy Global Grid System ────────────────────────────── */
         .ta-grid-wrapper {
           width: 100%;
-          border-bottom: 1px dashed var(--border);
           position: relative;
           background: var(--bg);
+          z-index: 1;
+          border-bottom: 1px solid var(--border);
+          border-top: 1px solid var(--border);
+          margin-bottom: 32px;
+          scroll-margin-top: 65px;
+          
+          /* Simpler, faster reveal animation */
+          opacity: 0;
+          transform: translateY(16px);
+          transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+          will-change: opacity, transform;
         }
+        
+        .ta-grid-wrapper.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        /* Subtle structural joint marker in the 32px gap */
+        .ta-grid-wrapper:not(:last-child)::after {
+          content: "+";
+          position: absolute;
+          bottom: -20px;
+          left: 50%;
+          transform: translateX(-50%);
+          font-family: 'IBM Plex Mono', monospace;
+          font-size: 10px;
+          color: var(--border);
+          line-height: 1;
+          pointer-events: none;
+        }
+
         
         .ta-grid {
           display: grid;
           grid-template-columns: 2fr 1fr 1fr 1fr;
           max-width: 1440px;
           margin: 0 auto;
-          border-left: 1px dashed var(--border);
-          border-right: 1px dashed var(--border);
+          border-left: 1px solid var(--border);
+          border-right: 1px solid var(--border);
           position: relative;
         }
         
         .ta-col {
-          border-right: 1px dashed var(--border);
+          border-right: 1px solid var(--border);
           position: relative;
           display: flex;
           flex-direction: column;
@@ -236,13 +297,14 @@ export default function App() {
           margin-bottom: 24px;
         }
         .ta-hero-title {
-          font-family: "Space Grotesk", system-ui, sans-serif;
-          font-size: clamp(2.5rem, 5vw, 4rem);
-          font-weight: 600;
-          line-height: 1;
-          letter-spacing: -0.04em;
+          font-family: "Bricolage Grotesque", system-ui, sans-serif;
+          font-size: clamp(4rem, 8vw, 7rem);
+          font-weight: 700;
+          line-height: 0.95;
+          letter-spacing: -0.05em;
           color: var(--text-primary);
-          margin: 0 0 24px;
+          margin: 0 0 32px;
+          text-wrap: balance;
         }
         .ta-hero-desc {
           font-family: "Inter", system-ui, sans-serif;
@@ -266,30 +328,73 @@ export default function App() {
           letter-spacing: 0.05em;
           text-transform: uppercase;
           text-decoration: none;
-          transition: transform 0.1s ease, background-color 0.2s ease;
+          border: 2px solid #000;
+          cursor: pointer;
+          overflow: hidden;
+          z-index: 1;
+          transition: transform 0.15s ease, box-shadow 0.15s ease;
+          clip-path: polygon(
+            0 8px, 8px 8px, 8px 0, 
+            calc(100% - 8px) 0, calc(100% - 8px) 8px, 100% 8px, 
+            100% calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 
+            8px 100%, 8px calc(100% - 8px), 0 calc(100% - 8px)
+          );
+          box-shadow: 4px 4px 0 0 #000;
         }
         .ta-btn-pixel:hover {
-          opacity: 0.9;
-          transform: translateY(-1px);
+          transform: translateY(-2px);
+          box-shadow: 6px 6px 0 0 #000;
         }
-        .ta-btn-pixel::before {
+        .ta-btn-pixel:active {
+          transform: translateY(2px);
+          box-shadow: 2px 2px 0 0 #000;
+        }
+
+        .ta-btn-pixel-secondary {
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background-color: transparent;
+          color: var(--text-secondary);
+          font-family: var(--byline-font-mono), monospace;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          text-decoration: none;
+          border: 1px solid var(--border);
+          cursor: pointer;
+          overflow: hidden;
+          z-index: 1;
+          transition: transform 0.15s ease, box-shadow 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+          clip-path: polygon(
+            0 8px, 8px 8px, 8px 0, 
+            calc(100% - 8px) 0, calc(100% - 8px) 8px, 100% 8px, 
+            100% calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%, 
+            8px 100%, 8px calc(100% - 8px), 0 calc(100% - 8px)
+          );
+        }
+        .ta-btn-pixel-secondary::before {
           content: "";
           position: absolute;
-          top: 0; left: 0; right: 0; bottom: 0;
-          border: 2px solid #000;
-          pointer-events: none;
-        }
-        .ta-btn-pixel::after {
-          content: "";
-          position: absolute;
-          bottom: -4px; right: -4px;
-          width: 100%; height: 100%;
-          background: #000;
+          top: 0; left: -101%;
+          width: 101%; height: 100%;
+          background-color: var(--text-primary);
           z-index: -1;
-          transition: transform 0.1s ease;
+          transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .ta-btn-pixel:active::after {
-          transform: translate(-2px, -2px);
+        .ta-btn-pixel-secondary:hover {
+          color: var(--bg);
+          border-color: var(--text-primary);
+          transform: translateY(-2px);
+          box-shadow: 6px 6px 0 0 rgba(255, 255, 255, 0.15);
+        }
+        .ta-btn-pixel-secondary:hover::before {
+          transform: translateX(100%);
+        }
+        .ta-btn-pixel-secondary:active {
+          transform: translateY(2px);
+          box-shadow: 2px 2px 0 0 rgba(240, 165, 0, 0.15);
         }
 
         @media (max-width: 1024px) {
@@ -310,18 +415,48 @@ export default function App() {
         }
       `}</style>
 
+
+
       {/* ── Navbar ─────────────────────────────────────────────────────────── */}
-      {view !== "dashboard" && <Navbar theme={theme} onToggleTheme={handleToggleTheme} />}
+      {view !== "dashboard" && <Navbar />}
 
       <main id="main-content">
         {view === "docs" ? (
           <DocsSection />
         ) : view === "dashboard" ? (
           <DashboardSection />
+        ) : view === "placeholder" ? (
+          <>
+            <PlaceholderPage title={placeholderTitle} />
+            <Footer />
+          </>
+        ) : view === "pricing" ? (
+          <>
+            <PricingPage />
+            <Footer />
+          </>
+        ) : view === "privacy" ? (
+          <>
+            <LegalPage title="Privacy Policy" content={<PrivacyPolicyContent />} />
+            <Footer />
+          </>
+        ) : view === "terms" ? (
+          <>
+            <LegalPage title="Terms of Service" content={<TermsOfServiceContent />} />
+            <Footer />
+          </>
+        ) : view === "license" ? (
+          <>
+            <LegalPage title="MIT License" content={<MITLicenseContent />} />
+            <Footer />
+          </>
         ) : (
           <>
           {/* ── Hero ───────────────────────────────────────────────────────────── */}
           <Hero />
+
+          {/* ── Quick Setup ────────────────────────────────────────────────────── */}
+          <SetupSection />
 
           {/* ── Problem ────────────────────────────────────────────────────────── */}
           <ProblemSection />
@@ -339,8 +474,8 @@ export default function App() {
           <IntegrationsSection />
 
           {/* ── Social proof ───────────────────────────────────────────────────── */}
-          {/* ── Pricing ────────────────────────────────────────────────────────── */}
-          <PricingSection />
+          {/* ── Installation & FAQ ─────────────────────────────────────────────── */}
+          <InstallationFAQSection />
 
           {/* ── Final CTA ──────────────────────────────────────────────────────── */}
           <CTASection />

@@ -5,13 +5,12 @@ import {
   IconBrain,
   IconCode,
   IconGitBranch,
-  IconSparkles,
   IconUsers,
-  IconMicrophone,
+  IconArrowUpRight,
+  IconCheck,
+  IconCornerDownRight,
 } from "@tabler/icons-react";
 import { type DispatchRead, type Project } from "../../../api";
-import { AudioRecorder } from "./AudioRecorder";
-import { SetupChecklist } from "./SetupChecklist";
 
 interface OverviewTabProps {
   onPublish: (text: string) => void;
@@ -24,52 +23,33 @@ interface OverviewTabProps {
   onNavigate: (tab: string) => void;
 }
 
-function deriveWatcherNotes(dispatches: DispatchRead[], projects: Project[]): string[] {
-  const notes: string[] = [];
-
-  if (dispatches.length === 0) {
-    notes.push("no dispatches yet — run your first pipeline to see signals here");
-    notes.push("voice profile loaded with opener patterns and banned phrase list");
-    notes.push("github watcher ready — connect a repo in settings to enable auto-detection");
-    return notes;
-  }
-
-  const pendingReview = dispatches.filter(d => d.stamps.some(s => s.status === "ready") && d.stamps.every(s => s.status !== "approved")).length;
-  if (pendingReview > 0) {
-    notes.push(`${pendingReview} dispatch${pendingReview > 1 ? "es" : ""} ready for review in The Desk`);
-  }
-
-  const platforms = dispatches.flatMap(d => d.suggested_platforms || []);
-  const platformCounts: Record<string, number> = {};
-  platforms.forEach(p => { platformCounts[p] = (platformCounts[p] || 0) + 1; });
-  const topPlatform = Object.entries(platformCounts).sort((a, b) => b[1] - a[1])[0];
-  if (topPlatform) {
-    notes.push(`${topPlatform[0]} is your most-used platform (${topPlatform[1]} dispatch${topPlatform[1] > 1 ? "es" : ""})`);
-  }
-
-  const blockedCount = dispatches.filter(d => d.is_post_worthy === false).length;
-  if (blockedCount > 0) {
-    notes.push(`${blockedCount} milestone${blockedCount > 1 ? "s" : ""} held by Strategist — check Activity for reasoning`);
-  } else if (dispatches.length > 2) {
-    notes.push("all recent milestones cleared the post-worthiness threshold");
-  }
-
-  const redditUsed = dispatches.some(d => d.suggested_platforms?.includes("reddit"));
-  if (!redditUsed && dispatches.length >= 3) {
-    notes.push("reddit is still blocked — dispatches haven't had enough technical depth yet");
-  }
-
-  const totalProjects = projects.length;
-  if (totalProjects > 1) {
-    notes.push(`${totalProjects} projects being tracked — ${totalProjects > 3 ? "consider cross-project synthesis" : "all active"}`);
-  }
-
-  return notes.slice(0, 3);
-}
+const ONBOARDING_STEPS = [
+  {
+    id: "chat",
+    label: "Log a milestone",
+    desc: "Type what you shipped in the Agent Chat →",
+    cta: "Use the chat on the right",
+    ctaTarget: null,
+    spotlight: true,
+  },
+  {
+    id: "review",
+    label: "Review the drafts",
+    desc: "Agents write platform-native posts for you",
+    cta: "Go to Desk",
+    ctaTarget: "desk",
+  },
+  {
+    id: "approve",
+    label: "Approve & ship",
+    desc: "One click sends it to LinkedIn, X, Reddit",
+    cta: "Go to Activity",
+    ctaTarget: "activity",
+  },
+];
 
 export function OverviewTab({
   onPublish,
-  onVoicePublish,
   isMobile,
   projects,
   activeProject,
@@ -77,22 +57,19 @@ export function OverviewTab({
   onSelectDispatch,
   onNavigate,
 }: OverviewTabProps) {
-  const [input, setInput] = React.useState(
-    "shipped a cleaner landing page for byline and the real challenge was making the product feel obvious in five seconds"
-  );
-  const [isRecordingMode, setIsRecordingMode] = React.useState(false);
-  const hasActiveProject = Boolean(activeProject?.id);
+  const hasDispatches = dispatches.length > 0;
+  const isNew = !hasDispatches;
 
   const stats = React.useMemo(() => {
     const totalDispatches = dispatches.length;
     const totalProjects = projects.length;
     const runs = dispatches.filter(d => d.stamps.some(s => s.status !== "pending")).length;
     return [
-      { label: "Milestones Logged", value: totalDispatches, note: "all channels", icon: IconBolt },
-      { label: "Active Projects", value: totalProjects, note: "monitored", icon: IconCode },
-      { label: "Completed Runs", value: runs, note: "stamped drafts", icon: IconBrain },
-      { label: "Commits Watched", value: 14 + totalDispatches * 3, note: "mostly product work", icon: IconGitBranch },
-      { label: "Platforms Live", value: 4, note: "voice-tuned", icon: IconUsers },
+      { label: "Milestones", value: totalDispatches, icon: IconBolt },
+      { label: "Projects", value: totalProjects, icon: IconCode },
+      { label: "Completed", value: runs, icon: IconBrain },
+      { label: "Platforms", value: 4, icon: IconUsers },
+      { label: "Commits", value: 14 + totalDispatches * 3, icon: IconGitBranch },
     ];
   }, [dispatches, projects]);
 
@@ -101,358 +78,338 @@ export function OverviewTab({
     onNavigate("desk");
   };
 
+  // Determine which onboarding steps are "done"
+  const completedSteps = React.useMemo(() => {
+    const done = new Set<string>();
+    if (hasDispatches) done.add("chat");
+    if (dispatches.some(d => d.stamps.some(s => s.status === "approved"))) done.add("review");
+    if (dispatches.some(d => d.stamps.some(s => s.status === "posted"))) done.add("approve");
+    return done;
+  }, [dispatches]);
+
+  const allOnboardingDone = completedSteps.size === ONBOARDING_STEPS.length;
+
   return (
     <div
       style={{
         flex: 1,
         overflowY: "auto",
-        padding: isMobile ? "16px" : "24px",
+        padding: isMobile ? "16px" : "24px 28px",
         display: "flex",
         flexDirection: "column",
-        gap: 18,
-        background:
-          "radial-gradient(circle at top right, rgba(255,102,0,0.06), transparent 28%), var(--by-bg)",
+        gap: 20,
+        background: "radial-gradient(circle at top right, rgba(255,102,0,0.055), transparent 30%), var(--by-bg)",
       }}
     >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: isMobile ? "1fr" : "minmax(0, 1.15fr) minmax(320px, 0.85fr)",
-          gap: 16,
-        }}
-      >
-        <div
-          style={{
-            background: "linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))",
-            border: "0.5px solid rgba(255,255,255,0.08)",
-            borderRadius: 8,
-            padding: isMobile ? "18px" : "22px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 14,
-          }}
-        >
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "5px 10px",
-              borderRadius: 999,
-              background: "rgba(255,102,0,0.08)",
-              color: "var(--by-accent)",
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 11,
-              alignSelf: "flex-start",
-            }}
-          >
-            <IconSparkles size={12} stroke={1.8} />
-            Log a milestone
-          </div>
 
-          <div>
-            <div
-              style={{
-                fontFamily: "var(--by-font-display), sans-serif",
-                fontSize: isMobile ? 26 : 30,
-                lineHeight: 1.05,
-                letterSpacing: "-0.04em",
-                color: "var(--by-text)",
-              }}
-            >
-              Ship a milestone.
-              <br />
-              <span style={{ color: "var(--by-accent)" }}>Byline</span> writes it everywhere.
-            </div>
-            <p
-              style={{
-                margin: "10px 0 0",
-                color: "var(--by-text-2)",
-                fontFamily: "var(--by-font-body), sans-serif",
-                fontSize: 13,
-                lineHeight: 1.65,
-                maxWidth: 480,
-              }}
-            >
-              Describe what you built or learned. The 5-agent pipeline picks the angle, writes
-              platform-native drafts, and scores them — you just review and approve.
-            </p>
+      {/* ── HEADER ROW ─────────────────────────────────────────── */}
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16 }}>
+        <div>
+          <div style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: isMobile ? 22 : 26,
+            fontWeight: 700,
+            color: "var(--by-text)",
+            letterSpacing: "-0.03em",
+            lineHeight: 1.1,
+          }}>
+            byline_
           </div>
-
-            <div
-              style={{
-                borderRadius: 4,
-                border: "0.5px solid rgba(245,240,232,0.07)",
-                background: "rgba(10,10,10,0.4)",
-                padding: 14,
-              }}
-            >
-              <div
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontSize: 10,
-                  color: "var(--by-text-3)",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                  marginBottom: 10,
-                }}
-              >
-                What happened? (be specific)
-              </div>
-            {isRecordingMode && activeProject?.id ? (
-              <AudioRecorder
-                projectId={activeProject.id}
-                onTranscriptionSuccess={(transcription, dispatchId) => {
-                  if (activeProject?.id) {
-                    onVoicePublish(transcription, dispatchId);
-                    setIsRecordingMode(false);
-                  }
-                }}
-                onCancel={() => setIsRecordingMode(false)}
-              />
-            ) : (
-              <>
-                <textarea
-                  aria-label="Describe the milestone to run through the pipeline demo"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  rows={4}
-                  style={{
-                    width: "100%",
-                    background: "rgba(255,255,255,0.025)",
-                    border: "0.5px solid rgba(255,255,255,0.08)",
-                    borderRadius: 4,
-                    padding: "12px 14px",
-                    color: "var(--by-text)",
-                    fontFamily: "var(--by-font-body), sans-serif",
-                    fontSize: 14,
-                    resize: "vertical",
-                    outline: "none",
-                    lineHeight: 1.65,
-                    boxSizing: "border-box",
-                  }}
-                />
-                <div
-                  style={{
-                    marginTop: 12,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: 12,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <span style={{ color: "var(--by-text-3)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 11 }}>
-                    more texture → better angle selection
-                  </span>
-                  <div style={{ display: "flex", gap: 10 }}>
-                    <button
-                      onClick={() => {
-                        if (hasActiveProject) {
-                          setIsRecordingMode(true);
-                        }
-                      }}
-                      disabled={!hasActiveProject}
-                      title={!hasActiveProject ? "Select a project first" : "Record a voice note"}
-                      style={{
-                        fontFamily: "'IBM Plex Mono', monospace",
-                        fontSize: 11,
-                        padding: "9px 14px",
-                        background: hasActiveProject ? "rgba(255, 255, 255, 0.03)" : "rgba(255, 255, 255, 0.02)",
-                        color: hasActiveProject ? "var(--by-text-2)" : "var(--by-text-3)",
-                        border: "0.5px solid rgba(255,255,255,0.08)",
-                        borderRadius: 4,
-                        cursor: hasActiveProject ? "pointer" : "not-allowed",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 6,
-                        transition: "background 120ms ease",
-                        opacity: hasActiveProject ? 1 : 0.7,
-                      }}
-                    >
-                      <IconMicrophone size={12} stroke={2} />
-                      record voice note
-                    </button>
-                    <button
-                      onClick={() => {
-                        if (input.trim()) {
-                          onPublish(input.trim());
-                        }
-                      }}
-                      style={{
-                        fontFamily: "'IBM Plex Mono', monospace",
-                        fontSize: 11,
-                        fontWeight: 600,
-                        padding: "9px 14px",
-                        background: "#A63D00",
-                        color: "#F5F2EC",
-                        border: "none",
-                        borderRadius: 4,
-                        cursor: "pointer",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 6,
-                        transition: "opacity 120ms ease",
-                      }}
-                    >
-                      <IconBolt size={12} stroke={2} aria-hidden="true" />
-                      run pipeline
-                    </button>
-                  </div>
-                </div>
-                {!hasActiveProject && (
-                  <span style={{ color: "var(--by-text-3)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 10 }}>
-                    select a project to enable voice capture
-                  </span>
-                )}
-              </>
-            )}
-            </div>
+          <div style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: 13,
+            color: "var(--by-text-3)",
+            marginTop: 4,
+          }}>
+            {activeProject ? `watching ${activeProject.name}` : "no project selected"}
+          </div>
         </div>
 
-        <div
-          style={{
-            background: "rgba(255,255,255,0.025)",
-            border: "0.5px solid rgba(255,255,255,0.08)",
-            borderRadius: 8,
-            padding: isMobile ? "18px" : "22px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 14,
-          }}
-        >
-          <div
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: 10,
-              color: "var(--by-text-3)",
-              textTransform: "uppercase",
-              letterSpacing: "0.08em",
-            }}
-          >
-            What the system noticed
-          </div>
-          {deriveWatcherNotes(dispatches, projects).map((note) => (
-            <div
-              key={note}
-              style={{
-                padding: "12px 14px",
-                borderRadius: 4,
-                background: "rgba(255,255,255,0.03)",
-                border: "0.5px solid rgba(255,255,255,0.06)",
-                color: "var(--by-text-2)",
-                fontFamily: "var(--by-font-body), sans-serif",
-                fontSize: 13,
-                lineHeight: 1.65,
-              }}
-            >
-              {note}
+        {/* Stats pill row */}
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", justifyContent: "flex-end" }}>
+          {stats.map(s => (
+            <div key={s.label} style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "5px 10px",
+              background: "rgba(255,255,255,0.03)",
+              border: "0.5px solid var(--by-border)",
+              borderRadius: 6,
+            }}>
+              <s.icon size={12} stroke={1.8} color="var(--by-accent)" />
+              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, color: "var(--by-text)", fontWeight: 600 }}>
+                {s.value}
+              </span>
+              <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--by-text-3)" }}>
+                {s.label}
+              </span>
             </div>
           ))}
         </div>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(5, 1fr)",
-          gap: 12,
-        }}
-      >
-        {stats.map((s) => (
-          <div
-            key={s.label}
-            style={{
-              background: "rgba(255,255,255,0.03)",
-              border: "0.5px solid rgba(255,255,255,0.08)",
-              borderRadius: 8,
-              padding: "16px 14px",
-              display: "flex",
-              flexDirection: "column",
-              gap: 10,
-            }}
-          >
-            <s.icon size={16} stroke={1.6} color="var(--by-accent)" />
-            <div style={{ fontFamily: "var(--by-font-mono), monospace", fontSize: 24, fontWeight: 600, color: "var(--by-text)", lineHeight: 1 }}>
-              {s.value === 0 ? "0\u200b" : s.value}
-            </div>
-            <div style={{ fontFamily: "var(--by-font-body), sans-serif", fontSize: 12, color: "var(--by-text-2)" }}>{s.label}</div>
-            <div style={{ fontFamily: "var(--by-font-mono), monospace", fontSize: 10, color: "var(--by-text-3)" }}>{s.note}</div>
-          </div>
-        ))}
-      </div>
-
-      {dispatches.length === 0 && <SetupChecklist />}
-      <div
-        style={{
-          background: "rgba(255,255,255,0.03)",
-          border: "0.5px solid rgba(255,255,255,0.08)",
-          borderRadius: 8,
+      {/* ── ONBOARDING / GET STARTED ───────────────────────────── */}
+      {!allOnboardingDone && (
+        <div style={{
+          background: "var(--by-bg-2)",
+          border: "0.5px solid var(--by-border)",
+          borderRadius: 10,
           overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            padding: "14px 18px",
-            borderBottom: "0.5px solid rgba(255,255,255,0.08)",
+        }}>
+          {/* Header */}
+          <div style={{
+            padding: "12px 18px",
+            borderBottom: "0.5px solid var(--by-border)",
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
-            gap: 12,
-          }}
-        >
-          <div style={{ fontFamily: "var(--by-font-mono), monospace", fontSize: 10, color: "var(--by-text-3)", textTransform: "uppercase", letterSpacing: "0.08em" }}>
-            recent milestones
-          </div>
-          <button
-            onClick={() => onNavigate("activity")}
-            style={{
-              background: "transparent",
-              border: "none",
-              color: "var(--by-text-2)",
-              fontFamily: "var(--by-font-mono), monospace",
+            gap: 8,
+          }}>
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--by-amber)" }} />
+            <span style={{
+              fontFamily: "'IBM Plex Mono', monospace",
               fontSize: 11,
-              cursor: "pointer",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-            }}
-          >
-            view all
-            <IconArrowRight size={12} stroke={1.8} />
-          </button>
+              color: "var(--by-text-2)",
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+            }}>
+              Get started — {completedSteps.size}/{ONBOARDING_STEPS.length} done
+            </span>
+          </div>
+
+          {/* Steps */}
+          <div style={{ padding: "8px 0" }}>
+            {ONBOARDING_STEPS.map((step, idx) => {
+              const isDone = completedSteps.has(step.id);
+              const isNext = !isDone && ONBOARDING_STEPS.findIndex(s => !completedSteps.has(s.id)) === idx;
+
+              return (
+                <div
+                  key={step.id}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 14,
+                    padding: "12px 18px",
+                    background: isNext ? "rgba(232, 94, 44, 0.04)" : "transparent",
+                    borderLeft: `2px solid ${isNext ? "var(--by-accent)" : "transparent"}`,
+                    transition: "background 100ms ease",
+                  }}
+                >
+                  {/* Step indicator */}
+                  <div style={{
+                    width: 22,
+                    height: 22,
+                    borderRadius: "50%",
+                    background: isDone ? "rgba(63, 185, 80, 0.15)" : isNext ? "rgba(232, 94, 44, 0.15)" : "transparent",
+                    border: `1px solid ${isDone ? "var(--by-green)" : isNext ? "var(--by-accent)" : "var(--by-border)"}`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                    transition: "all 100ms ease",
+                  }}>
+                    {isDone ? (
+                      <IconCheck size={12} color="var(--by-green)" stroke={2.5} />
+                    ) : (
+                      <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: isNext ? "var(--by-accent)" : "var(--by-text-3)" }}>
+                        {idx + 1}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Label */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: 13,
+                      fontWeight: 500,
+                      color: isDone ? "var(--by-text-3)" : "var(--by-text)",
+                      textDecoration: isDone ? "line-through" : "none",
+                    }}>
+                      {step.label}
+                    </div>
+                    <div style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontSize: 12,
+                      color: "var(--by-text-3)",
+                      marginTop: 2,
+                    }}>
+                      {step.desc}
+                    </div>
+                  </div>
+
+                  {/* CTA */}
+                  {isNext && (
+                    step.spotlight ? (
+                      /* Pulsing arrow pointing right → to Agent Chat */
+                      <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 6,
+                        padding: "5px 12px",
+                        background: "var(--by-accent)",
+                        borderRadius: 6,
+                        cursor: "default",
+                        animation: "by-rail-pulse 2s ease-in-out infinite",
+                      }}>
+                        <span style={{
+                          fontFamily: "'IBM Plex Mono', monospace",
+                          fontSize: 11,
+                          color: "#fff",
+                          fontWeight: 600,
+                        }}>
+                          Agent Chat →
+                        </span>
+                        <IconCornerDownRight size={13} color="#fff" stroke={2} />
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => step.ctaTarget && onNavigate(step.ctaTarget)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                          padding: "5px 12px",
+                          background: "rgba(255,255,255,0.06)",
+                          border: "0.5px solid var(--by-border)",
+                          borderRadius: 6,
+                          cursor: "pointer",
+                          fontFamily: "'IBM Plex Mono', monospace",
+                          fontSize: 11,
+                          color: "var(--by-text-2)",
+                          flexShrink: 0,
+                        }}
+                        onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.1)")}
+                        onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
+                      >
+                        {step.cta}
+                        <IconArrowUpRight size={12} stroke={2} />
+                      </button>
+                    )
+                  )}
+
+                  {isDone && (
+                    <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--by-green)" }}>done</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Progress bar */}
+          <div style={{ height: 2, background: "var(--by-border)" }}>
+            <div style={{
+              height: "100%",
+              width: `${(completedSteps.size / ONBOARDING_STEPS.length) * 100}%`,
+              background: "var(--by-accent)",
+              transition: "width 400ms ease",
+            }} />
+          </div>
+        </div>
+      )}
+
+      {/* ── RECENT MILESTONES ──────────────────────────────────── */}
+      <div style={{
+        background: "var(--by-bg-2)",
+        border: "0.5px solid var(--by-border)",
+        borderRadius: 10,
+        overflow: "hidden",
+        flex: hasDispatches ? 1 : undefined,
+      }}>
+        <div style={{
+          padding: "12px 18px",
+          borderBottom: "0.5px solid var(--by-border)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}>
+          <span style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: 11,
+            color: "var(--by-text-2)",
+            textTransform: "uppercase",
+            letterSpacing: "0.06em",
+          }}>
+            Recent milestones
+          </span>
+          {hasDispatches && (
+            <button
+              onClick={() => onNavigate("activity")}
+              style={{
+                background: "transparent",
+                border: "none",
+                color: "var(--by-text-3)",
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 11,
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+              onMouseEnter={e => (e.currentTarget.style.color = "var(--by-text)")}
+              onMouseLeave={e => (e.currentTarget.style.color = "var(--by-text-3)")}
+            >
+              view all
+              <IconArrowRight size={12} stroke={1.8} />
+            </button>
+          )}
         </div>
 
-        {dispatches.length === 0 ? (
-          <div style={{ padding: "32px 20px", textAlign: "center", color: "var(--by-text-3)" }}>
-            <div style={{ fontFamily: "var(--by-font-display), sans-serif", fontSize: 16, color: "var(--by-text-2)", marginBottom: 8 }}>
-              No pipelines run yet
+        {!hasDispatches ? (
+          <div style={{
+            padding: "40px 24px",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 12,
+            textAlign: "center",
+          }}>
+            <div style={{
+              width: 40,
+              height: 40,
+              borderRadius: 10,
+              background: "rgba(232, 94, 44, 0.1)",
+              border: "0.5px solid rgba(232, 94, 44, 0.2)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
+              <IconBolt size={18} color="var(--by-accent)" stroke={1.8} />
             </div>
-            <p style={{ fontSize: 12, marginBottom: 16, lineHeight: 1.6, maxWidth: 360, margin: "0 auto 16px" }}>
-              Once you dispatch a milestone above, completed runs will appear here with their platform, status, and critic score.
-            </p>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 14, color: "var(--by-text-2)", fontWeight: 500 }}>
+              No milestones yet
+            </div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontSize: 13, color: "var(--by-text-3)", lineHeight: 1.6, maxWidth: 280 }}>
+              Type what you shipped in the Agent Chat on the right. The agents will take it from there.
+            </div>
             <button
               onClick={() => onPublish("shipped pgvector content ranking and cut query response times in half")}
               style={{
-                fontFamily: "var(--by-font-mono), monospace",
-                fontSize: 11,
+                marginTop: 8,
                 padding: "8px 16px",
                 background: "rgba(255,255,255,0.04)",
-                border: "1px solid var(--by-border)",
-                borderRadius: 4,
-                color: "var(--by-text)",
+                border: "0.5px solid var(--by-border)",
+                borderRadius: 6,
+                color: "var(--by-text-2)",
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: 11,
                 cursor: "pointer",
+                transition: "background 100ms ease",
               }}
+              onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.08)")}
+              onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.04)")}
             >
-              Run a sample pipeline
+              → try a sample run
             </button>
           </div>
         ) : (
-          dispatches.slice(0, 5).map((r, i) => {
-            const timeStr = new Date(r.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            // Calculate a status string based on stamps
+          dispatches.slice(0, 8).map((r, i) => {
+            const timeStr = new Date(r.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
             const isCompleted = r.stamps.some(s => s.status !== "pending");
-            const statusLabel = r.is_post_worthy === false ? "skip" : (isCompleted ? "ready" : "pending");
+            const statusLabel = r.is_post_worthy === false ? "skip" : isCompleted ? "ready" : "pending";
+            const statusColor = statusLabel === "ready" ? "var(--by-green)" : statusLabel === "skip" ? "var(--by-red)" : "var(--by-amber)";
+
             return (
               <div
                 key={r.id}
@@ -460,38 +417,62 @@ export function OverviewTab({
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "space-between",
-                  padding: "14px 18px",
-                  borderBottom: i < Math.min(dispatches.length, 5) - 1 ? "0.5px solid rgba(255,255,255,0.08)" : "none",
                   gap: 16,
+                  padding: "12px 18px",
+                  borderBottom: i < Math.min(dispatches.length, 8) - 1 ? "0.5px solid rgba(255,255,255,0.05)" : "none",
                   cursor: "pointer",
-                  transition: "background-color 150ms ease",
+                  transition: "background 100ms ease",
                 }}
-                onMouseEnter={e => e.currentTarget.style.backgroundColor = "rgba(255,255,255,0.02)"}
-                onMouseLeave={e => e.currentTarget.style.backgroundColor = "transparent"}
+                onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.02)")}
+                onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
               >
-                <div style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}>
-                  <div style={{ fontFamily: "var(--by-font-mono), monospace", fontSize: 11, color: "var(--by-text)", fontWeight: 500 }}>
-                    {r.project_name.toLowerCase()}
+                {/* Status dot */}
+                <div style={{
+                  width: 7,
+                  height: 7,
+                  borderRadius: "50%",
+                  background: statusColor,
+                  flexShrink: 0,
+                  opacity: 0.8,
+                }} />
+
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontSize: 10,
+                    color: "var(--by-text-3)",
+                    marginBottom: 3,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.04em",
+                  }}>
+                    {r.project_name}
                   </div>
-                  <div style={{ fontSize: 13, color: "var(--by-text-2)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <div style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: 13,
+                    color: "var(--by-text)",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}>
                     {r.body}
                   </div>
                 </div>
+
                 <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
-                  <span style={{ fontSize: 11, color: "var(--by-text-3)", fontFamily: "var(--by-font-mono), monospace" }}>{timeStr}</span>
-                  <div
-                    style={{
-                      padding: "4px 8px",
-                      borderRadius: 4,
-                      fontSize: 10,
-                      fontFamily: "var(--by-font-mono), monospace",
-                      background: statusLabel === "ready" ? "rgba(63,185,80,0.12)" : statusLabel === "skip" ? "rgba(248,113,113,0.1)" : "rgba(255,102,0,0.1)",
-                      color: statusLabel === "ready" ? "var(--by-green)" : statusLabel === "skip" ? "var(--by-red)" : "var(--by-accent)",
-                    }}
-                  >
+                  <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: 10, color: "var(--by-text-3)" }}>{timeStr}</span>
+                  <div style={{
+                    padding: "3px 8px",
+                    borderRadius: 4,
+                    fontSize: 10,
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    color: statusColor,
+                    background: `color-mix(in srgb, ${statusColor} 12%, transparent)`,
+                    border: `0.5px solid color-mix(in srgb, ${statusColor} 20%, transparent)`,
+                  }}>
                     {statusLabel}
                   </div>
+                  <IconArrowRight size={12} stroke={1.5} color="var(--by-text-3)" />
                 </div>
               </div>
             );

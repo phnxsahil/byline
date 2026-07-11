@@ -60,7 +60,7 @@ export function CTASection() {
         <div style={{
           position: "absolute",
           inset: 0,
-          backgroundImage: "url('/cta_chair_pov_bg.png')",
+          backgroundImage: "url('/cta_startup_garage_bg.png')",
           backgroundSize: "cover",
           backgroundPosition: "center center",
           zIndex: 0,

@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { IconArrowUpRight, IconBrandGithub, IconBrandX, IconArrowUp, IconCode, IconTerminal2 } from "@tabler/icons-react";
-import { StampBadge } from "./StampBadge";
-
 const PRODUCT_LINKS = [
   { label: "AI Agents", href: "#how-it-works" },
   { label: "Content Pipeline", href: "#features" },
@@ -100,24 +98,6 @@ export function Footer() {
         overflow: "hidden"
       } as React.CSSProperties}
     >
-      {/* Background Image & Overlay */}
-      <div style={{
-        position: "absolute",
-        inset: 0,
-        backgroundImage: "url('/footer_bg.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center center",
-        zIndex: 0,
-        opacity: 0.85,
-        pointerEvents: "none"
-      }} />
-      <div style={{
-        position: "absolute",
-        inset: 0,
-        background: "linear-gradient(to bottom, var(--bg) 0%, rgba(13,17,23,0.9) 25%, rgba(13,17,23,0.6) 65%, var(--bg) 90%)",
-        zIndex: 0,
-        pointerEvents: "none"
-      }} />
       <style>{`
         /* Main Grid Architecture */
         .f-grid {
@@ -260,13 +240,6 @@ export function Footer() {
           }
         }
       `}</style>
-
-      <div className="dither-pattern" style={{ opacity: 0.08 }} />
-
-      {/* SVG Stamp Background Watermark (Continuing from CTA Section) */}
-      <div style={{ position: "absolute", top: -212, left: "50%", transform: "translate(-50%, -50%)", zIndex: 0, width: "100%", height: "100%", overflow: "hidden", display: "flex", justifyContent: "center", alignItems: "center" }}>
-        <StampBadge size={400} opacity={0.15} rotation={15} />
-      </div>
 
       {/* Main Architectural Grid */}
       <div className="f-grid">

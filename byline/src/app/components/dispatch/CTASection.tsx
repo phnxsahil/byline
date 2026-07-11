@@ -7,7 +7,7 @@ export function CTASection() {
       className="ta-grid-wrapper dispatch-reveal" 
       style={{ 
         marginBottom: 0, 
-        borderBottom: "none",
+        borderBottom: "1px solid var(--border)",
         position: "relative",
         background: "var(--bg)"
       } as React.CSSProperties}
@@ -20,13 +20,13 @@ export function CTASection() {
         backgroundSize: "cover",
         backgroundPosition: "center center",
         zIndex: 0,
-        opacity: 0.85,
+        opacity: 1,
         pointerEvents: "none"
       }} />
       <div style={{
         position: "absolute",
         inset: 0,
-        background: "radial-gradient(ellipse at 50% 30%, var(--bg) 0%, rgba(13,17,23,0.9) 35%, transparent 70%), linear-gradient(to bottom, transparent 80%, var(--bg) 100%)",
+        background: "radial-gradient(ellipse 80% 80% at 50% 30%, rgba(13,17,23,0.95) 0%, rgba(13,17,23,0.7) 40%, transparent 80%)",
         zIndex: 0,
         pointerEvents: "none"
       }} />

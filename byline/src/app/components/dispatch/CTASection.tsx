@@ -53,6 +53,16 @@ export function CTASection() {
             white-space: nowrap;
           }
         }
+        
+        .cta-btn-primary {
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+        .cta-btn-primary:hover {
+          background: #fff !important;
+          color: #000 !important;
+          box-shadow: 0 0 30px rgba(255, 255, 255, 0.2), 6px 6px 0 0 #000 !important;
+          transform: translateY(-2px) scale(1.02) !important;
+        }
       `}</style>
       
       <div className="ta-grid" style={{ overflow: "hidden" }}>
@@ -64,13 +74,13 @@ export function CTASection() {
           backgroundSize: "cover",
           backgroundPosition: "center bottom",
           zIndex: 0,
-          opacity: 1,
+          opacity: 0.5,
           pointerEvents: "none"
         }} />
         <div style={{
           position: "absolute",
           inset: 0,
-          background: "radial-gradient(ellipse 80% 80% at 50% 30%, rgba(13,17,23,0.95) 0%, rgba(13,17,23,0.7) 40%, transparent 80%)",
+          background: "radial-gradient(ellipse 100% 100% at 50% 20%, rgba(13,17,23,0.98) 0%, rgba(13,17,23,0.85) 40%, transparent 100%)",
           zIndex: 0,
           pointerEvents: "none"
         }} />

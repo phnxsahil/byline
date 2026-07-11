@@ -24,13 +24,6 @@ export function Hero() {
           font-size: 13px;
           padding: 16px 32px;
           border: 2px solid #000;
-          transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
-        }
-        .hero-abstract-btn:hover {
-          background-color: transparent !important;
-          color: var(--accent) !important;
-          border-color: var(--accent) !important;
-          box-shadow: 6px 6px 0 0 rgba(240, 165, 0, 0.2) !important;
         }
 
         .hero-abstract-btn-secondary {
@@ -66,18 +59,9 @@ export function Hero() {
         {/* Background Stamp centered and cut by grid bounds */}
         <div style={{ position: "absolute", top: "45%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 0, pointerEvents: "none" }}>
           <div className="dispatch-stamp-anim">
-            <StampBadge size={640} opacity={0.06} rotation={-18} />
+            <StampBadge size={640} opacity={0.15} rotation={-18} />
           </div>
         </div>
-
-        {/* Vignette overlay to darken the edges and push the stamp back */}
-        <div style={{
-          position: "absolute",
-          inset: 0,
-          background: "radial-gradient(circle at 40% 50%, transparent 10%, rgba(13,17,23,0.85) 60%, var(--bg) 100%)",
-          zIndex: 0,
-          pointerEvents: "none"
-        }} />
         
         {/* Left column: Content spanning 3 columns for asymmetrical feel */}
         <div className="ta-col" style={{ gridColumn: "span 3", position: "relative", zIndex: 1 }}>

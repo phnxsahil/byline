@@ -25,7 +25,7 @@ export function Hero() {
         backgroundImage: "url('/hero_bg.png')",
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        opacity: 0.20,
+        opacity: 0.12,
         zIndex: 0,
         pointerEvents: 'none'
       }} />

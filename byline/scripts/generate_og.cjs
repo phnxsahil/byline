@@ -7,15 +7,15 @@ const fs = require('fs');
   const page = await browser.newPage({
     viewport: { width: 1200, height: 630 }
   });
-
-  const bgPath = path.resolve('public/cta_scene_bg.png').replace(/\\/g, '/');
+  const bgBuffer = fs.readFileSync(path.resolve('public/cta_scene_bg.webp'));
+  const bgBase64 = bgBuffer.toString('base64');
+  const bgDataUri = `data:image/webp;base64,${bgBase64}`;
   
   const html = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
       <meta charset="UTF-8">
-      <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
       <style>
         body {
           margin: 0;
@@ -32,7 +32,7 @@ const fs = require('fs');
         .bg {
           position: absolute;
           top: 0; left: 0; right: 0; bottom: 0;
-          background-image: url('file://${bgPath}');
+          background-image: url('${bgDataUri}');
           background-size: cover;
           background-position: center;
         }

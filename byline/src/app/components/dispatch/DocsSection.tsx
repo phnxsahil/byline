@@ -548,7 +548,7 @@ export function DocsSection() {
   const tocLinks = getTOCLinks();
 
   return (
-    <section style={{ backgroundColor: "var(--bg)", minHeight: "calc(100vh - 56px)", transition: "background-color 0.3s ease" }}>
+    <section id="docs" style={{ backgroundColor: "var(--bg)", minHeight: "calc(100vh - 56px)", transition: "background-color 0.3s ease", scrollMarginTop: "65px" }}>
       <style>{`
         .doc-p {
           font-size: 14px;

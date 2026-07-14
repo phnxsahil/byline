@@ -1,83 +1,112 @@
 <div align="center">
-  <img src="./public/hero_bg.webp" alt="Byline Hero Grid" width="100%" style="border-radius: 8px; margin-bottom: 24px;" />
+  <img src="./public/favicon.svg" alt="Byline Logo" width="120" style="margin-bottom: 20px;" />
 
-  <h1>Byline</h1>
+  <h1>Byline Platform</h1>
   <p><strong>Your byline. Everywhere you ship.</strong></p>
-  <p>An open-source, multi-agent content engine for developer-founders who build in public.</p>
 
-  <a href="https://yourbyline.vercel.app">View Demo</a> · 
-  <a href="https://github.com/phnxsahil/byline/issues">Report Bug</a> · 
-  <a href="https://github.com/phnxsahil/byline/pulls">Request Feature</a>
+  <p>
+    An open-source, multi-agent content engine designed for developer-founders building in public. Byline monitors your workflow and automatically dispatches native content across platforms.
+  </p>
+
+  <div>
+    <a href="https://github.com/phnxsahil/byline/actions"><img src="https://img.shields.io/github/actions/workflow/status/phnxsahil/byline/ci.yml?style=for-the-badge&logo=github&label=Build" alt="Build Status"></a>
+    <a href="https://github.com/phnxsahil/byline/releases"><img src="https://img.shields.io/github/v/release/phnxsahil/byline?style=for-the-badge&color=F0A500&logo=react" alt="Release"></a>
+    <a href="https://github.com/phnxsahil/byline/blob/master/LICENSE"><img src="https://img.shields.io/github/license/phnxsahil/byline?style=for-the-badge" alt="License"></a>
+  </div>
+  
+  <br />
+
+  <a href="https://yourbyline.vercel.app"><strong>Explore the Demo</strong></a> ·
+  <a href="https://github.com/phnxsahil/byline/issues"><strong>Report Bug</strong></a> ·
+  <a href="https://github.com/phnxsahil/byline/pulls"><strong>Request Feature</strong></a>
+
+  <br /><br />
+  
+  <img src="./public/hero_bg.webp" alt="Byline Dashboard Preview" width="100%" style="border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5);" />
 </div>
 
----
+<hr />
 
-## What is Byline?
+## Table of Contents
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Tech Stack](#tech-stack)
+- [Enterprise Deployment](#enterprise-deployment)
+- [Voice Configuration](#voice-configuration)
+- [License](#license)
 
-Most content tools wait for you to bring the content. **Byline watches and finds it.**
+<hr />
 
-Byline watches your GitHub, listens for voice notes, and accepts quick captures. When it detects something worth saying (a milestone, a shipped feature, or a hard lesson learned), it triggers a 5-agent LangGraph pipeline to draft platform-native content for **LinkedIn**, **X (Twitter)**, **Reddit**, and **Threads**—all written in your unique voice.
+## Overview
 
-You review, edit, and approve the drafts from a beautiful, editorial web dashboard. Once approved, Byline dispatches them via Composio.
+Most content tools require you to manually construct and publish updates. **Byline operates on a push model.** 
 
-## How it works
+It continuously monitors your environment—fetching GitHub commits, processing voice notes, and capturing terminal outputs. When a significant milestone is detected, Byline triggers a LangGraph-orchestrated multi-agent pipeline to generate, critique, and finalize platform-native drafts for **LinkedIn, X (Twitter), Reddit, and Threads**. You review the drafts in a central dashboard and dispatch them instantly.
 
-When a milestone is detected, Byline runs a rigorous 5-agent LangGraph pipeline:
+## Architecture
 
-1. **Strategist:** Analyzes the raw milestone, decides the best angle (e.g., `lesson_learned`, `build_log`), selects the target platforms, and determines if it's even worth posting.
-2. **Four Platform Writers:** Specialized agents that generate native drafts for their respective platforms (LinkedIn, X, Reddit, Threads). They adhere to strict rules (e.g., no "excited to announce", proper hook structures, platform-specific formatting).
-3. **Critic:** Scores every draft out of 10 based on clarity, voice match, hook strength, and platform fit. It flags AI-slop and demands rewrites for anything that sounds unnatural.
+The Byline intelligence engine relies on a strict **5-Agent Pipeline** to ensure quality and voice consistency:
+
+1. **Strategist:** Evaluates raw input to determine content viability, narrative angle (e.g., `technical_deep_dive`, `build_log`), and optimal target platforms.
+2. **Platform Writers (x4):** Highly specialized sub-agents responsible for crafting native drafts for their respective platforms. They enforce platform-specific constraints (e.g., X character limits, Reddit anti-promotion guidelines).
+3. **Critic:** The final checkpoint. It evaluates drafts across four dimensions (Clarity, Voice Match, Hook Strength, Platform Fit) and enforces the user's negative constraints (e.g., rejecting AI-generated clichés like "delve" or "thrilled to announce").
+
+<hr />
 
 ## Tech Stack
 
-Byline is built with a modern, AI-native stack:
+Designed for scale and performance, Byline leverages a modern, AI-native infrastructure:
 
-- **Frontend:** Next.js 14 (TypeScript), React, TailwindCSS
+- **Frontend:** Next.js 14, React, TailwindCSS
 - **Backend:** FastAPI (Python), asyncpg
-- **Database:** PostgreSQL + `pgvector`
-- **AI/Agents:** LangGraph, Anthropic (`claude-sonnet-4-6`)
-- **Integrations:** Composio (for dispatching)
+- **Database:** PostgreSQL with `pgvector` for semantic search
+- **Orchestration:** LangGraph, Anthropic (`claude-sonnet-4-6`)
+- **Deployment:** Composio Integration
 
-## Local Setup
+<hr />
 
-Byline is fully open-source and self-hostable.
+## Enterprise Deployment
 
-### 1. Database
-You need a PostgreSQL database with the `pgvector` extension installed.
+Byline is built to be self-hosted. The recommended deployment strategy utilizes Docker for the data layer and local runtimes for the application services.
+
+### 1. Database Initialization
+Ensure Docker is installed, then spin up the PostgreSQL instance (includes `pgvector`).
 ```bash
 docker-compose up -d
 ```
-*Run the `init.sql` script to set up the schema and seed data.*
+*Note: Execute the `init.sql` script to apply the schema migrations and seed data.*
 
-### 2. Backend (FastAPI + LangGraph)
-Navigate to the `api` directory, set up your Python virtual environment, and install dependencies. You will need an `ANTHROPIC_API_KEY`.
+### 2. Backend Services
+Initialize the FastAPI application and LangGraph pipelines. You must supply a valid `ANTHROPIC_API_KEY` in your `.env`.
 ```bash
 cd api
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
-uvicorn main:app --reload
+uvicorn main:app --reload --port 8000
 ```
 
-### 3. Frontend (Next.js)
-Navigate to the web directory and install the dependencies.
+### 3. Frontend Dashboard
+Start the Next.js client interface.
 ```bash
 cd packages/web
 npm install
 npm run dev
 ```
 
-## Voice Profiles
+<hr />
 
-Byline learns how you write. You can configure your **Voice Profile** to ensure the agents sound like you. You can provide:
-- Average post lengths
-- Favorite opener patterns
-- **Banned phrases** (e.g., no "thrilled to share" or "delve")
-- Raw writing samples for the Critic agent to cross-reference
+## Voice Configuration
 
-## License
+To maintain brand authenticity, Byline supports granular Voice Profiles. Administrators can configure:
+- **Baseline Metrics:** Target word counts and average paragraph lengths.
+- **Hook Patterns:** Preferred opening structures.
+- **Banned Lexicon:** Strict arrays of prohibited phrases to prevent generic AI output.
+- **Reference Material:** Vector embeddings of historical writing samples used by the Critic agent for style-matching.
 
-Distributed under the MIT License. See `LICENSE` for more information.
+<hr />
 
----
 <div align="center">
-  Built by <a href="https://sharmasahil.me">@Sahil</a>
+  <p>Distributed under the MIT License.</p>
+  <p>Built by <a href="https://sharmasahil.me">@Sahil</a></p>
 </div>

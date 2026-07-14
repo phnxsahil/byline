@@ -585,7 +585,7 @@ async def update_draft(dispatch_id: str, platform: str, body: dict):
 
 ## 8. Phase build order — strict
 
-### Phase 0 (do first — this weekend)
+### Phase 0 (do first — this weekend) [DONE]
 **Goal:** CLI → 4 drafts in terminal. Nothing else.
 
 Steps:
@@ -630,7 +630,7 @@ Steps:
 
 **Phase 0 is done when you get 4 drafts. Do not move to Phase 1 until this works.**
 
-### Phase 1 (next weekend)
+### Phase 1 (next weekend) [DONE]
 **Goal:** Next.js review UI — The Wire + The Desk.
 
 Steps:
@@ -647,7 +647,7 @@ Steps:
    ```
 6. Approve button → PATCH /dispatch/{id}/drafts/{platform} with {status: "approved"}
 
-### Phase 2 (weekend 3-4)
+### Phase 2 (weekend 3-4) [IN PROGRESS]
 **Goal:** The Watcher — GitHub webhook + voice notes.
 
 Steps:

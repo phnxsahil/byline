@@ -7,12 +7,6 @@
   <p>
     An open-source, multi-agent content engine designed for developer-founders building in public. Byline monitors your workflow and automatically dispatches native content across platforms.
   </p>
-
-  <div>
-    <a href="https://github.com/phnxsahil/byline/actions"><img src="https://img.shields.io/github/actions/workflow/status/phnxsahil/byline/ci.yml?style=for-the-badge&logo=github&label=Build" alt="Build Status"></a>
-    <a href="https://github.com/phnxsahil/byline/releases"><img src="https://img.shields.io/github/v/release/phnxsahil/byline?style=for-the-badge&color=F0A500&logo=react" alt="Release"></a>
-    <a href="https://github.com/phnxsahil/byline/blob/master/LICENSE"><img src="https://img.shields.io/github/license/phnxsahil/byline?style=for-the-badge" alt="License"></a>
-  </div>
   
   <br />
 

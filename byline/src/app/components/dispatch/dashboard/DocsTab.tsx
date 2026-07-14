@@ -174,7 +174,7 @@ const DOC_CONTENT: Record<string, { title: string; category: string; content: Re
         <p style={{ margin: 0, fontSize: 13, lineHeight: 1.7, color: "var(--text-secondary)" }}>
           Clone the repository and run Docker Compose to spin up all services:
         </p>
-        <CodeBlock filename="docker-compose.yml" code={`git clone https://github.com/sahil/byline.git\ncd byline\ndocker compose up -d`} />
+        <CodeBlock filename="docker-compose.yml" code={`git clone https://github.com/phnxsahil/byline.git\ncd byline\ndocker compose up -d`} />
 
         <h3 style={{ margin: "14px 0 4px 0", fontSize: 14, fontWeight: 600, color: "var(--text-primary)" }}>Configuring environment variables</h3>
         <p style={{ margin: 0, fontSize: 13, lineHeight: 1.7, color: "var(--text-secondary)" }}>

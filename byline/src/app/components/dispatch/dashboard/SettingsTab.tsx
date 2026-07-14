@@ -367,6 +367,18 @@ export function SettingsTab({ isMobile, projects = [], drafts = [] }: SettingsTa
   const [confirmReset, setConfirmReset] = React.useState(false);
   const [realVoiceProfile, setRealVoiceProfile] = React.useState<any>(null);
 
+  // API Key Tester State
+  const [selectedProvider, setSelectedProvider] = React.useState<"anthropic" | "openai" | "gemini" | "groq" | "ollama">("anthropic");
+  const [apiKeyInput, setApiKeyInput] = React.useState("");
+  const [showKey, setShowKey] = React.useState(false);
+  const [testStatus, setTestStatus] = React.useState<"idle" | "testing" | "success" | "error">("idle");
+  const [testResult, setTestResult] = React.useState<{ model: string, latency: number } | null>(null);
+  const [testError, setTestError] = React.useState<string | null>(null);
+
+  // Voice Profile State
+  const [voiceSamples, setVoiceSamples] = React.useState("");
+  const [analyzingVoice, setAnalyzingVoice] = React.useState(false);
+
   React.useEffect(() => {
     getVoiceProfile()
       .then(profile => setRealVoiceProfile(profile))
@@ -425,6 +437,54 @@ export function SettingsTab({ isMobile, projects = [], drafts = [] }: SettingsTa
     } catch {}
     setApprovalMode(DEFAULT_APPROVAL_MODE);
     setOverrides({ ...DEFAULT_OVERRIDES });
+  };
+
+  const handleAnalyzeVoice = async () => {
+    if (!voiceSamples.trim()) return;
+    setAnalyzingVoice(true);
+    try {
+      const res = await fetch("/api/voice-profile/extract", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ raw_posts: voiceSamples, platform: "all" }),
+      });
+      if (res.ok) {
+        const newProfile = await res.json();
+        setRealVoiceProfile(newProfile);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setAnalyzingVoice(false);
+      setVoiceSamples("");
+    }
+  };
+
+  const handleTestKey = async () => {
+    if (selectedProvider !== "ollama" && !apiKeyInput) {
+      setTestError("API key is required");
+      setTestStatus("error");
+      return;
+    }
+    setTestStatus("testing");
+    setTestError(null);
+    setTestResult(null);
+
+    try {
+      const res = await fetch("/api/test-key", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ provider: selectedProvider, api_key: apiKeyInput }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error?.message || data?.detail || "Test failed");
+      
+      setTestStatus("success");
+      setTestResult({ model: data.model, latency: data.latency_ms });
+    } catch (err: any) {
+      setTestStatus("error");
+      setTestError(err.message);
+    }
   };
 
   return (
@@ -545,16 +605,38 @@ export function SettingsTab({ isMobile, projects = [], drafts = [] }: SettingsTa
                     </div>
                     <div>
                       <div style={{ fontSize: 13, color: "var(--by-text)", fontWeight: 600 }}>Active Voice Profile</div>
-                      <div style={{ fontSize: 11, color: "var(--by-text-3)" }}>Learned from your past posts</div>
+                      <div style={{ fontSize: 11, color: "var(--by-text-3)" }}>
+                        {realVoiceProfile ? `v${realVoiceProfile.version} · ${new Date(realVoiceProfile.generated_at).toLocaleDateString()}` : "No profile active"}
+                      </div>
                     </div>
                   </div>
-                  <div style={{ fontSize: 12, color: "var(--by-text)", lineHeight: 1.6, background: "rgba(255,255,255,0.02)", padding: 12, borderRadius: 6, border: "0.5px solid var(--by-border)" }}>
-                    "lowercase on casual channels, sentence case on LinkedIn, hook-led openings, short paragraphs, no corporate filler."
-                  </div>
-                  <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
-                    <button style={{ flex: 1, padding: "8px 0", borderRadius: 6, border: "0.5px solid var(--by-border)", background: "rgba(255,255,255,0.05)", color: "var(--by-text)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, cursor: "pointer", transition: "background 100ms", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }} onMouseEnter={e => e.currentTarget.style.background="rgba(255,255,255,0.1)"} onMouseLeave={e => e.currentTarget.style.background="rgba(255,255,255,0.05)"}>
-                      <IconRefresh size={14} stroke={1.6} />
-                      Retrain Voice
+                  
+                  {realVoiceProfile ? (
+                    <div style={{ fontSize: 11, color: "var(--by-text)", lineHeight: 1.6, background: "rgba(255,255,255,0.02)", padding: 12, borderRadius: 6, border: "0.5px solid var(--by-border)", fontFamily: "'JetBrains Mono', monospace", whiteSpace: "pre-wrap", maxHeight: "150px", overflowY: "auto" }}>
+                      {realVoiceProfile.body}
+                    </div>
+                  ) : (
+                    <div style={{ fontSize: 12, color: "var(--by-text-3)", lineHeight: 1.6, background: "rgba(255,255,255,0.02)", padding: 12, borderRadius: 6, border: "0.5px solid var(--by-border)", textAlign: "center" }}>
+                      No voice profile found. Paste some samples below to generate one.
+                    </div>
+                  )}
+                  
+                  <div style={{ marginTop: 14 }}>
+                    <textarea
+                      value={voiceSamples}
+                      onChange={(e) => setVoiceSamples(e.target.value)}
+                      placeholder="Paste 3-5 of your best past posts here..."
+                      style={{ width: "100%", background: "var(--by-bg-2)", border: "0.5px solid var(--by-border)", borderRadius: 6, padding: "10px", color: "var(--by-text)", fontSize: 12, minHeight: "80px", resize: "vertical", outline: "none", marginBottom: 8, fontFamily: "sans-serif" }}
+                    />
+                    <button 
+                      onClick={handleAnalyzeVoice}
+                      disabled={analyzingVoice || !voiceSamples.trim()}
+                      style={{ width: "100%", padding: "8px 0", borderRadius: 6, border: "0.5px solid var(--by-border)", background: "rgba(255,255,255,0.05)", color: "var(--by-text)", fontFamily: "'IBM Plex Mono', monospace", fontSize: 11, cursor: (analyzingVoice || !voiceSamples.trim()) ? "not-allowed" : "pointer", opacity: (analyzingVoice || !voiceSamples.trim()) ? 0.5 : 1, transition: "background 100ms", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }} 
+                      onMouseEnter={e => { if(!analyzingVoice && voiceSamples.trim()) e.currentTarget.style.background="rgba(255,255,255,0.1)"}} 
+                      onMouseLeave={e => e.currentTarget.style.background="rgba(255,255,255,0.05)"}
+                    >
+                      {analyzingVoice ? <IconLoader2 size={14} className="animate-spin text-amber-500" /> : <IconSparkles size={14} />}
+                      {analyzingVoice ? "Analyzing Voice..." : (realVoiceProfile ? "Retrain Voice" : "Analyze My Voice")}
                     </button>
                   </div>
                 </div>
@@ -661,15 +743,83 @@ export function SettingsTab({ isMobile, projects = [], drafts = [] }: SettingsTa
 
         {activeSection === "developer" && (
           <SectionShell title="API & developer tools" eyebrow="Developer">
+            
+            <div style={{ background: "var(--by-bg-3)", border: "0.5px solid var(--by-border)", borderRadius: 8, padding: 16, display: "flex", flexDirection: "column", gap: 16, marginBottom: 12 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: "var(--by-text)" }}>LLM Configuration</div>
+              
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                <label style={{ fontSize: 11, color: "var(--by-text-2)", textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>Provider</label>
+                <select 
+                  value={selectedProvider} 
+                  onChange={(e) => {
+                    setSelectedProvider(e.target.value as any);
+                    setTestStatus("idle");
+                    setTestResult(null);
+                    setTestError(null);
+                  }}
+                  style={{ background: "var(--by-bg-2)", border: "0.5px solid var(--by-border)", borderRadius: 6, padding: "8px 12px", color: "var(--by-text)", fontSize: 13, outline: "none", width: "100%", maxWidth: 300, appearance: "auto" }}
+                >
+                  <option value="anthropic">Anthropic (Claude)</option>
+                  <option value="openai">OpenAI (GPT)</option>
+                  <option value="gemini">Google Gemini</option>
+                  <option value="groq">Groq</option>
+                  <option value="ollama">Ollama (Local)</option>
+                </select>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                <label style={{ fontSize: 11, color: "var(--by-text-2)", textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 600 }}>
+                  {selectedProvider === "ollama" ? "Host URL" : "API Key"}
+                </label>
+                <div style={{ display: "flex", gap: 8, maxWidth: 400 }}>
+                  <div style={{ position: "relative", flex: 1 }}>
+                    <input 
+                      type={showKey || selectedProvider === "ollama" ? "text" : "password"}
+                      value={apiKeyInput}
+                      onChange={(e) => setApiKeyInput(e.target.value)}
+                      placeholder={selectedProvider === "ollama" ? "http://localhost:11434" : "sk-..."}
+                      style={{ background: "var(--by-bg-2)", border: "0.5px solid var(--by-border)", borderRadius: 6, padding: "8px 12px", color: "var(--by-text)", fontSize: 13, outline: "none", width: "100%", fontFamily: "'JetBrains Mono', monospace" }}
+                    />
+                    {selectedProvider !== "ollama" && (
+                      <button 
+                        onClick={() => setShowKey(!showKey)}
+                        style={{ position: "absolute", right: 8, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "var(--by-text-3)", cursor: "pointer", fontSize: 11 }}
+                      >
+                        {showKey ? "Hide" : "Show"}
+                      </button>
+                    )}
+                  </div>
+                  <button 
+                    onClick={handleTestKey}
+                    disabled={testStatus === "testing"}
+                    style={{ padding: "8px 16px", borderRadius: 6, border: "0.5px solid var(--by-border)", background: "var(--by-bg-2)", color: "var(--by-text)", fontSize: 12, fontWeight: 600, cursor: testStatus === "testing" ? "not-allowed" : "pointer", opacity: testStatus === "testing" ? 0.6 : 1, display: "flex", alignItems: "center", gap: 6 }}
+                  >
+                    {testStatus === "testing" ? "Testing..." : "Test Connection"}
+                  </button>
+                </div>
+              </div>
+
+              {testStatus === "success" && testResult && (
+                <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 12px", background: "rgba(63,185,80,0.1)", border: "0.5px solid rgba(63,185,80,0.2)", borderRadius: 6, color: "var(--by-green)", fontSize: 12, fontWeight: 500 }}>
+                  <span>✓ Connected</span>
+                  <span style={{ opacity: 0.5 }}>•</span>
+                  <span>{testResult.model}</span>
+                  <span style={{ opacity: 0.5 }}>•</span>
+                  <span>{testResult.latency}ms</span>
+                </div>
+              )}
+
+              {testStatus === "error" && testError && (
+                <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 12px", background: "rgba(248,81,73,0.1)", border: "0.5px solid rgba(248,81,73,0.2)", borderRadius: 6, color: "var(--by-red)", fontSize: 12, fontWeight: 500 }}>
+                  <IconAlertCircle size={14} />
+                  {testError}
+                </div>
+              )}
+            </div>
+
             <TokenRow label="Local API" value="http://localhost:8000" meta="FastAPI dispatch endpoints backing the dashboard and CLI." />
             <TokenRow label="Frontend runtime" value="vite dev server" meta="Hot-reload is active while the dashboard shell is being rebuilt." />
             <TokenRow label="Secret keys" value="managed in .env" meta="Anthropic, GitHub, Threads, and Composio credentials live outside the UI." />
-            <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-              <button style={{ padding: "6px 10px", borderRadius: 5, border: "0.5px solid var(--by-border)", background: "transparent", color: "var(--by-text)", fontFamily: "'JetBrains Mono', monospace", fontSize: 10, cursor: "pointer" }}>
-                <IconKey size={12} stroke={1.6} style={{ marginRight: 6 }} />
-                create api key
-              </button>
-            </div>
           </SectionShell>
         )}
 

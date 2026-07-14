@@ -1,16 +1,18 @@
 import React, { useRef, useEffect, useState } from "react";
 import type { AgentStep } from "./AgentRail";
-import { IconPhoto, IconSend, IconLoader2, IconBrandLinkedin, IconBrandX, IconBrandReddit, IconSparkles, IconMessageCircle } from "@tabler/icons-react";
+import { IconPhoto, IconSend, IconLoader2, IconBrandLinkedin, IconBrandX, IconBrandReddit, IconSparkles, IconMessageCircle, IconMicrophone } from "@tabler/icons-react";
+import { AudioRecorder } from "./AudioRecorder";
 
 interface FeedPanelProps {
   agentSteps: AgentStep[];
   isRunning: boolean;
-  onRunMilestone: (txt: string, images?: string[]) => void;
+  onRunMilestone: (txt: string, source?: string) => void;
   onReviewDraft?: () => void;
 }
 
-export function FeedPanel({ agentSteps, isRunning, onRunMilestone, onReviewDraft }: FeedPanelProps) {
+export function FeedPanel({ agentSteps, isRunning, onRunMilestone, onReviewDraft, projectId }: FeedPanelProps & { projectId?: string }) {
   const [input, setInput] = useState("");
+  const [mode, setMode] = useState<"milestone" | "refine">("milestone");
   const [platforms, setPlatforms] = useState({ linkedin: true, x: true, reddit: true, threads: false });
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -20,7 +22,7 @@ export function FeedPanel({ agentSteps, isRunning, onRunMilestone, onReviewDraft
 
   const handleSend = () => {
     if (!input.trim()) return;
-    onRunMilestone(input);
+    onRunMilestone(input, mode === "refine" ? "paste" : "manual");
     setInput("");
   };
 
@@ -147,14 +149,50 @@ export function FeedPanel({ agentSteps, isRunning, onRunMilestone, onReviewDraft
       </div>
 
       {/* Composer Area */}
-      <div className="p-6 bg-surface/90 backdrop-blur-md border-t border-rule/50 z-10">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-paper border border-rule shadow-lg shadow-black/5 focus-within:border-ink/40 focus-within:ring-4 focus-within:ring-ink/5 rounded-3xl transition-all p-2 flex flex-col">
+      <div className="p-6 bg-surface/90 backdrop-blur-md border-t border-rule/50 z-10 flex flex-col gap-2 relative">
+        <div className="max-w-4xl mx-auto w-full">
+          
+          {/* Mode Toggle Tab Bar */}
+          <div className="flex items-center gap-1 mb-2 ml-4">
+            <button 
+              onClick={() => setMode("milestone")}
+              className={`px-4 py-1.5 rounded-t-lg text-[11px] font-bold tracking-widest uppercase transition-colors ${
+                mode === "milestone" ? "bg-paper text-ink border-t border-x border-rule shadow-sm" : "bg-transparent text-mute hover:text-ink"
+              }`}
+            >
+              Log Milestone
+            </button>
+            <button 
+              onClick={() => setMode("refine")}
+              className={`px-4 py-1.5 rounded-t-lg text-[11px] font-bold tracking-widest uppercase transition-colors ${
+                mode === "refine" ? "bg-paper text-ink border-t border-x border-rule shadow-sm" : "bg-transparent text-mute hover:text-ink"
+              }`}
+            >
+              Paste & Refine
+            </button>
+          </div>
+
+          <div className={`bg-paper border shadow-lg shadow-black/5 focus-within:border-ink/40 focus-within:ring-4 focus-within:ring-ink/5 transition-all p-2 flex flex-col ${
+            mode === "refine" ? "rounded-3xl rounded-tl-none border-rule" : "rounded-3xl border-rule"
+          }`}>
+            
+            {mode === "milestone" && input.length > 250 && (
+              <div className="px-5 pt-3 pb-1 flex items-center justify-between animate-in fade-in slide-in-from-top-2 duration-300">
+                <span className="text-[11px] font-medium text-mute">This looks like raw content.</span>
+                <button 
+                  onClick={() => setMode("refine")}
+                  className="text-[11px] font-bold text-amber-500 uppercase tracking-widest hover:opacity-80"
+                >
+                  Switch to Paste & Refine Mode →
+                </button>
+              </div>
+            )}
+
             <textarea
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask the agents to refine, or log a new milestone..."
+              placeholder={mode === "refine" ? "Paste raw content to shape into platform-native posts — README sections, PR descriptions, rough thoughts..." : "Ask the agents to refine, or log a new milestone..."}
               className="w-full bg-transparent resize-none outline-none text-sm text-ink placeholder:text-mute/60 min-h-[60px] p-5 pb-3"
               rows={1}
             />
@@ -192,14 +230,19 @@ export function FeedPanel({ agentSteps, isRunning, onRunMilestone, onReviewDraft
               </div>
               
               <div className="flex items-center gap-2">
-                <button className="p-2.5 text-mute hover:text-ink hover:bg-surface rounded-full transition-colors">
-                  <IconPhoto size={20} stroke={1.5} />
-                </button>
+                <AudioRecorder 
+                  projectId={projectId || "mock-project-id"} 
+                  onTranscriptionSuccess={(txt) => onRunMilestone(txt, "voice")} 
+                  onCancel={() => {}} 
+                />
                 <button 
                   onClick={handleSend}
                   disabled={!input.trim()}
-                  className="p-3 bg-ink text-paper hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed rounded-full transition-all ml-1 shadow-lg shadow-ink/20"
+                  className="p-3 bg-ink text-paper hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed rounded-full transition-all ml-1 shadow-lg shadow-ink/20 flex items-center gap-2"
                 >
+                  {mode === "refine" ? (
+                    <span className="text-[11px] font-bold uppercase tracking-widest pl-2">Refine</span>
+                  ) : null}
                   <IconSend size={18} stroke={2} className="ml-0.5" />
                 </button>
               </div>

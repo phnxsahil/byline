@@ -51,8 +51,8 @@ export function DemoSection() {
         
         <div className="ta-col" style={{ gridColumn: "span 3", borderLeft: "1px solid var(--border)", position: "relative", padding: "48px" }}>
           <div style={{ 
-            background: "var(--bg2)", 
-            border: "1px solid var(--border)", 
+            background: "var(--bg-terminal)", 
+            border: "1px solid rgba(255, 255, 255, 0.1)", 
             borderRadius: "8px", 
             overflow: "hidden",
             boxShadow: "0 20px 40px rgba(0,0,0,0.8)"

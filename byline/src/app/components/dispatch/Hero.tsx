@@ -70,11 +70,14 @@ export function Hero() {
               </div>
             </div>
             
-            <h1 className="ta-hero-title">
+            <h1 style={{ position: 'absolute', width: 1, height: 1, padding: 0, margin: -1, overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', whiteSpace: 'nowrap', borderWidth: 0 }}>
+              Byline — AI Content Engine for Developers Building in Public
+            </h1>
+            <div className="ta-hero-title">
               Ship code.<br />
               We'll write<br />
               the post.
-            </h1>
+            </div>
             
             <div style={{ fontFamily: "var(--byline-font-mono)", fontSize: 16, color: "var(--accent)", marginBottom: 24, minHeight: 24 }}>
               {typed}
@@ -98,9 +101,10 @@ export function Hero() {
 
             <div className="hero-btn-container">
               <a 
-                href="https://github.com/sahil/byline" 
+                href="https://github.com/phnxsahil/byline" 
                 className="ta-btn-pixel hero-abstract-btn dispatch-cta-pulse"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <IconBrandGithub size={18} stroke={2} style={{ marginRight: 8 }} /> STAR ON GITHUB
               </a>

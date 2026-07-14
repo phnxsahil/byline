@@ -22,7 +22,7 @@ export function PricingSection() {
                <div key={f} style={{ display: "flex", gap: 12, alignItems: "center", fontFamily: "Inter", fontSize: 14, color: "var(--text-secondary)" }}><IconCheck size={16} color="var(--accent)" /> {f}</div>
              ))}
           </div>
-          <a href="https://github.com/sahil/byline" className="ta-btn-pixel" style={{ padding: "12px 24px", width: "100%" }}>CLONE ON GITHUB</a>
+          <a href="https://github.com/phnxsahil/byline" target="_blank" rel="noopener noreferrer" className="ta-btn-pixel" style={{ padding: "12px 24px", width: "100%" }}>CLONE ON GITHUB</a>
         </div>
         
         <div className="ta-col" style={{ padding: 48 }}>

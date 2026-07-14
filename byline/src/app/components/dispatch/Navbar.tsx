@@ -200,9 +200,27 @@ export function Navbar({ theme, onToggleTheme }: { theme: 'dark' | 'light', onTo
 
         {/* Right: Actions */}
         <div className="ta-nav-right">
-          <button className="ta-btn-pixel nav-btn-pixel dispatch-cta-pulse" onClick={() => window.open('https://github.com/sahil/byline', '_blank')}>
-            <IconStar size={12} stroke={2.5} /> STAR ON GITHUB
+          <button onClick={onToggleTheme} style={{
+            background: "transparent",
+            border: "none",
+            color: "var(--text-secondary)",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 6,
+            borderRadius: "50%",
+            transition: "background 0.2s ease, color 0.2s ease"
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.background = "rgba(128, 128, 128, 0.1)"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.background = "transparent"; }}
+          >
+            {theme === "dark" ? <IconSun size={18} stroke={2} /> : <IconMoon size={18} stroke={2} />}
           </button>
+
+          <a href="https://github.com/phnxsahil/byline" target="_blank" rel="noopener noreferrer" className="ta-btn-pixel nav-btn-pixel dispatch-cta-pulse">
+            <IconStar size={12} stroke={2.5} /> STAR ON GITHUB
+          </a>
           
           <button className="ta-mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             {mobileMenuOpen ? <IconX size={20} /> : <IconMenu2 size={20} />}
@@ -217,9 +235,9 @@ export function Navbar({ theme, onToggleTheme }: { theme: 'dark' | 'light', onTo
         <div onClick={closeMenu}><ShutterNavLink href="#features" label="Features" /></div>
         <div onClick={closeMenu}><ShutterNavLink href="#docs" label="Docs" /></div>
         <div style={{ marginTop: 8 }}>
-          <button className="ta-btn-pixel" style={{ width: "100%", padding: "12px" }} onClick={() => { closeMenu(); window.open('https://github.com/sahil/byline', '_blank'); }}>
+          <a href="https://github.com/phnxsahil/byline" target="_blank" rel="noopener noreferrer" className="ta-btn-pixel" style={{ width: "100%", padding: "12px", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }} onClick={closeMenu}>
             <IconStar size={12} stroke={2.5} /> STAR ON GITHUB
-          </button>
+          </a>
         </div>
       </div>
     </nav>

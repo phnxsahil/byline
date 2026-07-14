@@ -121,7 +121,7 @@ export function InstallationFAQSection() {
 
         {/* Right half: FAQs (2 columns) */}
         <div className="ta-col" style={{ gridColumn: "span 2", padding: "120px 64px" }}>
-           <h3 style={{ 
+           <div style={{ 
             fontFamily: "var(--byline-font-mono), monospace", 
             fontSize: 12, 
             fontWeight: 600, 
@@ -131,7 +131,7 @@ export function InstallationFAQSection() {
             textTransform: "uppercase"
           }}>
             Frequently Asked Questions
-          </h3>
+          </div>
 
           <div>
             {faqs.map((faq, idx) => (

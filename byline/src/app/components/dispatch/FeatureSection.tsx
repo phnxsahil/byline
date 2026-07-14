@@ -57,7 +57,7 @@ export function FeatureSection() {
             {FEATURES.map((f, i) => (
               <div key={i} className="feat-card dispatch-bento-card" data-index={i}>
                 <f.Icon size={24} color="var(--text-secondary)" stroke={1.5} style={{ marginBottom: 24 }} />
-                <div style={{ fontFamily: "Space Grotesk", fontSize: 16, fontWeight: 600, color: "var(--text-primary)", marginBottom: 8 }}>{f.title}</div>
+                <h3 style={{ fontFamily: "Space Grotesk", fontSize: 16, fontWeight: 600, color: "var(--text-primary)", margin: 0, marginBottom: 8 }}>{f.title}</h3>
                 <div style={{ fontFamily: "Inter", fontSize: 13, color: "var(--text-secondary)", lineHeight: 1.5 }}>{f.desc}</div>
               </div>
             ))}

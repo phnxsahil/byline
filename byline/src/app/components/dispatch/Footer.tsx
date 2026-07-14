@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { IconArrowUpRight, IconBrandGithub, IconBrandX, IconArrowUp, IconCode, IconTerminal2 } from "@tabler/icons-react";
+import { IconArrowUpRight, IconBrandGithub, IconBrandX, IconBrandLinkedin, IconArrowUp, IconCode, IconTerminal2 } from "@tabler/icons-react";
 const PRODUCT_LINKS = [
   { label: "AI Agents", href: "#how-it-works" },
   { label: "Content Pipeline", href: "#features" },
@@ -10,7 +10,7 @@ const PRODUCT_LINKS = [
 const DEV_LINKS = [
   { label: "Documentation", href: "#docs" },
   { label: "API Reference", href: "#api" },
-  { label: "GitHub Repo", href: "https://github.com/sahil/byline" },
+  { label: "GitHub Repo", href: "https://github.com/phnxsahil/byline" },
   { label: "Self-Hosting", href: "#self-hosting" },
 ];
 
@@ -318,11 +318,16 @@ export function Footer() {
           <span>100% OPEN SOURCE. BUILT FOR DEVELOPERS WHO SHIP.</span>
           <span style={{ color: "var(--border)" }}>|</span>
           <span>MIT LICENSE</span>
+          <span style={{ color: "var(--border)" }}>|</span>
+          <span>
+            BUILT BY <a href="https://sharmasahil.me" target="_blank" rel="noopener noreferrer" style={{ color: "var(--text-primary)", textDecoration: "none", borderBottom: "1px dashed var(--text-secondary)" }}>@SAHIL</a>
+          </span>
         </div>
 
         <div className="f-socials">
-          <a href="https://x.com/sahil"><IconBrandX size={18} stroke={1.5} /></a>
-          <a href="https://github.com/sahil/byline"><IconBrandGithub size={18} stroke={1.5} /></a>
+          <a href="https://x.com/theonlysahil1" aria-label="Byline on X (Twitter)" rel="noopener noreferrer"><IconBrandX size={18} stroke={1.5} /></a>
+          <a href="https://github.com/phnxsahil/byline" aria-label="Byline on GitHub" rel="noopener noreferrer"><IconBrandGithub size={18} stroke={1.5} /></a>
+          <a href="https://www.linkedin.com/in/sahil-sharma-5a3715270/" aria-label="Sahil on LinkedIn" rel="noopener noreferrer"><IconBrandLinkedin size={18} stroke={1.5} /></a>
         </div>
       </div>
     </footer>

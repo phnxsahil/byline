@@ -66,6 +66,25 @@ export default function App() {
   const [shutterActive, setShutterActive] = useState(false);
   const [shutterKey, setShutterKey] = useState(0);
 
+  const [theme, setTheme] = useState<"dark" | "light">(() => {
+    if (typeof window !== "undefined") {
+      return (localStorage.getItem("theme") as "dark" | "light") || "dark";
+    }
+    return "dark";
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(t => t === "dark" ? "light" : "dark");
+
   useEffect(() => {
     const handleHashChange = () => {
       const targetView = getRouteState(window.location.hash);
@@ -332,7 +351,7 @@ export default function App() {
           cursor: pointer;
           overflow: hidden;
           z-index: 1;
-          transition: transform 0.15s ease, box-shadow 0.15s ease;
+          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
           clip-path: polygon(
             0 8px, 8px 8px, 8px 0, 
             calc(100% - 8px) 0, calc(100% - 8px) 8px, 100% 8px, 
@@ -342,8 +361,10 @@ export default function App() {
           box-shadow: 4px 4px 0 0 #000;
         }
         .ta-btn-pixel:hover {
-          transform: translateY(-2px);
-          box-shadow: 6px 6px 0 0 #000;
+          background-color: #fff;
+          color: #000;
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 0 0 30px rgba(255, 255, 255, 0.4), 6px 6px 0 0 #000;
         }
         .ta-btn-pixel:active {
           transform: translateY(2px);
@@ -418,7 +439,7 @@ export default function App() {
 
 
       {/* ── Navbar ─────────────────────────────────────────────────────────── */}
-      {view !== "dashboard" && <Navbar />}
+      {view !== "dashboard" && <Navbar theme={theme} onToggleTheme={toggleTheme} />}
 
       <main id="main-content">
         {view === "docs" ? (

@@ -71,7 +71,7 @@ export function HowItWorksSection() {
               <div key={i} className="hiw-card">
                 <div style={{ fontFamily: "var(--byline-font-mono)", fontSize: 32, fontWeight: 700, color: "var(--text-secondary)", opacity: 0.6, marginBottom: 16 }}>0{step.num}</div>
                 <step.Icon size={24} color={step.color} stroke={1.5} style={{ marginBottom: 16 }} />
-                <div style={{ fontFamily: "Space Grotesk", fontSize: 14, fontWeight: 600, color: "var(--text-primary)", marginBottom: 8 }}>{step.title}</div>
+                <h3 style={{ fontFamily: "Space Grotesk", fontSize: 14, fontWeight: 600, color: "var(--text-primary)", margin: 0, marginBottom: 8 }}>{step.title}</h3>
                 <div style={{ fontFamily: "Inter", fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.5 }}>{step.desc}</div>
                 {i < 4 && <div className="step-arrow"><IconArrowRight size={10} color="var(--text-secondary)" /></div>}
               </div>

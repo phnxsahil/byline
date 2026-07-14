@@ -1,0 +1,56 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Byline",
+  "logo": {
+    "dark": "https://raw.githubusercontent.com/phnxsahil/byline/main/public/og-image.png",
+    "light": "https://raw.githubusercontent.com/phnxsahil/byline/main/public/og-image.png"
+  },
+  "favicon": "https://raw.githubusercontent.com/phnxsahil/byline/main/public/favicon.ico",
+  "colors": {
+    "primary": "#F0A500",
+    "light": "#F0A500",
+    "dark": "#F0A500",
+    "background": {
+      "dark": "#0D1117"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "GitHub",
+      "url": "https://github.com/phnxsahil/byline"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Website",
+    "url": "https://byline.so"
+  },
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "getting-started",
+        "self-hosting"
+      ]
+    },
+    {
+      "group": "Core Concepts",
+      "pages": [
+        "overall-structure",
+        "agents",
+        "voice-profile"
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "integrations"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference"
+      ]
+    }
+  ]
+}

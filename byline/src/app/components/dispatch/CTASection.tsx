@@ -18,20 +18,21 @@ export function CTASection() {
           font-family: var(--byline-font-mono);
           font-size: 13px;
           font-weight: 700;
-          color: var(--text-secondary);
+          color: rgba(237, 234, 227, 0.7); /* Forced light for dark bg */
           text-decoration: none;
           padding: 16px 32px;
-          border: 1px solid var(--border);
+          border: 1px solid rgba(255, 255, 255, 0.15); /* Forced light */
           display: flex;
           align-items: center;
           gap: 12px;
-          transition: all 0.2s ease;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
           background: transparent;
         }
         .cta-github-btn:hover {
-          background: var(--surface);
-          color: var(--text-primary);
-          border-color: var(--text-primary);
+          background: rgba(255, 255, 255, 0.05);
+          color: #EDEAE3;
+          border-color: rgba(255, 255, 255, 0.3);
+          transform: translateY(-2px);
         }
         .cta-btn-container {
           display: flex;
@@ -60,7 +61,7 @@ export function CTASection() {
         .cta-btn-primary:hover {
           background: #fff !important;
           color: #000 !important;
-          box-shadow: 0 0 30px rgba(255, 255, 255, 0.2), 6px 6px 0 0 #000 !important;
+          box-shadow: 0 0 30px rgba(255, 255, 255, 0.4), 6px 6px 0 0 #000 !important;
           transform: translateY(-2px) scale(1.02) !important;
         }
       `}</style>
@@ -70,18 +71,20 @@ export function CTASection() {
         <div style={{
           position: "absolute",
           inset: 0,
-          backgroundImage: "url('/cta_scene_bg.png')",
+          backgroundImage: "url('/cta_scene_bg.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center bottom",
           zIndex: 0,
-          opacity: 0.5,
-          pointerEvents: "none"
-        }} />
+          opacity: 0.85, /* INCREASED OPACITY SO IMAGE IS VISIBLE */
+          pointerEvents: "none",
+        }} aria-hidden="true" role="presentation" />
+        
+        {/* Subtle dark gradient overlay so text is still readable, but decreased significantly so image pops */}
         <div style={{
           position: "absolute",
           inset: 0,
-          background: "radial-gradient(ellipse 100% 100% at 50% 20%, rgba(13,17,23,0.98) 0%, rgba(13,17,23,0.85) 40%, transparent 100%)",
-          zIndex: 0,
+          background: "radial-gradient(ellipse 100% 100% at 50% 30%, rgba(13,17,23,0.6) 0%, rgba(13,17,23,0.85) 100%)",
+          zIndex: 1,
           pointerEvents: "none"
         }} />
 
@@ -92,10 +95,10 @@ export function CTASection() {
           {/* Removed internal radial gradient to rely on the parent wrapper's linear gradient */}
 
           <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <h2 className="ta-hero-title" style={{ fontSize: "3rem" }}>Ready to ship in public?</h2>
-            <p className="ta-hero-desc" style={{ marginBottom: 40, textAlign: "center" }}>Open source. Self-hostable. Ship code, we'll write the post.</p>
+            <h2 className="ta-hero-title" style={{ fontSize: "3rem", color: "#EDEAE3" }}>Ready to ship in public?</h2>
+            <p className="ta-hero-desc" style={{ marginBottom: 40, textAlign: "center", color: "rgba(237, 234, 227, 0.7)" }}>Open source. Self-hostable. Ship code, we'll write the post.</p>
             <div className="cta-btn-container">
-              <a href="https://github.com/sahil/byline" target="_blank" className="ta-btn-pixel cta-btn-primary" style={{ padding: "16px 32px", display: "flex", alignItems: "center", gap: 12 }}>
+              <a href="https://github.com/phnxsahil/byline" target="_blank" rel="noopener noreferrer" className="ta-btn-pixel cta-btn-primary" style={{ padding: "16px 32px", display: "flex", alignItems: "center", gap: 12 }}>
                 <IconBrandGithub size={18} stroke={2} /> STAR ON GITHUB
               </a>
               <a href="#docs" className="cta-github-btn">
@@ -108,13 +111,10 @@ export function CTASection() {
                 fontFamily: "var(--byline-font-mono)", 
                 fontSize: 12, 
                 letterSpacing: "0.08em", 
-                color: "var(--text-primary)", 
+                color: "rgba(237, 234, 227, 0.8)", /* Increased brightness */
                 fontWeight: 700,
                 textTransform: "uppercase",
                 opacity: 0.9,
-                background: "linear-gradient(90deg, var(--text-primary), var(--text-secondary))",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent"
               }}>
                 Backed by Y (Combinator rejected us).
               </div>

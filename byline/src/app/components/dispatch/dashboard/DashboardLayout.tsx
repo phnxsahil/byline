@@ -25,7 +25,7 @@ interface DashboardLayoutProps {
 
 const MOCK_PROJECTS: ApiProject[] = [
   { id: "proj-1", name: "fltrd.tech", slug: "fltrd-tech", description: "AI-powered content filtering", status: "active", repo_url: "https://github.com/sahil/fltrd" },
-  { id: "proj-2", name: "byline", slug: "byline", description: "Your byline. Everywhere you ship.", status: "active", repo_url: "https://github.com/sahil/byline" },
+  { id: "proj-2", name: "byline", slug: "byline", description: "Your byline. Everywhere you ship.", status: "active", repo_url: "https://github.com/phnxsahil/byline" },
 ];
 
 const MOCK_DISPATCHES: DispatchRead[] = [
@@ -174,51 +174,94 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
     }
   };
 
-  const makeAgentSteps = (query: string): AgentStep[] => [
-    {
-      agentId: "strategist",
-      startedAt: Date.now(),
-      status: "pending",
-      input: { context: ["Project context loaded", `Milestone: ${query}`], instructions: "Choose angle." },
-      decisions: [{ label: "Waiting on dispatch", detail: "Strategist classification." }],
-    },
-    {
-      agentId: "linkedin",
-      startedAt: Date.now(),
-      status: "pending",
-      input: { context: [], instructions: "Write draft." },
-      decisions: [{ label: "Standing by", detail: "Waiting for strategist." }],
-    },
-    {
-      agentId: "x",
-      startedAt: Date.now(),
-      status: "pending",
-      input: { context: [], instructions: "Write draft." },
-      decisions: [{ label: "Standing by", detail: "Waiting for strategist." }],
-    },
-    {
-      agentId: "reddit",
-      startedAt: Date.now(),
-      status: "pending",
-      input: { context: [], instructions: "Write draft." },
-      decisions: [{ label: "Standing by", detail: "Waiting for strategist." }],
-    },
-    {
-      agentId: "qa",
-      startedAt: Date.now(),
-      status: "pending",
-      input: { context: [], instructions: "Validate limits." },
-      decisions: [{ label: "Standing by", detail: "Waiting for drafts." }],
-    },
-    {
-      agentId: "critic",
-      startedAt: Date.now(),
-      status: "pending",
-      input: { context: [], instructions: "Score drafts." },
-      decisions: [{ label: "Waiting for drafts", detail: "Critic runs last." }],
-    },
-  ];
+  // ─── SSE event → agentStep mapper ────────────────────────────────────────
+  const applySSEEvent = (event: Record<string, unknown>) => {
+    const node = event.node as string | undefined;
+    const status = event.status as string | undefined;
+    const output = event.output as Record<string, unknown> | undefined;
 
+    if (!node || !status) return;
+
+    setAgentSteps((prev) =>
+      prev.map((s) => {
+        if (s.agentId !== node) return s;
+        if (status === "running") {
+          return {
+            ...s,
+            status: "running",
+            decisions: [{ label: `${node} running`, detail: "Processing…" }],
+          };
+        }
+        if (status === "done") {
+          const draftText =
+            (output?.content as string) ||
+            (output?.draft as string) ||
+            undefined;
+          return {
+            ...s,
+            status: "done",
+            finishedAt: Date.now(),
+            decisions: [{ label: "Done", detail: output?.angle_reasoning as string || "Completed." }],
+            ...(draftText ? { output: { draft: draftText } } : {}),
+          };
+        }
+        return s;
+      })
+    );
+  };
+
+  // ─── Real pipeline (live backend) ─────────────────────────────────────────
+  const runPipelineLive = async (milestoneText: string, source = "manual") => {
+    if (!currentProject) return;
+    setIsRunning(true);
+    setAgentSteps(makeAgentSteps(milestoneText));
+    setDeskOpen(false);
+
+    let dispatch: DispatchRead;
+    try {
+      dispatch = await createDispatch({
+        project_id: currentProject.id,
+        body: milestoneText,
+        source,
+      });
+    } catch (err) {
+      setBackendError(`Failed to create dispatch: ${err}`);
+      setIsRunning(false);
+      return;
+    }
+
+    // Add dispatch to list immediately so SignalHub shows it
+    setDispatches((prev) => [dispatch, ...prev]);
+    setActiveDispatch(dispatch);
+
+    // Open SSE stream — pipeline runs server-side
+    streamGeneration(
+      dispatch.id,
+      (event) => applySSEEvent(event),
+      (err) => {
+        setBackendError(`Pipeline error: ${err.message}`);
+        setIsRunning(false);
+      },
+      async () => {
+        // Pipeline finished — load real drafts
+        setIsRunning(false);
+        try {
+          const draftList = await getDrafts(dispatch.id);
+          setDrafts(draftList);
+          if (draftList.length > 0) setDeskOpen(true);
+          // Reload dispatch to get updated stamps/angle
+          const refreshed = await listDispatches();
+          setDispatches(refreshed);
+          const updated = refreshed.find((d) => d.id === dispatch.id);
+          if (updated) setActiveDispatch(updated);
+        } catch (err) {
+          setBackendError(`Failed to load drafts: ${err}`);
+        }
+      }
+    );
+  };
+
+  // ─── Offline simulation (mock fallback) ───────────────────────────────────
   const runPipelineSimulated = (milestoneText: string) => {
     setIsRunning(true);
     setAgentSteps(makeAgentSteps(milestoneText));
@@ -236,19 +279,15 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
             const draftText = platform === "linkedin" ? `We just shipped: "${milestoneText}"` : `shipped: ${milestoneText.toLowerCase()}.`;
             return { ...s, status: "done", output: { draft: draftText }, decisions: [{ label: "Draft complete", detail: "Native draft generated." }] };
           }
-          if (s.agentId === "qa") {
-            return { ...s, status: "done", finishedAt: Date.now(), decisions: [{ label: "Linting completed", detail: "Guidelines validated." }] };
-          }
-          if (s.agentId === "critic") {
-            return { ...s, status: "running", decisions: [{ label: "Verifying", detail: "Running anti-slop and voice compliance." }] };
-          }
+          if (s.agentId === "qa") return { ...s, status: "done", finishedAt: Date.now(), decisions: [{ label: "Linting completed", detail: "Guidelines validated." }] };
+          if (s.agentId === "critic") return { ...s, status: "running", decisions: [{ label: "Verifying", detail: "Running anti-slop and voice compliance." }] };
           return s;
         }));
       },
       () => {
         setIsRunning(false);
         setAgentSteps((prev) => prev.map((s) => s.agentId === "critic" ? { ...s, status: "done", finishedAt: Date.now(), decisions: [{ label: "Verification complete", detail: "Reviewed voice and compliance constraints." }] } : s));
-        
+
         const newMockId = `disp-mock-${Date.now()}`;
         const newMockDisp: DispatchRead = {
           id: newMockId,
@@ -268,17 +307,18 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
           arc_id: null,
           arc_name: null,
           avoid_topics: [],
-          strategist_reasoning: {}
+          strategist_reasoning: {},
         };
-        
+
         MOCK_DRAFTS[newMockId] = [
           { id: `dr-mock-li-${Date.now()}`, dispatch_id: newMockId, platform: "linkedin", body: `We just shipped: "${milestoneText}"`, reddit_title: null, reddit_subreddit: null, critic_score: 8.5, critic_note: "Passed", voice_match_score: 8.5, critic_grade: "A", status: "draft", created_at: new Date().toISOString() },
           { id: `dr-mock-x-${Date.now()}`, dispatch_id: newMockId, platform: "x", body: `shipped: ${milestoneText.toLowerCase()}.`, reddit_title: null, reddit_subreddit: null, critic_score: 8.2, critic_note: "Passed", voice_match_score: 8.2, critic_grade: "A", status: "draft", created_at: new Date().toISOString() }
         ];
-        
-        setDispatches(prev => [newMockDisp, ...prev]);
+
+        setDispatches((prev) => [newMockDisp, ...prev]);
         setActiveDispatch(newMockDisp);
         setDrafts(MOCK_DRAFTS[newMockId]);
+        setDeskOpen(true);
       },
     ];
 
@@ -287,10 +327,15 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
     });
   };
 
-  const runPipeline = (query?: string) => {
+  // ─── Public entry point ───────────────────────────────────────────────────
+  const runPipeline = (query?: string, source?: string) => {
     if (isRunning) return;
     const milestone = query?.trim() || "shipped semantic search on fltrd.tech using pgvector";
-    runPipelineSimulated(milestone); // Using mock for now per plan
+    if (apiConnected) {
+      runPipelineLive(milestone, source ?? "manual");
+    } else {
+      runPipelineSimulated(milestone);
+    }
   };
 
   return (
@@ -331,6 +376,7 @@ export function DashboardLayout({ onLandingClick }: DashboardLayoutProps) {
             isRunning={isRunning}
             onRunMilestone={runPipeline}
             onReviewDraft={() => setDeskOpen(true)}
+            projectId={currentProject?.id}
           />
         </div>
 

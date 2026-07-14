@@ -346,16 +346,29 @@ export function AudioRecorder({ projectId, onTranscriptionSuccess, onCancel }: A
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
+  if (status === "idle") {
+    return (
+      <button 
+        onClick={startRecording}
+        className="p-2.5 text-mute hover:text-ink hover:bg-surface rounded-full transition-colors"
+        title="Record voice note"
+      >
+        <IconMicrophone size={20} stroke={1.5} />
+      </button>
+    );
+  }
+
   return (
     <div
+      className="absolute bottom-16 left-4 right-4 z-20 shadow-xl shadow-black/10 backdrop-blur-md"
       style={{
         display: "flex",
         flexDirection: "column",
         gap: 12,
-        background: "rgba(255, 255, 255, 0.015)",
-        border: "0.5px dashed rgba(240, 165, 0, 0.25)",
-        borderRadius: 6,
-        padding: 14,
+        background: "rgba(13, 17, 23, 0.95)",
+        border: "0.5px solid rgba(240, 165, 0, 0.4)",
+        borderRadius: 12,
+        padding: 16,
         boxSizing: "border-box",
       }}
     >
@@ -436,44 +449,7 @@ export function AudioRecorder({ projectId, onTranscriptionSuccess, onCancel }: A
 
       {/* Control Actions */}
       <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 4 }}>
-        {status === "idle" && (
-          <>
-            <button
-              onClick={onCancel}
-              style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 10,
-                padding: "6px 12px",
-                background: "transparent",
-                color: "var(--by-text-3)",
-                border: "0.5px solid var(--by-border)",
-                borderRadius: 4,
-                cursor: "pointer",
-              }}
-            >
-              cancel
-            </button>
-            <button
-              onClick={startRecording}
-              style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: 10,
-                padding: "6px 12px",
-                background: "rgba(240, 165, 0, 0.12)",
-                color: "var(--by-amber)",
-                border: "0.5px solid var(--by-amber)",
-                borderRadius: 4,
-                cursor: "pointer",
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-              }}
-            >
-              <IconMicrophone size={12} />
-              start recording
-            </button>
-          </>
-        )}
+        {/* Idle state removed from here as it's handled at the top */}
 
         {status === "recording" && (
           <>

@@ -1,18 +1,112 @@
 
   <!DOCTYPE html>
-  <html lang="en" class="dark">
+  <html lang="en">
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>byline — your byline everywhere you ship</title>
       <meta name="description" content="Byline watches what you ship, remembers your projects, and turns milestones into platform-native drafts for LinkedIn, X, Reddit, and Threads." />
       <meta property="og:description" content="Byline watches what you ship, remembers your projects, and turns milestones into platform-native drafts for LinkedIn, X, Reddit, and Threads." />
+      <link rel="canonical" href="https://yourbyline.vercel.app/" />
+      <meta property="og:title" content="byline — your byline everywhere you ship" />
+      <meta property="og:site_name" content="Byline" />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://yourbyline.vercel.app/" />
+      <meta property="og:image" content="https://yourbyline.vercel.app/og-image.png" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:site" content="@theonlysahil1" />
+      <meta name="twitter:title" content="byline — your byline everywhere you ship" />
+      <meta name="twitter:description" content="Byline watches what you ship, remembers your projects, and turns milestones into platform-native drafts for LinkedIn, X, Reddit, and Threads." />
+      <meta name="twitter:image" content="https://yourbyline.vercel.app/og-image.png" />
+      <meta name="theme-color" content="#0D1117" />
       <meta name="robots" content="index, follow" />
+      <meta name="author" content="Sahil" />
       <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+      <link rel="preload" as="image" href="/hero_bg.webp" type="image/webp" />
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Inter:wght@100..900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
       <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
+
+      <!-- SoftwareApplication schema -->
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Byline",
+        "url": "https://yourbyline.vercel.app",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Web",
+        "description": "Byline is an open-source multi-agent content engine for developer-founders. It watches your GitHub and turns milestones into platform-native drafts for LinkedIn, X, Reddit, and Threads.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Sahil"
+        },
+        "license": "https://opensource.org/licenses/MIT"
+      }
+      </script>
+
+      <!-- Organization schema -->
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Byline",
+        "url": "https://yourbyline.vercel.app",
+        "sameAs": [
+          "https://github.com/phnxsahil/byline",
+          "https://x.com/theonlysahil1",
+          "https://www.linkedin.com/in/sahil-sharma-5a3715270/"
+        ]
+      }
+      </script>
+
+      <!-- FAQPage schema -->
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Do I need to pay for Byline?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Byline is completely open-source and free to use. You only pay for your own API keys (Anthropic) if you self-host."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How does Byline connect to GitHub?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Byline uses GitHub webhooks or periodic polling to watch your repositories for meaningful commits, PRs, and deployments."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which social platforms does Byline support?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Byline currently drafts native content for LinkedIn, X (Twitter), Reddit, and Threads."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I self-host Byline?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Byline is MIT licensed and fully self-hostable. Clone the repo, add your API keys, and run docker-compose up."
+            }
+          }
+        ]
+      }
+      </script>
     </head>
 
     <body>

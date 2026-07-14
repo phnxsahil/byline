@@ -60,7 +60,7 @@ export function DeskDrawer({ drafts, activeDispatch, onUpdateDraft, onClose }: D
                            draft.platform === "x" ? IconBrandX :
                            draft.platform === "reddit" ? IconBrandReddit : null;
               
-              const isApproved = draft.status === "ready" || draft.status === "posted";
+              const isApproved = draft.status === "approved" || draft.status === "posted";
 
               return (
                 <div key={draft.id} className={`rounded-3xl transition-all duration-300 relative overflow-hidden ${isApproved ? 'bg-surface border-2 border-emerald-500/50 shadow-lg shadow-emerald-500/5' : 'bg-surface border border-rule/30 hover:border-rule shadow-md shadow-black/10'}`}>
@@ -89,6 +89,38 @@ export function DeskDrawer({ drafts, activeDispatch, onUpdateDraft, onClose }: D
                     )}
                   </div>
 
+                  {/* Critic Details */}
+                  {(draft.voice_match_score || draft.critic_grade || draft.critic_note) && (
+                    <div className="px-5 py-3 bg-surface/50 border-b border-rule/10 flex flex-col gap-2">
+                      <div className="flex items-center gap-4">
+                        {draft.voice_match_score && (
+                           <div className="flex items-center gap-1.5">
+                             <span className="text-[9px] text-mute font-bold uppercase tracking-widest">Voice Match</span>
+                             <span className="text-[11px] font-mono font-bold text-ink">{draft.voice_match_score}/10</span>
+                           </div>
+                        )}
+                        {draft.critic_grade && (
+                           <div className="flex items-center gap-1.5">
+                             <span className="text-[9px] text-mute font-bold uppercase tracking-widest">Grade</span>
+                             <div className={`text-[11px] font-bold px-1.5 py-0.5 rounded ${
+                               draft.critic_grade === 'A' ? 'bg-emerald-500/10 text-emerald-500' :
+                               draft.critic_grade === 'B' ? 'bg-amber-500/10 text-amber-500' :
+                               draft.critic_grade === 'C' ? 'bg-orange-500/10 text-orange-500' :
+                               'bg-red-500/10 text-red-500'
+                             }`}>
+                               {draft.critic_grade}
+                             </div>
+                           </div>
+                        )}
+                      </div>
+                      {draft.critic_note && (
+                        <p className="text-[11px] italic text-mute/80 font-medium">
+                          &quot;{draft.critic_note}&quot;
+                        </p>
+                      )}
+                    </div>
+                  )}
+
                   {/* Card Body */}
                   <div className="p-2 relative">
                     <textarea 
@@ -106,7 +138,7 @@ export function DeskDrawer({ drafts, activeDispatch, onUpdateDraft, onClose }: D
                     </div>
                     
                     <button 
-                      onClick={() => onUpdateDraft(draft.id, draft.body, isApproved ? "draft" : "ready")}
+                      onClick={() => onUpdateDraft(draft.id, draft.body, isApproved ? "draft" : "approved")}
                       className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-[11px] font-bold tracking-widest uppercase transition-all shadow-sm ${
                         isApproved 
                           ? "bg-emerald-500 text-paper hover:opacity-90 shadow-emerald-500/20" 

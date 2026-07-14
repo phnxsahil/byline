@@ -1,0 +1,54 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Byline",
+  "colors": {
+    "primary": "#F0A500",
+    "light": "#F0A500",
+    "dark": "#F0A500"
+  },
+  "navigation": {
+    "pages": [
+      {
+        "group": "Getting Started",
+        "pages": [
+          "getting-started",
+          "self-hosting"
+        ]
+      },
+      {
+        "group": "Core Concepts",
+        "pages": [
+          "overall-structure",
+          "agents",
+          "voice-profile"
+        ]
+      },
+      {
+        "group": "Integrations",
+        "pages": [
+          "integrations"
+        ]
+      },
+      {
+        "group": "API Reference",
+        "pages": [
+          "api-reference"
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/phnxsahil/byline"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Website",
+      "href": "https://byline.so"
+    }
+  }
+}

@@ -33,7 +33,7 @@ export function PricingPage() {
               </li>
             ))}
           </ul>
-          <a href="https://github.com/sahil/byline" target="_blank" className="ta-btn-pixel" style={{ width: "100%", padding: "16px", textAlign: "center", display: "flex", justifyContent: "center", gap: 8 }}>
+          <a href="https://github.com/phnxsahil/byline" target="_blank" rel="noopener noreferrer" className="ta-btn-pixel" style={{ width: "100%", padding: "16px", textAlign: "center", display: "flex", justifyContent: "center", gap: 8 }}>
             <IconBrandGithub size={18} stroke={2} /> CLONE REPO
           </a>
         </div>

@@ -28,6 +28,11 @@ export interface DispatchRead {
   suggested_platforms: string[];
   created_at: string;
   stamps: StampState[];
+  is_post_worthy: boolean | null;
+  arc_id: string | null;
+  arc_name: string | null;
+  avoid_topics: string[];
+  strategist_reasoning: Record<string, unknown>;
 }
 
 export interface DraftRead {
@@ -219,4 +224,3 @@ export async function patchOutlet(
     body: JSON.stringify(payload),
   });
 }
-

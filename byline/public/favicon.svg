@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250">
+  <rect width="250" height="250" rx="55" fill="#131312" />
+  <text x="125" y="120" font-family="'IBM Plex Mono', Consolas, Monaco, 'Courier New', monospace" font-size="170" font-weight="700" text-anchor="middle" dominant-baseline="central">
+    <tspan fill="#FF6600">[</tspan><tspan fill="#ffffff" dx="4">b</tspan><tspan fill="#FF6600" dx="4">]</tspan>
+  </text>
+</svg>
